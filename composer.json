@@ -1,0 +1,33 @@
+{
+  "name": "adamfairholm/elasticquent",
+  "type": "library",
+  "description": "Map Larvel Eloquent models to ElasticSearch types.",
+  "keywords": [
+    "elasticsearch",
+    "eloquent",
+    "laravel"
+  ],
+  "homepage": "https://github.com/adamfairholm/Elasticquent",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Adam Fairholm",
+      "email": "adam.fairholm@gmail.com",
+      "homepage": "http://adamfairholm.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.4.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~4.0",
+    "illuminate/support": "~4.2",
+    "illuminate/database": "~4.2",
+     "nesbot/carbon": "~1.0"
+  },
+  "autoload": {
+    "psr-0": {
+      "Adamfairholm\\Elasticquent\\": "src/"
+    }
+  }
+}
