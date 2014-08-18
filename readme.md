@@ -1,23 +1,23 @@
-# Elastiquent: Elasticsearch for Eloquent Laravel Models
+# Elasticquent: Elasticsearch for Eloquent Laravel Models
 
-Elastiquent makes working with Elasticsearch and Eloquent models easier by mapping them to Elasticsearch types. You can use the default settings or define how Elasticsearch should index and search your Eloquent models right in the model.
+Elasticquent makes working with Elasticsearch and Eloquent models easier by mapping them to Elasticsearch types. You can use the default settings or define how Elasticsearch should index and search your Eloquent models right in the model.
 
-Elastiquent uses the [official Elasticsearch PHP API](https://github.com/elasticsearch/elasticsearch-php). To get started, you should have a basic knowledge of how ElasticSearch works (indexes, types, mappings, etc). This is meant for use with Elasticsearch 1.x.
+Elasticquent uses the [official Elasticsearch PHP API](https://github.com/elasticsearch/elasticsearch-php). To get started, you should have a basic knowledge of how ElasticSearch works (indexes, types, mappings, etc). This is meant for use with Elasticsearch 1.x.
 
 ## Setup
 
-To get started, add Elastiquent to you composer.json file:
+To get started, add Elasticquent to you composer.json file:
 
-    "adamfairholm/elastiquent" => "master-dev"
+    "adamfairholm/Elasticquent" => "master-dev"
 
-Once you've run a `composer update`, add the Elastiquent trait to any Eloquent model that you want to be able to index in Elasticsearch:
+Once you've run a `composer update`, add the Elasticquent trait to any Eloquent model that you want to be able to index in Elasticsearch:
 
 ```php
-use Adamfairholm\Elastiquent\ElastiquentTrait;
+use Adamfairholm\Elasticquent\ElasticquentTrait;
 
 class Book extends Eloquent {
 
-    use ElastiquentTrait;
+    use ElasticquentTrait;
 
 }
 ```
@@ -42,7 +42,7 @@ You can index individual entries as well:
 
 ### Setting the Type Name
 
-By default, Elastiquent will use the table name for your model as the type name for indexing. If you'd like to override it, you can with the `getTypeName` function.
+By default, Elasticquent will use the table name for your model as the type name for indexing. If you'd like to override it, you can with the `getTypeName` function.
 
 
 ```php
@@ -54,7 +54,7 @@ function getTypeName()
 
 ### Setting Up / Tearing Down
 
-If you don't want to manually set up your Elasticsearch types, you can do some basic set up and tear down commands via your Elastiquent models.
+If you don't want to manually set up your Elasticsearch types, you can do some basic set up and tear down commands via your Elasticquent models.
 
 For instance, if you'd like to setup a model's type mapping, you can do:
 
@@ -70,11 +70,11 @@ To rebuild (delete and re-add, useful when you make important changes to your ma
 
 ### Document IDs
 
-Elastiquent will use whatever is set as the `primaryKey` for your Eloquent models as the id for your Elasticsearch documents.
+Elasticquent will use whatever is set as the `primaryKey` for your Eloquent models as the id for your Elasticsearch documents.
 
 ### Document Data
 
-By default, Elastiquent will use the entire attribute array for your Elasticsearch documents. However, if you want to customize how your search documents are structured, you can set a `getIndexDocumentData` function that returns you own custom document array.
+By default, Elasticquent will use the entire attribute array for your Elasticsearch documents. However, if you want to customize how your search documents are structured, you can set a `getIndexDocumentData` function that returns you own custom document array.
 
 ```php
 function getIndexDocumentData()
@@ -101,17 +101,17 @@ _Note that you must rebuild your mapping and re-index for this to take effect._
 
 
 
-To check if the type for the Elastiquent model exists yet, use `typeExists`:
+To check if the type for the Elasticquent model exists yet, use `typeExists`:
 
     $typeExists = Book::typeExists();
 
-### Using Elastiquent With Custom Collections
+### Using Elasticquent With Custom Collections
 
-If you are using a custom collection with your Eloquent models, you just need to add the `ElastiquentCollectionTrait` to your collection so you can use `addToIndex`.
+If you are using a custom collection with your Eloquent models, you just need to add the `ElasticquentCollectionTrait` to your collection so you can use `addToIndex`.
 
 ```php
 class MyCollection extends \Illuminate\Database\Eloquent\Collection {
 
-    use ElastiquentCollectionTrait;
+    use ElasticquentCollectionTrait;
 }
 ```
