@@ -1,5 +1,7 @@
 <?php namespace Adamfairholm\Elasticquent;
 
+use \Adamfairholm\Elasticquent\ElasticquentCollection as ElasticquentCollection;
+
 /**
  * Elasticquent Trait
  *
@@ -46,7 +48,7 @@ trait ElasticquentTrait {
     /**
      * New Collection
      *
-     * @return
+     * @return Collection
      */
     public function newCollection(array $models = array())
     {
