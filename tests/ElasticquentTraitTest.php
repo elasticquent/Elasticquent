@@ -20,9 +20,7 @@ class ElasticquentTraitTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     *
-     *
-     * @return void
+     * Test getTypeName()
      */
     public function testGetTypeName()
     {
@@ -31,7 +29,7 @@ class ElasticquentTraitTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * Test Uses Timestamp In Index
+     * Test Basic Properties Getters
      */
     public function testBasicPropertiesGetters()
     {
