@@ -128,7 +128,61 @@ function getIndexDocumentData()
 }
 ```
 
-### More Options
+## Searching
+
+There are two ways to search in Elasticquent. The first is a simple term search that searches all fields.
+
+    $books = Book::search('Moby Dick');
+
+The second is a query based search for more complex searching needs:
+
+    $books = Book::searchByQuery(array('match' => array('title' => 'Moby Dick')));
+
+Both methods will return a search collection. 
+
+## Search Collection Functions
+
+When you search on an Elasticquent model, you get a search collection with some special functions.
+
+You can get total hits:
+
+    $books->totalHits();
+
+Access the shards array:
+
+    $books->shards();
+
+Access the max score:
+
+    $books->maxScore();
+
+Access the timed out boolean property:
+
+    $books->timedOut();
+
+And access the took property:
+
+    $books->took();
+
+### Using the Search Collection Outside of Elastiquent
+
+If you're dealing with raw search data from outside of Elastiquent, you can use the Elasticquent search results collection to turn that data into a collection.
+
+```php
+$client = new \Elasticsearch\Client();
+
+$params = array(
+    'index' => 'default',
+    'type'  => 'books'
+);
+
+$params['body']['query']['match']['title'] = 'Moby Dick';
+
+$collection = new \Elasticquent\ElasticquentResultCollection($client->search($params), new Book);
+
+```
+
+## More Options
 
 By default, document sources are enabled. To turn document sources off, set a property in your Eloquent model:
 
