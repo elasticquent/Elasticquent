@@ -1,6 +1,6 @@
 # Elasticquent Beta
 
-## Elasticsearch for Eloquent Laravel Models
+_Elasticsearch for Eloquent Laravel Models_
 
 Elasticquent makes working with [Elasticsearch](http://www.elasticsearch.org/) and [Eloquent](http://laravel.com/docs/eloquent) models easier by mapping them to Elasticsearch types. You can use the default settings or define how Elasticsearch should index and search your Eloquent models right in the model.
 
