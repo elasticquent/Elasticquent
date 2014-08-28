@@ -1,6 +1,7 @@
 <?php namespace Adamfairholm\Elasticquent;
 
 use \Adamfairholm\Elasticquent\ElasticquentCollection as ElasticquentCollection;
+use \Adamfairholm\Elasticquent\ElasticquentResultCollection as ResultCollection;
 
 /**
  * Elasticquent Trait
@@ -11,38 +12,28 @@ use \Adamfairholm\Elasticquent\ElasticquentCollection as ElasticquentCollection;
 trait ElasticquentTrait {
 
     /**
-     * Mapping Properties
-     *
-     * ElasticSearch mapping properties for this
-     * particular model.
-     *
-     * @var     array
-     */
-    protected $mappingProperties;
-
-    /**
-     * Enable Document Source
      *
      *
-     * @var     bool
-     */
-    protected $enableDocumentSource = true;
-
-    /**
-     *
-     *
-     * @return
+     * @var bool
      */
     protected $usesTimestampsInIndex = true;
 
     /**
+     * Score
+     *
+     *
+     * @var int
+     */
+    protected $score;
+
+    /**
      * Get ElasticSearch Client
      *
-     * @return Elasticsearch\Client
+     * @return \Elasticsearch\Client
      */
     public function getElasticSearchClient()
     {
-        return new Elasticsearch\Client();
+        return new \Elasticsearch\Client();
     }
 
     /**
@@ -65,8 +56,8 @@ trait ElasticquentTrait {
         // The first thing we check is if there
         // is an elasticquery config file and if there is a
         // default index.
-        if (Config::get('elasticquent.default_index')) {
-            return Config::get('elasticquent.default_index');
+        if (\Config::get('elasticquent.default_index')) {
+            return \Config::get('elasticquent.default_index');
         }
 
         // Otherwise we will just go with 'default'
@@ -84,7 +75,7 @@ trait ElasticquentTrait {
     }
 
     /**
-     *
+     * Uses Timestamps In Index
      *
      * @return void
      */
@@ -94,7 +85,7 @@ trait ElasticquentTrait {
     }
 
     /**
-     *
+     * Use Timestamps In Index
      *
      * @return void
      */
@@ -104,7 +95,7 @@ trait ElasticquentTrait {
     }
 
     /**
-     *
+     * Don't Use Timestamps In Index
      *
      * @return void
      */
@@ -127,11 +118,31 @@ trait ElasticquentTrait {
      * Set Mapping Properties
      *
      * @param   array $mappingProperties
-     * @return  vodi
+     * @return  void
      */
     public function setMappingProperties($mapping)
     {
         $this->mappingProperties = $mapping;
+    }
+
+    /**
+     * Get Score
+     *
+     * @return null|int
+     */
+    public function getScore()
+    {
+        return $this->score;
+    }
+
+    /**
+     * Set Score
+     *
+     * @return void
+     */
+    public function setScore($score = null)
+    {
+        $this->score = $score;
     }
 
     /**
@@ -177,18 +188,43 @@ trait ElasticquentTrait {
     }
 
     /**
-     * Search a Type
+     * Search By Query
      *
+     * Search with a query array
      *
-     * @return void
+     * @param   query $query
+     * @return  
      */
-    public static function search($query = array())
+    public static function searchByQuery($query = array())
     {
         $instance = new static;
 
         $params = $instance->getBasicEsParams();
 
+        $params['body']['query'] = $query;
 
+        return $instance->getElasticSearchClient()->search($params);
+    }
+
+    /**
+     * Search
+     *
+     * Simple search using a match _all query
+     *
+     * @param   string $term
+     * @return  \Fairholm\Elasticquent\ElasticquentResultCollection
+     */
+    public static function search($term = null)
+    {
+        $instance = new static;
+
+        $params = $instance->getBasicEsParams();
+
+        $params['body']['query']['match']['_all'] = $term;
+
+        $result = $instance->getElasticSearchClient()->search($params);
+    
+        return new ResultCollection($result, $instance = new static);
     }
 
     /**
@@ -273,15 +309,16 @@ trait ElasticquentTrait {
     {
         $instance = new static;
 
-        $params = $instance->getBasicEsParams();
+        $mapping = $instance->getBasicEsParams();
 
-        $params['ignore_conflicts'] = $ignoreConflicts;
+        $params = array(
+            '_source'       => array('enabled' => true),
+            'properties'    => $instance->getMappingProperties()
+        );
 
-        $params['_source'] = array('enabled' => $instance->enableDocumentSource);
+        $mapping['body'][$instance->getTypeName()] = $params;
 
-        $params['properties'] = $instance->getMapping();
-
-        return $instance->getElasticSearchClient()->indices()->putMapping($params);
+        return $instance->getElasticSearchClient()->indices()->putMapping($mapping);
     }
 
     /**
@@ -317,6 +354,32 @@ trait ElasticquentTrait {
     }
 
     /**
+     * Create Index
+     *
+     * @return 
+     */
+    public static function createIndex($shards = null, $replicas = null)
+    {
+        $instance = new static;
+
+        $client = $instance->getElasticSearchClient();
+
+        $index = array(
+            'index'     => $instance->getIndexName()
+        );
+
+        if ($shards) {
+            $index['body']['settings']['number_of_shards'] = $shards;
+        }
+
+        if ($replicas) {
+            $index['body']['settings']['number_of_replicas'] = $replicas;
+        }
+    
+        return $client->indices()->create($index);
+    }
+
+    /**
      * Get Mapping
      *
      * Get our existing Elasticsearch mapping
@@ -327,8 +390,6 @@ trait ElasticquentTrait {
     public static function getMapping()
     {
         $instance = new static;
-
-        $params = $instance->getBasicEsParams();
     }
 
     /**
@@ -342,5 +403,29 @@ trait ElasticquentTrait {
     {
         $params = $this->getBasicEsParams();
         return $this->getElasticSearchClient()->indices()->existsType($params);
+    }
+
+    /**
+     * New FRom Hit Builder
+     * 
+     * Variation on newFromBuilder. Instead, takes
+     * a 
+     *
+     * @param  array  $hit
+     * @return static
+     */
+    public function newFromHitBuilder($hit = array())
+    {
+        $instance = $this->newInstance(array(), true);
+
+        $attributes = $hit['_source'];
+
+        $instance->setRawAttributes((array) $attributes, true);
+
+        // In addition to setting the attributes
+        // from the index, we will set the score as well.
+        $instance->setScore($hit['_score']);
+
+        return $instance;
     }
 }
