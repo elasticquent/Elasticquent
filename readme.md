@@ -1,19 +1,44 @@
-# Elasticquent: Elasticsearch for Eloquent Laravel Models
+# Elasticquent Beta
 
-Elasticquent makes working with Elasticsearch and Eloquent models easier by mapping them to Elasticsearch types. You can use the default settings or define how Elasticsearch should index and search your Eloquent models right in the model.
+## Elasticsearch for Eloquent Laravel Models
+
+Elasticquent makes working with [Elasticsearch](http://www.elasticsearch.org/) and [Eloquent](http://laravel.com/docs/eloquent) models easier by mapping them to Elasticsearch types. You can use the default settings or define how Elasticsearch should index and search your Eloquent models right in the model.
 
 Elasticquent uses the [official Elasticsearch PHP API](https://github.com/elasticsearch/elasticsearch-php). To get started, you should have a basic knowledge of how ElasticSearch works (indexes, types, mappings, etc). This is meant for use with Elasticsearch 1.x.
 
+## Overview
+
+Elasticquent allows you take an Eloquent model and easily index and search its contents in Elasticsearch.
+
+    $books = Book::where('id', '<', 200)->get();
+    $books->addToIndex();
+
+When you search, instead of getting a plain array of search results, you instead get an Eloquent collection with some special Elasticsearch functionality.
+
+    $books = Book::search('Moby Dick');
+    echo $books->totalHits();
+
+Plus, you can still use all the Eloquent collection functionality:
+
+    $books = $books->filter(function($book)
+    {
+        return $book->hasISBN();
+    });
+
+Check out the rest of the documentation for how to get started using Elasticsearch and Elasticquent!
+
 ## Setup
+
+Before you start using Elasticquent, make sure you've installed [Elasticsearch](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/_installation.html).
 
 To get started, add Elasticquent to you composer.json file:
 
-    "adamfairholm/Elasticquent" => "master-dev"
+    "fairholm/elasticquent" => "master-dev"
 
 Once you've run a `composer update`, add the Elasticquent trait to any Eloquent model that you want to be able to index in Elasticsearch:
 
 ```php
-use Adamfairholm\Elasticquent\ElasticquentTrait;
+use Elasticquent\ElasticquentTrait;
 
 class Book extends Eloquent {
 
@@ -22,7 +47,38 @@ class Book extends Eloquent {
 }
 ```
 
-Now your Eloquent model has some extra methods that make it easier to index your model's data using Elasticsearch.
+Now your Eloquent model has some extra methods that make it easier to index your model's data using Elasticsearch. 
+
+## Indexes and Mapping
+
+While you can definitely build your indexes and mapping through the Elasticsearch API, you can also use some helper methods to build indexes and types right from your models.
+
+If you want a simple way to create indexes, Elasticquent models have a function for that: 
+
+    Book::createIndex($shards = null, $replicas = null);
+
+For mapping, you can set a `mappingProperties` property in your model and use some mapping functions from there:
+
+```php
+protected $mappingProperties = array(
+   'title' => array(
+        'type' => 'string',
+        'analyzer' => 'standard'
+    )
+);
+```
+
+If you'd like to setup a model's type mapping based on your mapping properties, you can use:
+
+    Book::putMapping($ignoreConflicts = true);
+
+To delete a mapping:
+
+    Book::deleteMapping();
+
+To rebuild (delete and re-add, useful when you make important changes to your mapping) a mapping:
+
+    Book::rebuildMapping();
 
 ## Basic Usage
 
@@ -44,33 +100,18 @@ You can index individual entries as well:
 
 By default, Elasticquent will use the table name for your model as the type name for indexing. If you'd like to override it, you can with the `getTypeName` function.
 
-
 ```php
 function getTypeName()
 {
-    return 'custom\_type\_name';
+    return 'custom_type_name';
 }
 ```
 
-### Setting Up / Tearing Down
-
-If you don't want to manually set up your Elasticsearch types, you can do some basic set up and tear down commands via your Elasticquent models.
-
-For instance, if you'd like to setup a model's type mapping, you can do:
-
-    Book::putMapping($ignoreConflicts = true);
-
-To delete a mapping
-
-    Book::deleteMapping();
-
-To rebuild (delete and re-add, useful when you make important changes to your mapping) the mapping:
-
-    Book::rebuildMapping();
-
-### Document IDs
+### Document IDs & Sources
 
 Elasticquent will use whatever is set as the `primaryKey` for your Eloquent models as the id for your Elasticsearch documents.
+
+Elasticquent also must use Elasticsearch with the document source on. This is because when search results are returned by Elasticquent, it uses the document source to populate a collection in the same way it'd populate a collection from the database.
 
 ### Document Data
 
@@ -87,10 +128,6 @@ function getIndexDocumentData()
 }
 ```
 
-### Setting Mapping Properties
-
-You can set mapping properties in a
-
 ### More Options
 
 By default, document sources are enabled. To turn document sources off, set a property in your Eloquent model:
@@ -98,8 +135,6 @@ By default, document sources are enabled. To turn document sources off, set a pr
     protected $enableDocumentSource = false;
 
 _Note that you must rebuild your mapping and re-index for this to take effect._
-
-
 
 To check if the type for the Elasticquent model exists yet, use `typeExists`:
 

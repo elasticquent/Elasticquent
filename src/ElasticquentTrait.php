@@ -12,7 +12,7 @@ use \Elasticquent\ElasticquentResultCollection as ResultCollection;
 trait ElasticquentTrait {
 
     /**
-     *
+     * Uses Timestamps In Index
      *
      * @var bool
      */
@@ -21,6 +21,8 @@ trait ElasticquentTrait {
     /**
      * Score
      *
+     * Hit score when using data
+     * from Elasticsearch results.
      *
      * @var int
      */
@@ -380,19 +382,6 @@ trait ElasticquentTrait {
     }
 
     /**
-     * Get Mapping
-     *
-     * Get our existing Elasticsearch mapping
-     * for this model.
-     *
-     * @return
-     */
-    public static function getMapping()
-    {
-        $instance = new static;
-    }
-
-    /**
      * Type Exists
      *
      * Does this type exist?
@@ -402,6 +391,7 @@ trait ElasticquentTrait {
     public static function typeExists()
     {
         $params = $this->getBasicEsParams();
+        
         return $this->getElasticSearchClient()->indices()->existsType($params);
     }
 
