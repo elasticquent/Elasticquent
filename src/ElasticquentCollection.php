@@ -1,17 +1,7 @@
-<?php namespace Adamfairholm\Elasticquent;
+<?php namespace Elasticquent;
 
 class ElasticquentCollection extends \Illuminate\Database\Eloquent\Collection {
 
     use ElasticquentCollectionTrait;
-
-    /**
-     * 
-     *
-     * @return void
-     */
-    public function countHits()
-    {
-
-    }
 
 }

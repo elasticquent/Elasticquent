@@ -1,4 +1,4 @@
-<?php namespace Adamfairholm\Elasticquent;
+<?php namespace Elasticquent;
 
 class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collection {
 

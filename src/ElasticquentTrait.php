@@ -1,7 +1,7 @@
-<?php namespace Adamfairholm\Elasticquent;
+<?php namespace Elasticquent;
 
-use \Adamfairholm\Elasticquent\ElasticquentCollection as ElasticquentCollection;
-use \Adamfairholm\Elasticquent\ElasticquentResultCollection as ResultCollection;
+use \Elasticquent\ElasticquentCollection as ElasticquentCollection;
+use \Elasticquent\ElasticquentResultCollection as ResultCollection;
 
 /**
  * Elasticquent Trait

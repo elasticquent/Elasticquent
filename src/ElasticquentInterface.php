@@ -1,4 +1,4 @@
-<?php namespace Adamfairholm\Elasticquent;
+<?php namespace Elasticquent;
 
 interface ElasticquentInterface {
 

@@ -1,5 +1,5 @@
 {
-  "name": "adamfairholm/elasticquent",
+  "name": "fairholm/elasticquent",
   "type": "library",
   "description": "Map Larvel Eloquent models to ElasticSearch types.",
   "keywords": [
@@ -28,7 +28,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Adamfairholm\\Elasticquent\\": "src/"
+      "Elasticquent\\": "src/"
     }
   }
 }
