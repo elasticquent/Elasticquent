@@ -183,9 +183,9 @@ You can check the document score that Elasticsearch assigned to this document wi
 
     $book->documentScore();
 
-### Using the Search Collection Outside of Elastiquent
+### Using the Search Collection Outside of Elasticquent
 
-If you're dealing with raw search data from outside of Elastiquent, you can use the Elasticquent search results collection to turn that data into a collection.
+If you're dealing with raw search data from outside of Elasticquent, you can use the Elasticquent search results collection to turn that data into a collection.
 
 ```php
 $client = new \Elasticsearch\Client();
