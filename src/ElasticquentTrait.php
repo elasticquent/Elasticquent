@@ -24,9 +24,9 @@ trait ElasticquentTrait {
      * Hit score when using data
      * from Elasticsearch results.
      *
-     * @var int
+     * @var null|int
      */
-    protected $score;
+    protected $score = null;
 
     /**
      * Get ElasticSearch Client
