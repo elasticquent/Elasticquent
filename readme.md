@@ -80,6 +80,11 @@ To rebuild (delete and re-add, useful when you make important changes to your ma
 
     Book::rebuildMapping();
 
+You can also get the type mapping and check if it exists.
+
+    Book::mappingExists();
+    Book::getMapping();
+
 ## Basic Usage
 
 To index all the entries in an Eloquent model, use `addAllToIndex`:

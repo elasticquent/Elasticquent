@@ -336,6 +336,34 @@ trait ElasticquentTrait {
     }
 
     /**
+     * Mapping Exists
+     *
+     * @return bool
+     */
+    public static function mappingExists()
+    {
+        $instance = new static;
+
+        $mapping = $instance->getMapping();
+
+        return (empty($mapping)) ? false : true;
+    }
+
+    /**
+     * Get Mapping
+     *
+     * @return void
+     */
+    public static function getMapping()
+    {
+        $instance = new static;
+
+        $params = $instance->getBasicEsParams();
+
+        return $instance->getElasticSearchClient()->indices()->getMapping($params);
+    }
+
+    /**
      * Put Mapping
      *
      * @param    bool $ignoreConflicts
@@ -377,22 +405,27 @@ trait ElasticquentTrait {
      * This will delete and then re-add
      * the mapping for this model.
      *
-     * @return
+     * @return array
      */
-    public function rebuildMapping()
+    public static function rebuildMapping()
     {
-        self::deleteMapping();
+        $instance = new static;
+
+        // If the mapping exists, let's delete it.
+        if ($instance->mappingExists()) {
+            $instance->deleteMapping();
+        }
 
         // Don't need ignore conflicts because if we
         // just removed the mapping there shouldn't
         // be any conflicts.
-        self::putMapping();
+        return $instance->putMapping();
     }
 
     /**
      * Create Index
      *
-     * @return 
+     * @return array
      */
     public static function createIndex($shards = null, $replicas = null)
     {
