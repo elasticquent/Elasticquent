@@ -459,9 +459,11 @@ trait ElasticquentTrait {
      */
     public static function typeExists()
     {
-        $params = $this->getBasicEsParams();
+        $instance = new static;
+
+        $params = $instance->getBasicEsParams();
         
-        return $this->getElasticSearchClient()->indices()->existsType($params);
+        return $instance->getElasticSearchClient()->indices()->existsType($params);
     }
 
     /**
