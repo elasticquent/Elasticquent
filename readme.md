@@ -97,8 +97,8 @@ return array(
     | Default Index Name
     |--------------------------------------------------------------------------
     |
-    | This is the index name that Elastiquent uses for all
-    | Elastiquent model.
+    | This is the index name that Elastiquent will use for all
+    | Elastiquent models.
     */
 
     'default_index' => 'my_custom_index_name',
