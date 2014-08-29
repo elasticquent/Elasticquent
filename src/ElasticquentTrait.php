@@ -186,7 +186,7 @@ trait ElasticquentTrait {
 
         $all = $instance->newQuery()->get($columns);
 
-        
+        return $all->addToIndex();
     }
 
     /**
