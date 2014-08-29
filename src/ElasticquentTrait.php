@@ -368,7 +368,7 @@ trait ElasticquentTrait {
 
         $params = $instance->getBasicEsParams();
 
-        return $this->getElasticSearchClient()->indices()->deleteMapping($params);
+        return $instance->getElasticSearchClient()->indices()->deleteMapping($params);
     }
 
     /**
