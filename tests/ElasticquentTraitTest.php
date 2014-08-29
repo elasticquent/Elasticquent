@@ -76,9 +76,9 @@ class ElasticquentTraitTest extends PHPUnit_Framework_TestCase {
 
 }
 
-class TestModel extends Eloquent implements \Adamfairholm\Elasticquent\ElasticquentInterface {
+class TestModel extends Eloquent implements \Elasticquent\ElasticquentInterface {
 
-    use Adamfairholm\Elasticquent\ElasticquentTrait;
+    use Elasticquent\ElasticquentTrait;
 
     protected $fillable = array('name');
 
@@ -88,9 +88,9 @@ class TestModel extends Eloquent implements \Adamfairholm\Elasticquent\Elasticqu
     }
 }
 
-class CustomTestModel extends Eloquent implements \Adamfairholm\Elasticquent\ElasticquentInterface {
+class CustomTestModel extends Eloquent implements \Elasticquent\ElasticquentInterface {
 
-    use Adamfairholm\Elasticquent\ElasticquentTrait;
+    use Elasticquent\ElasticquentTrait;
 
     protected $fillable = array('name');
 

@@ -63,15 +63,6 @@ interface ElasticquentInterface {
     public function getIndexDocumentData();
 
     /**
-     * Get Index Document Routing
-     *
-     * Get the routing string for this document.
-     *
-     * @return void
-     */
-    public function getIndexDocumentRouting();
-
-    /**
      * Index Documents
      *
      * Index all documents in an Eloquent model.
@@ -79,7 +70,7 @@ interface ElasticquentInterface {
      * @param   array $columns
      * @return  void
      */
-    public static function addAllToIndex($columns = array('*'));
+    public static function addAllToIndex();
 
     /**
      * Search a Type
@@ -147,7 +138,7 @@ interface ElasticquentInterface {
      *
      * @return
      */
-    public function rebuildMapping();
+    public static function rebuildMapping();
 
     /**
      * Get Mapping
