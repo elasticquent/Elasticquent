@@ -106,7 +106,18 @@ return array(
 );
 ``` 
 
-## Basic Usage
+### Setting a Custom Type Name
+
+By default, Elasticquent will use the table name of your models as the type name for indexing. If you'd like to override it, you can with the `getTypeName` function.
+
+```php
+function getTypeName()
+{
+    return 'custom_type_name';
+}
+```
+
+## Indexing
 
 To index all the entries in an Eloquent model, use `addAllToIndex`:
 
@@ -125,38 +136,6 @@ You can index individual entries as well:
 You can also reindex an entire model:
 
     Book::reindex();
-
-### Setting the Type Name
-
-By default, Elasticquent will use the table name for your model as the type name for indexing. If you'd like to override it, you can with the `getTypeName` function.
-
-```php
-function getTypeName()
-{
-    return 'custom_type_name';
-}
-```
-
-### Document IDs & Sources
-
-Elasticquent will use whatever is set as the `primaryKey` for your Eloquent models as the id for your Elasticsearch documents.
-
-Elasticquent also must use Elasticsearch with the document source on. This is because when search results are returned by Elasticquent, it uses the document source to populate a collection in the same way it'd populate a collection from the database.
-
-### Document Data
-
-By default, Elasticquent will use the entire attribute array for your Elasticsearch documents. However, if you want to customize how your search documents are structured, you can set a `getIndexDocumentData` function that returns you own custom document array.
-
-```php
-function getIndexDocumentData()
-{
-    return array(
-        'id'      => $this->id,
-        'title'   => $this->title,
-        'custom'  => 'variable'
-    );
-}
-```
 
 ## Searching
 
@@ -221,6 +200,29 @@ $params['body']['query']['match']['title'] = 'Moby Dick';
 $collection = new \Elasticquent\ElasticquentResultCollection($client->search($params), new Book);
 
 ```
+
+### Document IDs & Sources
+
+Elasticquent will use whatever is set as the `primaryKey` for your Eloquent models as the id for your Elasticsearch documents.
+
+Elasticquent also must use Elasticsearch with the document source on. This is because when search results are returned by Elasticquent, it uses the document source to populate a collection in the same way it'd populate a collection from the database.
+
+### Document Data
+
+By default, Elasticquent will use the entire attribute array for your Elasticsearch documents. However, if you want to customize how your search documents are structured, you can set a `getIndexDocumentData` function that returns you own custom document array.
+
+```php
+function getIndexDocumentData()
+{
+    return array(
+        'id'      => $this->id,
+        'title'   => $this->title,
+        'custom'  => 'variable'
+    );
+}
+```
+
+Be careful with this, as Elastiquent reads the document source into the Eloquent model attributes when creating a search result collection, so if data is missing it could cause some of your model functionality to break. 
 
 ## More Options
 
