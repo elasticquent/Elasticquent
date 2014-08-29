@@ -85,6 +85,27 @@ You can also get the type mapping and check if it exists.
     Book::mappingExists();
     Book::getMapping();
 
+### Setting a Custom Index Name
+
+Elastiquent will use `default` as your index name, but you can set a custom index name by creating an `elasticquent.php` config file in `/app/config/`:
+
+```php
+return array(
+
+    /*
+    |--------------------------------------------------------------------------
+    | Default Index Name
+    |--------------------------------------------------------------------------
+    |
+    | This is the index name that Elastiquent uses for all
+    | Elastiquent model.
+    */
+
+    'default_index' => 'my_custom_index_name',
+
+);
+``` 
+
 ## Basic Usage
 
 To index all the entries in an Eloquent model, use `addAllToIndex`:
