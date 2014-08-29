@@ -101,6 +101,10 @@ You can index individual entries as well:
     $book = Book::find($id);
     $book->addToIndex();
 
+You can also reindex an entire model:
+
+    Book::reindex();
+
 ### Setting the Type Name
 
 By default, Elasticquent will use the table name for your model as the type name for indexing. If you'd like to override it, you can with the `getTypeName` function.
@@ -199,12 +203,6 @@ $collection = new \Elasticquent\ElasticquentResultCollection($client->search($pa
 
 ## More Options
 
-By default, document sources are enabled. To turn document sources off, set a property in your Eloquent model:
-
-    protected $enableDocumentSource = false;
-
-_Note that you must rebuild your mapping and re-index for this to take effect._
-
 To check if the type for the Elasticquent model exists yet, use `typeExists`:
 
     $typeExists = Book::typeExists();
@@ -219,3 +217,10 @@ class MyCollection extends \Illuminate\Database\Eloquent\Collection {
     use ElasticquentCollectionTrait;
 }
 ```
+
+## Roadmap
+
+Elasticquent currently needs:
+
+* Tests that mock ES API calls.
+* Support for routes

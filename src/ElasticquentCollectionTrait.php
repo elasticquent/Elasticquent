@@ -41,9 +41,9 @@ trait ElasticquentCollectionTrait {
     }
 
     /**
-     * 
+     * Delete From Index
      *
-     * @return void
+     * @return array
      */
     public function deleteFromIndex()
     {
@@ -63,6 +63,19 @@ trait ElasticquentCollectionTrait {
         }
 
         return $this->getElasticSearchClient()->bulk($params);
+    }
+
+    /**
+     * Reindex
+     *
+     * Delete the items and then re-index them.
+     *
+     * @return array
+     */
+    public function reindex()
+    {
+        $this->deleteFromIndex();
+        return $this->addToIndex();
     }
 
     /**

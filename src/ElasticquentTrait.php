@@ -193,32 +193,34 @@ trait ElasticquentTrait {
     }
 
     /**
-     * Get Index Document Routing
-     *
-     * Get the routing string for this document.
-     *
-     * @return null|string
-     */
-    public function getIndexDocumentRouting()
-    {
-        return null;
-    }
-
-    /**
      * Index Documents
      *
      * Index all documents in an Eloquent model.
      *
      * @param   array $columns
-     * @return  void
+     * @return  array
      */
-    public static function addAllToIndex($columns = array('*'))
+    public static function addAllToIndex()
     {
         $instance = new static;
 
-        $all = $instance->newQuery()->get($columns);
+        $all = $instance->newQuery()->get(array('*'));
 
         return $all->addToIndex();
+    }
+
+    /**
+     * Re-Index All Content
+     *
+     * @return array
+     */
+    public static function reindex()
+    {
+        $instance = new static;
+
+        $all = $instance->newQuery()->get(array('*'));
+
+        return $all->reindex();
     }
 
     /**
