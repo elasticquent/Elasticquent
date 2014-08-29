@@ -115,6 +115,23 @@ interface ElasticquentInterface {
      */
     function getBasicEsParams($getIdIfPossible = true);
 
+     /**
+     * Is Elasticsearch Document
+     *
+     * Is the data in this module sourced
+     * from an Elasticsearch document source?
+     *
+     * @return bool
+     */
+    public function isDocument();
+
+    /**
+     * Get Document Score
+     *
+     * @return null|float
+     */
+    public function documentScore();
+
     /**
      * Put Mapping
      *

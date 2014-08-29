@@ -160,7 +160,7 @@ trait ElasticquentTrait {
     }
 
     /**
-     * Get Score
+     * Get Document Score
      *
      * @return null|float
      */

@@ -57,8 +57,6 @@ class ElasticquentTraitTest extends PHPUnit_Framework_TestCase {
 
     /**
      * Test Index Document Data
-     *
-     * @return void
      */
     public function testIndexDocumentData()
     {
@@ -72,6 +70,17 @@ class ElasticquentTraitTest extends PHPUnit_Framework_TestCase {
 
         $this->assertEquals(
                 array('foo' => 'bar'), $custom->getIndexDocumentData());
+    }
+
+    /**
+     * Test Document Null States
+     */
+    public function testDocumentNullStates()
+    {
+        $model = $this->testingModel();
+        
+        $this->assertFalse($model->isDocument());
+        $this->assertNull($model->documentScore());
     }
 
 }
