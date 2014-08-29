@@ -194,8 +194,8 @@ trait ElasticquentTrait {
      *
      * Search with a query array
      *
-     * @param   query $query
-     * @return  
+     * @param   array $query
+     * @return  \Fairholm\Elasticquent\ElasticquentResultCollection
      */
     public static function searchByQuery($query = array())
     {
@@ -205,7 +205,9 @@ trait ElasticquentTrait {
 
         $params['body']['query'] = $query;
 
-        return $instance->getElasticSearchClient()->search($params);
+        $result = $instance->getElasticSearchClient()->search($params);
+    
+        return new ResultCollection($result, $instance = new static);
     }
 
     /**
