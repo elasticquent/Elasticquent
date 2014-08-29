@@ -117,7 +117,7 @@ function getTypeName()
 }
 ```
 
-## Indexing
+## Indexing Documents
 
 To index all the entries in an Eloquent model, use `addAllToIndex`:
 
