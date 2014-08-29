@@ -19,14 +19,33 @@ trait ElasticquentTrait {
     protected $usesTimestampsInIndex = true;
 
     /**
-     * Score
+     * Is ES Document
+     *
+     * Set to true when our model is
+     * populated by a 
+     *
+     * @var bool
+     */
+    protected $isDocument = false;
+
+    /**
+     * Document Score
      *
      * Hit score when using data
      * from Elasticsearch results.
      *
      * @var null|int
      */
-    protected $score = null;
+    protected $documentScore = null;
+
+    /**
+     * Document Version
+     *
+     * Elasticsearch document version.
+     *
+     * @var null|int
+     */
+    protected $documentVersion = null;
 
     /**
      * Get ElasticSearch Client
@@ -128,29 +147,42 @@ trait ElasticquentTrait {
     }
 
     /**
-     * Get Score
+     * Is Elasticsearch Document
      *
-     * @return null|int
+     * Is the data in this module sourced
+     * from an Elasticsearch document source?
+     *
+     * @return bool
      */
-    public function getScore()
+    public function isDocument()
     {
-        return $this->score;
+        return $this->isDocument;
     }
 
     /**
-     * Set Score
+     * Get Score
      *
-     * @return void
+     * @return null|float
      */
-    public function setScore($score = null)
+    public function documentScore()
     {
-        $this->score = $score;
+        return $this->documentScore;
+    }
+
+    /**
+     * Document Version
+     *
+     * @return null|int
+     */
+    public function documentVersion()
+    {
+        return $this->documentVersion;
     }
 
     /**
      * Get Index Document Data
      *
-     * Get the data that ElasticSearch will
+     * Get the data that Elasticsearch will
      * index for this particular document.
      *
      * @return  array
@@ -165,7 +197,7 @@ trait ElasticquentTrait {
      *
      * Get the routing string for this document.
      *
-     * @return void
+     * @return null|string
      */
     public function getIndexDocumentRouting()
     {
@@ -234,7 +266,7 @@ trait ElasticquentTrait {
     /**
      * Add to Search Index
      *
-     * @return
+     * @return array
      */
     public function addToIndex()
     {
@@ -260,11 +292,11 @@ trait ElasticquentTrait {
     /**
      * Remove From Search Index
      *
-     * @return
+     * @return array
      */
     public function removeFromIndex()
     {
-        $this->getElasticSearchClient()->delete($this->getBasicEsParams());
+        return $this->getElasticSearchClient()->delete($this->getBasicEsParams());
     }
 
     /**
@@ -306,8 +338,8 @@ trait ElasticquentTrait {
     /**
      * Put Mapping
      *
-     * @param     bool $ignoreConflicts
-     * @return
+     * @param    bool $ignoreConflicts
+     * @return   array
      */
     public static function putMapping($ignoreConflicts = false)
     {
@@ -328,7 +360,7 @@ trait ElasticquentTrait {
     /**
      * Delete Mapping
      *
-     * @return
+     * @return array
      */
     public static function deleteMapping()
     {
@@ -416,7 +448,16 @@ trait ElasticquentTrait {
 
         // In addition to setting the attributes
         // from the index, we will set the score as well.
-        $instance->setScore($hit['_score']);
+        $instance->documentScore = $hit['_score'];
+
+        // This is now a model created
+        // from an Elasticsearch document.
+        $instance->isDocument = true;
+
+        // Set our document version if it's
+        if (isset($hit['_version'])) {
+            $instance->documentVersion = $hit['_version'];
+        }
 
         return $instance;
     }

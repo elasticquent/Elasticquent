@@ -164,6 +164,16 @@ And access the took property:
 
     $books->took();
 
+### Search Collection Models
+
+Items in a search result collection will have some extra data that comes from Elasticsearch. You can always check and see if a model is a document or not by using the `isDocument` function:
+
+    $book->isDocument();
+
+You can check the document score that Elasticsearch assigned to this document with:
+
+    $book->documentScore();
+
 ### Using the Search Collection Outside of Elastiquent
 
 If you're dealing with raw search data from outside of Elastiquent, you can use the Elasticquent search results collection to turn that data into a collection.
