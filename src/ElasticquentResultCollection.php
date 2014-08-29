@@ -11,6 +11,7 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
      * _construct 
      *
      * @param   $results elasticsearch results
+     * @param   Eloquent model instance $instance
      * @return  void
      */
     public function __construct($results, $instance)
@@ -30,7 +31,8 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
     /**
      * Hits To Items
      *
-     * @return void
+     * @param   Eloquent model instance $instance
+     * @return  array
      */
     private function hitsToItems($instance)
     {
@@ -65,9 +67,9 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
     }
 
     /**
-     * 
+     * Get Shards 
      *
-     * @return void
+     * @return array
      */
     public function getShards()
     {
@@ -75,9 +77,9 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
     }
 
     /**
-     * 
+     * Took
      *
-     * @return void
+     * @return string
      */
     public function took()
     {
@@ -93,5 +95,19 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
     {
         return (bool)$this->timed_out;
     }
+
+    /**
+     * Get Hits
+     *
+     * Get the raw hits array from
+     * Elasticsearch results. 
+     *
+     * @return array
+     */
+    public function getHits()
+    {
+        return $this->hits;
+    }
+
 
 }
