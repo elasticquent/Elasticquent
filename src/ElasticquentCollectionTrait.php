@@ -85,7 +85,13 @@ trait ElasticquentCollectionTrait {
      */
     public function getElasticSearchClient()
     {
-        return new \Elasticsearch\Client();
+        $config = array();
+
+        if (\Config::get('elasticquent.config')) {
+            $config = \Config::get('elasticquent.config');
+        }
+
+        return new \Elasticsearch\Client($config);
     }
 
 }
