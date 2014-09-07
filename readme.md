@@ -6,6 +6,26 @@ Elasticquent makes working with [Elasticsearch](http://www.elasticsearch.org/) a
 
 Elasticquent uses the [official Elasticsearch PHP API](https://github.com/elasticsearch/elasticsearch-php). To get started, you should have a basic knowledge of how Elasticsearch works (indexes, types, mappings, etc). This is meant for use with Elasticsearch 1.x.
 
+## Contents
+
+* [Overview](#overview)
+    * [How Elasticquent Works](#how-elasticquent-works)
+* [Setup](#setup)
+    * [Elasticsearch Configuration](#elasticsearch-configuration)
+    * [Indexes and Mapping](#indexes-and-mapping)
+    * [Setting a Custom Index Name](#setting-a-custom-index-name)
+    * [Setting a Custom Type Name](#setting-a-custom-type-name)
+* [Indexing Documents](#indexing-documents)
+* [Searching](#searching)
+    * [Search Collections](#search-collections)
+    * [Search Collection Documents](#search-collection-documents)
+    * [Using the Search Collection Outside Elasticquent](#using-the-search-collection-outside-wlasticquent)
+* [More Options](#more-options)
+    * [Document Ids](#document-ids)
+    * [Document Data](#document-data)
+    * [Using Elasticquent With Custom Collections](#using-elasticquetn-with-custom-collections)
+* [Roadmap](#roadmap)
+
 ## Overview
 
 Elasticquent allows you take an Eloquent model and easily index and search its contents in Elasticsearch.
@@ -15,7 +35,7 @@ Elasticquent allows you take an Eloquent model and easily index and search its c
 
 When you search, instead of getting a plain array of search results, you instead get an Eloquent collection with some special Elasticsearch functionality.
 
-    $books = Book::search('Moby Dick');
+    $books = Book::search('Moby Dick')->get();
     echo $books->totalHits();
 
 Plus, you can still use all the Eloquent collection functionality:
@@ -26,6 +46,10 @@ Plus, you can still use all the Eloquent collection functionality:
     });
 
 Check out the rest of the documentation for how to get started using Elasticsearch and Elasticquent!
+
+### How Elasticquent Works
+
+When using a database, Eloquent models are populated from data read from a database table. With Elasticquent, models are populated by data indexed in Elasticsearch. The whole idea behind using Elasticsearch for search is that its fast and light, so you model functionality will be dictated by what data has been indexed for your document.
 
 ## Setup
 
@@ -68,7 +92,7 @@ If you need to pass a special configuration array Elasticsearch, you can add tha
 'config' => []
 ```
 
-## Indexes and Mapping
+### Indexes and Mapping
 
 While you can definitely build your indexes and mapping through the Elasticsearch API, you can also use some helper methods to build indexes and types right from your models.
 
@@ -136,6 +160,10 @@ function getTypeName()
 }
 ```
 
+To check if the type for the Elasticquent model exists yet, use `typeExists`:
+
+    $typeExists = Book::typeExists();
+
 ## Indexing Documents
 
 To index all the entries in an Eloquent model, use `addAllToIndex`:
@@ -168,7 +196,7 @@ The second is a query based search for more complex searching needs:
 
 Both methods will return a search collection. 
 
-## Search Collection Functions
+### Search Collections
 
 When you search on an Elasticquent model, you get a search collection with some special functions.
 
@@ -192,7 +220,7 @@ And access the took property:
 
     $books->took();
 
-### Search Collection Models
+### Search Collection Documents
 
 Items in a search result collection will have some extra data that comes from Elasticsearch. You can always check and see if a model is a document or not by using the `isDocument` function:
 
@@ -220,11 +248,11 @@ $collection = new \Elasticquent\ElasticquentResultCollection($client->search($pa
 
 ```
 
-### Document IDs & Sources
+## More Options
+
+### Document IDs
 
 Elasticquent will use whatever is set as the `primaryKey` for your Eloquent models as the id for your Elasticsearch documents.
-
-Elasticquent also must use Elasticsearch with the document source on. This is because when search results are returned by Elasticquent, it uses the document source to populate a collection in the same way it'd populate a collection from the database.
 
 ### Document Data
 
@@ -240,14 +268,7 @@ function getIndexDocumentData()
     );
 }
 ```
-
-Be careful with this, as Elastiquent reads the document source into the Eloquent model attributes when creating a search result collection, so if data is missing it could cause some of your model functionality to break. 
-
-## More Options
-
-To check if the type for the Elasticquent model exists yet, use `typeExists`:
-
-    $typeExists = Book::typeExists();
+Be careful with this, as Elasticquent reads the document source into the Eloquent model attributes when creating a search result collection, so make sure you are indexing enough data for your the model functionality you want to use. 
 
 ### Using Elasticquent With Custom Collections
 
