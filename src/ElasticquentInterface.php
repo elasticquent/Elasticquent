@@ -1,7 +1,7 @@
 <?php namespace Elasticquent;
 
-interface ElasticquentInterface {
-
+interface ElasticquentInterface
+{
     /**
      * Get ElasticSearch Client
      *

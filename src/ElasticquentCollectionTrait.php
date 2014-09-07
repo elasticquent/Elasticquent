@@ -6,8 +6,8 @@
  * Elasticsearch functions that you
  * can run on collections of documents.
  */
-trait ElasticquentCollectionTrait {
-
+trait ElasticquentCollectionTrait
+{
     /**
      * Add To Index
      *

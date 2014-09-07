@@ -9,8 +9,8 @@ use \Elasticquent\ElasticquentResultCollection as ResultCollection;
  * Functionality extensions for Elequent that
  * makes working with Elasticsearch easier.
  */
-trait ElasticquentTrait {
-
+trait ElasticquentTrait
+{
     /**
      * Uses Timestamps In Index
      *

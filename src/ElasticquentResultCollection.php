@@ -1,7 +1,7 @@
 <?php namespace Elasticquent;
 
-class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collection {
-
+class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collection 
+{
     protected $took;
     protected $timed_out;
     protected $shards;
