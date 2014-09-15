@@ -22,7 +22,7 @@ trait ElasticquentTrait
      * Is ES Document
      *
      * Set to true when our model is
-     * populated by a 
+     * populated by a
      *
      * @var bool
      */
@@ -56,7 +56,7 @@ trait ElasticquentTrait
     {
         $config = array();
 
-        if (\Config::get('elasticquent.config')) {
+        if (\Config::has('elasticquent.config')) {
             $config = \Config::get('elasticquent.config');
         }
 
@@ -83,7 +83,7 @@ trait ElasticquentTrait
         // The first thing we check is if there
         // is an elasticquery config file and if there is a
         // default index.
-        if (\Config::get('elasticquent.default_index')) {
+        if (\Config::has('elasticquent.default_index')) {
             return \Config::get('elasticquent.default_index');
         }
 
@@ -246,7 +246,7 @@ trait ElasticquentTrait
         $params['body']['query'] = $query;
 
         $result = $instance->getElasticSearchClient()->search($params);
-    
+
         return new ResultCollection($result, $instance = new static);
     }
 
@@ -267,7 +267,7 @@ trait ElasticquentTrait
         $params['body']['query']['match']['_all'] = $term;
 
         $result = $instance->getElasticSearchClient()->search($params);
-    
+
         return new ResultCollection($result, $instance = new static);
     }
 
@@ -452,7 +452,7 @@ trait ElasticquentTrait
         if ($replicas) {
             $index['body']['settings']['number_of_replicas'] = $replicas;
         }
-    
+
         return $client->indices()->create($index);
     }
 
@@ -468,15 +468,15 @@ trait ElasticquentTrait
         $instance = new static;
 
         $params = $instance->getBasicEsParams();
-        
+
         return $instance->getElasticSearchClient()->indices()->existsType($params);
     }
 
     /**
      * New FRom Hit Builder
-     * 
+     *
      * Variation on newFromBuilder. Instead, takes
-     * a 
+     * a
      *
      * @param  array  $hit
      * @return static

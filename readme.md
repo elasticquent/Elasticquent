@@ -71,32 +71,55 @@ class Book extends Eloquent {
 }
 ```
 
-Now your Eloquent model has some extra methods that make it easier to index your model's data using Elasticsearch. 
+Now your Eloquent model has some extra methods that make it easier to index your model's data using Elasticsearch.
 
 ### Elasticsearch Configuration
 
 If you need to pass a special configuration array Elasticsearch, you can add that in an `elasticquent.php` config file at `/app/config/elasticquent.php`:
 
 ```php
-/*
-|--------------------------------------------------------------------------
-| Custom Elasticsearch Client Configuration
-|--------------------------------------------------------------------------
-|
-| This array will be passed to the Elasticsearch client.
-| See configuration options here:
-|
-| http://www.elasticsearch.org/guide/en/elasticsearch/client/php-api/current/_configuration.html
-*/
+<?php
 
-'config' => []
+return array(
+
+    /*
+    |--------------------------------------------------------------------------
+    | Custom Elasticsearch Client Configuration
+    |--------------------------------------------------------------------------
+    |
+    | This array will be passed to the Elasticsearch client.
+    | See configuration options here:
+    |
+    | http://www.elasticsearch.org/guide/en/elasticsearch/client/php-api/current/_configuration.html
+    */
+
+    'config' => [
+        'hosts'     => ['localhost:9200'],
+        'logging'   => true,
+        'logPath'   => storage_path() . '/logs/elasticsearch.log',
+        'logLevel'  => Monolog\Logger::WARNING,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Default Index Name
+    |--------------------------------------------------------------------------
+    |
+    | This is the index name that Elastiquent will use for all
+    | Elastiquent models.
+    */
+
+    'default_index' => 'my_custom_index_name',
+
+);
+
 ```
 
 ### Indexes and Mapping
 
 While you can definitely build your indexes and mapping through the Elasticsearch API, you can also use some helper methods to build indexes and types right from your models.
 
-If you want a simple way to create indexes, Elasticquent models have a function for that: 
+If you want a simple way to create indexes, Elasticquent models have a function for that:
 
     Book::createIndex($shards = null, $replicas = null);
 
@@ -133,6 +156,8 @@ You can also get the type mapping and check if it exists.
 Elastiquent will use `default` as your index name, but you can set a custom index name by creating an `elasticquent.php` config file in `/app/config/`:
 
 ```php
+<?php
+
 return array(
 
     /*
@@ -147,7 +172,7 @@ return array(
     'default_index' => 'my_custom_index_name',
 
 );
-``` 
+```
 
 ### Setting a Custom Type Name
 
@@ -194,7 +219,7 @@ The second is a query based search for more complex searching needs:
 
     $books = Book::searchByQuery(array('match' => array('title' => 'Moby Dick')));
 
-Both methods will return a search collection. 
+Both methods will return a search collection.
 
 ### Search Collections
 
@@ -268,7 +293,7 @@ function getIndexDocumentData()
     );
 }
 ```
-Be careful with this, as Elasticquent reads the document source into the Eloquent model attributes when creating a search result collection, so make sure you are indexing enough data for your the model functionality you want to use. 
+Be careful with this, as Elasticquent reads the document source into the Eloquent model attributes when creating a search result collection, so make sure you are indexing enough data for your the model functionality you want to use.
 
 ### Using Elasticquent With Custom Collections
 

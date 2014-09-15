@@ -87,7 +87,7 @@ trait ElasticquentCollectionTrait
     {
         $config = array();
 
-        if (\Config::get('elasticquent.config')) {
+        if (\Config::has('elasticquent.config')) {
             $config = \Config::get('elasticquent.config');
         }
 
