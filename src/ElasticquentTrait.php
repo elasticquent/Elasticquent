@@ -66,6 +66,7 @@ trait ElasticquentTrait
     /**
      * New Collection
      *
+     * @param array $models
      * @return Collection
      */
     public function newCollection(array $models = array())
@@ -144,8 +145,8 @@ trait ElasticquentTrait
     /**
      * Set Mapping Properties
      *
-     * @param   array $mappingProperties
-     * @return  void
+     * @param $mapping
+     * @internal param array $mappingProperties
      */
     public function setMappingProperties($mapping)
     {
@@ -203,7 +204,6 @@ trait ElasticquentTrait
      *
      * Index all documents in an Eloquent model.
      *
-     * @param   array $columns
      * @return  array
      */
     public static function addAllToIndex()
@@ -235,15 +235,29 @@ trait ElasticquentTrait
      * Search with a query array
      *
      * @param   array $query
+     * @param   null $aggregations
+     * @param   array $sourceFields
+     * @param   int $limit
+     * @param   int $offset
      * @return  \Fairholm\Elasticquent\ElasticquentResultCollection
      */
-    public static function searchByQuery($query = array())
+    public static function searchByQuery($query = null, $aggregations = null, $sourceFields = null, $limit = null, $offset = null)
     {
         $instance = new static;
 
-        $params = $instance->getBasicEsParams();
+        $params = $instance->getBasicEsParams(true, true, true, $limit, $offset);
 
-        $params['body']['query'] = $query;
+        if ($sourceFields) {
+            $params['body']['_source']['include'] = $sourceFields;
+        }
+
+        if ($query) {
+            $params['body']['query'] = $query;
+        }
+
+        if ($aggregations) {
+            $params['body']['aggs'] = $aggregations;
+        }
 
         $result = $instance->getElasticSearchClient()->search($params);
 
@@ -274,6 +288,7 @@ trait ElasticquentTrait
     /**
      * Add to Search Index
      *
+     * @throws Exception
      * @return array
      */
     public function addToIndex()
@@ -313,7 +328,7 @@ trait ElasticquentTrait
      * Retrieve an ElasticSearch document
      * for this enty.
      *
-     * @return
+     * @return array
      */
     public function getIndexedDocument()
     {
@@ -327,9 +342,14 @@ trait ElasticquentTrait
      * type passed in a parameter array.
      *
      * @param     bool $getIdIfPossible
+     * @param     bool $getSourceIfPossible
+     * @param     bool $getTimestampIfPossible
+     * @param     null $limit
+     * @param     int $offset
+     *
      * @return    array
      */
-    public function getBasicEsParams($getIdIfPossible = true)
+    public function getBasicEsParams($getIdIfPossible = true, $getSourceIfPossible = false, $getTimestampIfPossible = false, $limit = null, $offset = null)
     {
         $params = array(
             'index'     => $this->getIndexName(),
@@ -338,6 +358,28 @@ trait ElasticquentTrait
 
         if ($getIdIfPossible and $this->getKey()) {
             $params['id'] = $this->getKey();
+        }
+
+        $fieldsParam = array();
+
+        if ($getSourceIfPossible) {
+            array_push($fieldsParam, '_source');
+        }
+
+        if ($getTimestampIfPossible) {
+            array_push($fieldsParam, '_timestamp');
+        }
+
+        if ($fieldsParam) {
+            $params['fields'] = implode(",", $fieldsParam);
+        }
+
+        if ($limit) {
+            $params['size'] = $limit;
+        }
+
+        if ($offset) {
+            $params['from'] = $offset;
         }
 
         return $params;
@@ -433,6 +475,8 @@ trait ElasticquentTrait
     /**
      * Create Index
      *
+     * @param null $shards
+     * @param null $replicas
      * @return array
      */
     public static function createIndex($shards = null, $replicas = null)
@@ -486,6 +530,13 @@ trait ElasticquentTrait
         $instance = $this->newInstance(array(), true);
 
         $attributes = $hit['_source'];
+
+        // Add fields to attributes
+        if (isset($hit['fields'])) {
+            foreach ($hit['fields'] as $key => $value) {
+                $attributes[$key] = $value;
+            }
+        }
 
         $instance->setRawAttributes((array) $attributes, true);
 
