@@ -235,11 +235,11 @@ trait ElasticquentTrait
      * Search with a query array
      *
      * @param   array $query
-     * @param   null $aggregations
+     * @param   array $aggregations
      * @param   array $sourceFields
      * @param   int $limit
      * @param   int $offset
-     * @return  \Fairholm\Elasticquent\ElasticquentResultCollection
+     * @return  ResultCollection
      */
     public static function searchByQuery($query = null, $aggregations = null, $sourceFields = null, $limit = null, $offset = null)
     {
@@ -270,7 +270,7 @@ trait ElasticquentTrait
      * Simple search using a match _all query
      *
      * @param   string $term
-     * @return  \Fairholm\Elasticquent\ElasticquentResultCollection
+     * @return  ResultCollection
      */
     public static function search($term = null)
     {
@@ -344,7 +344,7 @@ trait ElasticquentTrait
      * @param     bool $getIdIfPossible
      * @param     bool $getSourceIfPossible
      * @param     bool $getTimestampIfPossible
-     * @param     null $limit
+     * @param     int $limit
      * @param     int $offset
      *
      * @return    array
@@ -475,8 +475,8 @@ trait ElasticquentTrait
     /**
      * Create Index
      *
-     * @param null $shards
-     * @param null $replicas
+     * @param int $shards
+     * @param int $replicas
      * @return array
      */
     public static function createIndex($shards = null, $replicas = null)
@@ -520,7 +520,6 @@ trait ElasticquentTrait
      * New FRom Hit Builder
      *
      * Variation on newFromBuilder. Instead, takes
-     * a
      *
      * @param  array  $hit
      * @return static
