@@ -221,6 +221,14 @@ The second is a query based search for more complex searching needs:
 
 Both methods will return a search collection.
 
+Here's the list of available paramers:
+
+- `query` - Your ElasticSearch Query
+- `aggregations` - The Aggregations you wish to return. [See Aggregations for details](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-aggregations.html).
+- `sourceFields` - Limits returned set to the selected fields only
+- `limit` - Number of records to return
+- `offset` - Sets the record offset (use for paging results)
+
 ### Search Collections
 
 When you search on an Elasticquent model, you get a search collection with some special functions.
@@ -244,6 +252,10 @@ Access the timed out boolean property:
 And access the took property:
 
     $books->took();
+
+And access search aggregations - [See Aggregations for details](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-aggregations.html):
+
+    $books->getAggregations();
 
 ### Search Collection Documents
 

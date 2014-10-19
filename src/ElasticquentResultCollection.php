@@ -1,27 +1,29 @@
 <?php namespace Elasticquent;
 
-class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collection 
+class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collection
 {
     protected $took;
     protected $timed_out;
     protected $shards;
     protected $hits;
+    protected $aggregations = null;
 
     /**
-     * _construct 
+     * _construct
      *
      * @param   $results elasticsearch results
-     * @param   Eloquent model instance $instance
-     * @return  void
+     * @param $instance
+     * @return \Elasticquent\ElasticquentResultCollection
      */
     public function __construct($results, $instance)
     {
         // Take our result data and map it
         // to some class properties.
-        $this->took = $results['took'];
-        $this->timed_out = $results['timed_out'];
-        $this->shards = $results['_shards'];
-        $this->hits = $results['hits'];
+        $this->took         = $results['took'];
+        $this->timed_out    = $results['timed_out'];
+        $this->shards       = $results['_shards'];
+        $this->hits         = $results['hits'];
+        $this->aggregations = $results['aggregations'];
 
         // Now we need to assign our hits to the
         // items in the collection.
@@ -67,7 +69,7 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
     }
 
     /**
-     * Get Shards 
+     * Get Shards
      *
      * @return array
      */
@@ -100,7 +102,7 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
      * Get Hits
      *
      * Get the raw hits array from
-     * Elasticsearch results. 
+     * Elasticsearch results.
      *
      * @return array
      */
@@ -109,5 +111,17 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
         return $this->hits;
     }
 
+    /**
+     * Get aggregations
+     *
+     * Get the raw hits array from
+     * Elasticsearch results.
+     *
+     * @return array
+     */
+    public function getAggregations()
+    {
+        return $this->aggregations;
+    }
 
 }
