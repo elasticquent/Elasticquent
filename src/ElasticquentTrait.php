@@ -374,11 +374,11 @@ trait ElasticquentTrait
             $params['fields'] = implode(",", $fieldsParam);
         }
 
-        if ($limit) {
+        if (is_numeric($limit)) {
             $params['size'] = $limit;
         }
 
-        if ($offset) {
+        if (is_numeric($offset)) {
             $params['from'] = $offset;
         }
 
