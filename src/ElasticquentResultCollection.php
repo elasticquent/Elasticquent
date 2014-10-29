@@ -23,7 +23,7 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
         $this->timed_out    = $results['timed_out'];
         $this->shards       = $results['_shards'];
         $this->hits         = $results['hits'];
-        $this->aggregations = $results['aggregations'];
+        $this->aggregations = isset($results['aggregations']) ? $results['aggregations'] : array();
 
         // Now we need to assign our hits to the
         // items in the collection.
