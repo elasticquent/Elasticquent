@@ -228,6 +228,7 @@ Here's the list of available paramers:
 - `sourceFields` - Limits returned set to the selected fields only
 - `limit` - Number of records to return
 - `offset` - Sets the record offset (use for paging results)
+- `sort` - Your sort query
 
 ### Search Collections
 
