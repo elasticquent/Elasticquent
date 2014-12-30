@@ -517,7 +517,7 @@ trait ElasticquentTrait
     }
 
     /**
-     * New FRom Hit Builder
+     * New From Hit Builder
      *
      * Variation on newFromBuilder. Instead, takes
      *
