@@ -57,7 +57,7 @@ Before you start using Elasticquent, make sure you've installed [Elasticsearch](
 
 To get started, add Elasticquent to you composer.json file:
 
-    "fairholm/elasticquent": "master-dev"
+    "fairholm/elasticquent": "dev-master"
 
 Once you've run a `composer update`, add the Elasticquent trait to any Eloquent model that you want to be able to index in Elasticsearch:
 
