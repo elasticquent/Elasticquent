@@ -1,7 +1,7 @@
 {
   "name": "fairholm/elasticquent",
   "type": "library",
-  "description": "Map Larvel Eloquent models to Elasticsearch types.",
+  "description": "Map Laravel Eloquent models to Elasticsearch types.",
   "keywords": [
     "elasticsearch",
     "eloquent",
