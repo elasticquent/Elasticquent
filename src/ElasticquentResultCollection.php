@@ -15,6 +15,7 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
      *
      * @param   $results elasticsearch results
      * @param $instance
+     *
      * @return \Elasticquent\ElasticquentResultCollection
      */
     public function __construct($results, $instance)
@@ -35,15 +36,15 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
     /**
      * Hits To Items
      *
-     * @param   Eloquent model instance $instance
-     * @return  array
+     * @param Eloquent model instance $instance
+     *
+     * @return array
      */
     private function hitsToItems($instance)
     {
         $items = array();
 
         foreach ($this->hits['hits'] as $hit) {
-
             $items[] = $instance->newFromHitBuilder($hit);
         }
 
@@ -97,7 +98,7 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
      */
     public function timedOut()
     {
-        return (bool)$this->timed_out;
+        return (bool) $this->timed_out;
     }
 
     /**
@@ -128,11 +129,11 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
 
     /** Paginate Collection
      * @param int $pageLimit
+     *
      * @return Paginator
      */
     public function paginate($pageLimit = 25)
     {
         return new Paginator($this->items, $this->totalHits(), $pageLimit, Paginator::resolveCurrentPage(), ['path' => Paginator::resolveCurrentPath()]);
     }
-
 }

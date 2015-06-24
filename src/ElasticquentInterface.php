@@ -31,9 +31,7 @@ interface ElasticquentInterface
     public function getTypeName();
 
     /**
-     * Uses Timestamps In Index
-     *
-     * @return void
+     * Uses Timestamps In Index.
      */
     public function usesTimestampsInIndex();
 
@@ -58,7 +56,7 @@ interface ElasticquentInterface
      * Get the data that ElasticSearch will
      * index for this particular document.
      *
-     * @return  array
+     * @return array
      */
     public function getIndexDocumentData();
 
@@ -67,16 +65,12 @@ interface ElasticquentInterface
      *
      * Index all documents in an Eloquent model.
      *
-     * @param   array $columns
-     * @return  void
+     * @param array $columns
      */
     public static function addAllToIndex();
 
     /**
-     * Search a Type
-     *
-     *
-     * @return void
+     * Search a Type.
      */
     public static function search($query = array());
 
@@ -110,13 +104,14 @@ interface ElasticquentInterface
      * Most Elasticsearch API calls need the index and
      * type passed in a parameter array.
      *
-     * @param     bool $getIdIfPossible
-     * @return    array
+     * @param bool $getIdIfPossible
+     *
+     * @return array
      */
-    function getBasicEsParams($getIdIfPossible = true);
+    public function getBasicEsParams($getIdIfPossible = true);
 
-     /**
-     * Is Elasticsearch Document
+    /**
+     * Is Elasticsearch Document.
      *
      * Is the data in this module sourced
      * from an Elasticsearch document source?
@@ -133,9 +128,10 @@ interface ElasticquentInterface
     public function documentScore();
 
     /**
-     * Put Mapping
+     * Put Mapping.
      *
-     * @param     bool $ignoreConflicts
+     * @param bool $ignoreConflicts
+     *
      * @return
      */
     public static function putMapping($ignoreConflicts = false);
@@ -175,5 +171,4 @@ interface ElasticquentInterface
      * @return bool
      */
     public static function typeExists();
-
 }

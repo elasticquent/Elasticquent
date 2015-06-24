@@ -103,9 +103,7 @@ trait ElasticquentTrait
     }
 
     /**
-     * Uses Timestamps In Index
-     *
-     * @return void
+     * Uses Timestamps In Index.
      */
     public function usesTimestampsInIndex()
     {
@@ -113,9 +111,7 @@ trait ElasticquentTrait
     }
 
     /**
-     * Use Timestamps In Index
-     *
-     * @return void
+     * Use Timestamps In Index.
      */
     public function useTimestampsInIndex()
     {
@@ -123,9 +119,7 @@ trait ElasticquentTrait
     }
 
     /**
-     * Don't Use Timestamps In Index
-     *
-     * @return void
+     * Don't Use Timestamps In Index.
      */
     public function dontUseTimestampsInIndex()
     {
@@ -192,7 +186,7 @@ trait ElasticquentTrait
      * Get the data that Elasticsearch will
      * index for this particular document.
      *
-     * @return  array
+     * @return array
      */
     public function getIndexDocumentData()
     {
@@ -204,7 +198,7 @@ trait ElasticquentTrait
      *
      * Index all documents in an Eloquent model.
      *
-     * @return  array
+     * @return array
      */
     public static function addAllToIndex()
     {
@@ -234,12 +228,14 @@ trait ElasticquentTrait
      *
      * Search with a query array
      *
-     * @param   array $query
-     * @param   array $aggregations
-     * @param   array $sourceFields
-     * @param   int $limit
-     * @param   int $offset
-     * @return  ResultCollection
+     * @param array $query
+     * @param array $aggregations
+     * @param array $sourceFields
+     * @param int   $limit
+     * @param int   $offset
+     * @param array $sort
+     *
+     * @return ResultCollection
      */
     public static function searchByQuery($query = null, $aggregations = null, $sourceFields = null, $limit = null, $offset = null, $sort = null)
     {
@@ -258,7 +254,7 @@ trait ElasticquentTrait
         if ($aggregations) {
             $params['body']['aggs'] = $aggregations;
         }
-        
+
         if ($sort) {
             $params['body']['sort'] = $sort;
         }
@@ -273,8 +269,9 @@ trait ElasticquentTrait
      *
      * Simple search using a match _all query
      *
-     * @param   string $term
-     * @return  ResultCollection
+     * @param string $term
+     *
+     * @return ResultCollection
      */
     public static function search($term = null)
     {
@@ -297,7 +294,7 @@ trait ElasticquentTrait
      */
     public function addToIndex()
     {
-        if ( ! $this->exists) {
+        if (!$this->exists) {
             throw new Exception('Document does not exist.');
         }
 
@@ -345,19 +342,19 @@ trait ElasticquentTrait
      * Most Elasticsearch API calls need the index and
      * type passed in a parameter array.
      *
-     * @param     bool $getIdIfPossible
-     * @param     bool $getSourceIfPossible
-     * @param     bool $getTimestampIfPossible
-     * @param     int $limit
-     * @param     int $offset
+     * @param bool $getIdIfPossible
+     * @param bool $getSourceIfPossible
+     * @param bool $getTimestampIfPossible
+     * @param int  $limit
+     * @param int  $offset
      *
-     * @return    array
+     * @return array
      */
     public function getBasicEsParams($getIdIfPossible = true, $getSourceIfPossible = false, $getTimestampIfPossible = false, $limit = null, $offset = null)
     {
         $params = array(
-            'index'     => $this->getIndexName(),
-            'type'      => $this->getTypeName()
+            'index' => $this->getIndexName(),
+            'type' => $this->getTypeName(),
         );
 
         if ($getIdIfPossible and $this->getKey()) {
@@ -375,7 +372,7 @@ trait ElasticquentTrait
         }
 
         if ($fieldsParam) {
-            $params['fields'] = implode(",", $fieldsParam);
+            $params['fields'] = implode(',', $fieldsParam);
         }
 
         if (is_numeric($limit)) {
@@ -418,10 +415,11 @@ trait ElasticquentTrait
     }
 
     /**
-     * Put Mapping
+     * Put Mapping.
      *
-     * @param    bool $ignoreConflicts
-     * @return   array
+     * @param bool $ignoreConflicts
+     *
+     * @return array
      */
     public static function putMapping($ignoreConflicts = false)
     {
@@ -430,8 +428,8 @@ trait ElasticquentTrait
         $mapping = $instance->getBasicEsParams();
 
         $params = array(
-            '_source'       => array('enabled' => true),
-            'properties'    => $instance->getMappingProperties()
+            '_source' => array('enabled' => true),
+            'properties' => $instance->getMappingProperties(),
         );
 
         $mapping['body'][$instance->getTypeName()] = $params;
@@ -481,6 +479,7 @@ trait ElasticquentTrait
      *
      * @param int $shards
      * @param int $replicas
+     *
      * @return array
      */
     public static function createIndex($shards = null, $replicas = null)
@@ -490,7 +489,7 @@ trait ElasticquentTrait
         $client = $instance->getElasticSearchClient();
 
         $index = array(
-            'index'     => $instance->getIndexName()
+            'index' => $instance->getIndexName(),
         );
 
         if ($shards) {
@@ -525,7 +524,8 @@ trait ElasticquentTrait
      *
      * Variation on newFromBuilder. Instead, takes
      *
-     * @param  array  $hit
+     * @param array $hit
+     *
      * @return static
      */
     public function newFromHitBuilder($hit = array())
