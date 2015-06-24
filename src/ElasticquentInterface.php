@@ -12,7 +12,8 @@ interface ElasticquentInterface
     /**
      * New Collection
      *
-     * @return
+     * @param array $models
+     * @return Collection
      */
     public function newCollection(array $models = array());
 
@@ -45,10 +46,9 @@ interface ElasticquentInterface
     /**
      * Set Mapping Properties
      *
-     * @param   array $mappingProperties
-     * @return  void
+     * @param   array $mapping
      */
-    public function setMappingProperties($mapping);
+    public function setMappingProperties(array $mapping = null);
 
     /**
      * Get Index Document Data
@@ -65,7 +65,7 @@ interface ElasticquentInterface
      *
      * Index all documents in an Eloquent model.
      *
-     * @param array $columns
+     * @return array $columns
      */
     public static function addAllToIndex();
 

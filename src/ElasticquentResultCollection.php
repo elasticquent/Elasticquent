@@ -127,7 +127,9 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
         return $this->aggregations;
     }
 
-    /** Paginate Collection
+    /**
+     * Paginate Collection
+     *
      * @param int $pageLimit
      *
      * @return Paginator

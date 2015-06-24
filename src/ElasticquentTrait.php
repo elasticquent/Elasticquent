@@ -12,6 +12,11 @@ use \Elasticquent\ElasticquentResultCollection as ResultCollection;
 trait ElasticquentTrait
 {
     /**
+     * @var array mapping properties
+     */
+    private $mappingProperties;
+
+    /**
      * Uses Timestamps In Index
      *
      * @var bool
@@ -139,10 +144,10 @@ trait ElasticquentTrait
     /**
      * Set Mapping Properties
      *
-     * @param $mapping
-     * @internal param array $mappingProperties
+     * @param    array $mapping
+     * @internal param array $mapping
      */
-    public function setMappingProperties($mapping)
+    public function setMappingProperties(array $mapping = null)
     {
         $this->mappingProperties = $mapping;
     }
