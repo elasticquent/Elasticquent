@@ -1,5 +1,7 @@
 <?php namespace Elasticquent;
 
+use Illuminate\Pagination\LengthAwarePaginator as Paginator;
+
 class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collection
 {
     protected $took;
@@ -122,6 +124,15 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
     public function getAggregations()
     {
         return $this->aggregations;
+    }
+
+    /** Paginate Collection
+     * @param int $pageLimit
+     * @return Paginator
+     */
+    public function paginate($pageLimit = 25)
+    {
+        return new Paginator($this->items, $this->totalHits(), $pageLimit, Paginator::resolveCurrentPage(), ['path' => Paginator::resolveCurrentPath()]);
     }
 
 }
