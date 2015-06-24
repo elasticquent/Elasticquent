@@ -30,20 +30,26 @@ Elasticquent uses the [official Elasticsearch PHP API](https://github.com/elasti
 
 Elasticquent allows you take an Eloquent model and easily index and search its contents in Elasticsearch.
 
+```php
     $books = Book::where('id', '<', 200)->get();
     $books->addToIndex();
+```
 
 When you search, instead of getting a plain array of search results, you instead get an Eloquent collection with some special Elasticsearch functionality.
 
+```php
     $books = Book::search('Moby Dick')->get();
     echo $books->totalHits();
+```
 
 Plus, you can still use all the Eloquent collection functionality:
 
+```php
     $books = $books->filter(function($book)
     {
         return $book->hasISBN();
     });
+```
 
 Check out the rest of the documentation for how to get started using Elasticsearch and Elasticquent!
 
@@ -57,7 +63,7 @@ Before you start using Elasticquent, make sure you've installed [Elasticsearch](
 
 To get started, add Elasticquent to you composer.json file:
 
-    "fairholm/elasticquent": "dev-master"
+    "elasticquent/elasticquent": "dev-master"
 
 Once you've run a `composer update`, add the Elasticquent trait to any Eloquent model that you want to be able to index in Elasticsearch:
 
@@ -136,15 +142,21 @@ protected $mappingProperties = array(
 
 If you'd like to setup a model's type mapping based on your mapping properties, you can use:
 
+```php
     Book::putMapping($ignoreConflicts = true);
+```
 
 To delete a mapping:
 
+```php
     Book::deleteMapping();
+```
 
 To rebuild (delete and re-add, useful when you make important changes to your mapping) a mapping:
 
+```php
     Book::rebuildMapping();
+```
 
 You can also get the type mapping and check if it exists.
 
@@ -187,37 +199,51 @@ function getTypeName()
 
 To check if the type for the Elasticquent model exists yet, use `typeExists`:
 
+```php
     $typeExists = Book::typeExists();
+```
 
 ## Indexing Documents
 
 To index all the entries in an Eloquent model, use `addAllToIndex`:
 
+```php
     Book::addAllToIndex();
+```
 
 You can also index a collection of models:
 
+```php
     $books = Book::where('id', '<', 200)->get();
     $books->addToIndex();
+```
 
 You can index individual entries as well:
 
+```php
     $book = Book::find($id);
     $book->addToIndex();
+```
 
 You can also reindex an entire model:
 
+```php
     Book::reindex();
+```
 
 ## Searching
 
 There are two ways to search in Elasticquent. The first is a simple term search that searches all fields.
 
+```php
     $books = Book::search('Moby Dick');
+```
 
 The second is a query based search for more complex searching needs:
 
+```php
     $books = Book::searchByQuery(array('match' => array('title' => 'Moby Dick')));
+```
 
 Both methods will return a search collection.
 
@@ -236,37 +262,53 @@ When you search on an Elasticquent model, you get a search collection with some 
 
 You can get total hits:
 
+```php
     $books->totalHits();
+```
 
 Access the shards array:
 
+```php
     $books->shards();
+```
 
 Access the max score:
 
+```php
     $books->maxScore();
+```
 
 Access the timed out boolean property:
 
+```php
     $books->timedOut();
+```
 
 And access the took property:
 
+```php
     $books->took();
+```
 
 And access search aggregations - [See Aggregations for details](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-aggregations.html):
 
+```php
     $books->getAggregations();
+```
 
 ### Search Collection Documents
 
 Items in a search result collection will have some extra data that comes from Elasticsearch. You can always check and see if a model is a document or not by using the `isDocument` function:
 
-    $book->isDocument();
+```php
+  $book->isDocument();
+```
 
 You can check the document score that Elasticsearch assigned to this document with:
 
+```php
     $book->documentScore();
+```
 
 ### Using the Search Collection Outside of Elasticquent
 
