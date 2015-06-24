@@ -504,7 +504,25 @@ trait ElasticquentTrait
     }
 
     /**
-     * Type Exists
+     * Delete Index
+     *
+     * @return array
+     */
+    public static function deleteIndex()
+    {
+        $instance = new static;
+
+        $client = $instance->getElasticSearchClient();
+
+        $index = array(
+            'index' => $instance->getIndexName(),
+        );
+
+        return $client->indices()->delete($index);
+    }
+
+    /**
+     * Type Exists.
      *
      * Does this type exist?
      *
