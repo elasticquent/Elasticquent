@@ -160,8 +160,10 @@ To rebuild (delete and re-add, useful when you make important changes to your ma
 
 You can also get the type mapping and check if it exists.
 
+```php
     Book::mappingExists();
     Book::getMapping();
+```
 
 ### Setting a Custom Index Name
 
@@ -301,7 +303,7 @@ And access search aggregations - [See Aggregations for details](http://www.elast
 Items in a search result collection will have some extra data that comes from Elasticsearch. You can always check and see if a model is a document or not by using the `isDocument` function:
 
 ```php
-  $book->isDocument();
+    $book->isDocument();
 ```
 
 You can check the document score that Elasticsearch assigned to this document with:
