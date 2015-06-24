@@ -1,4 +1,4 @@
-# Elasticquent Beta
+# Elasticquent
 
 _Elasticsearch for Eloquent Laravel Models_
 
@@ -25,6 +25,12 @@ Elasticquent uses the [official Elasticsearch PHP API](https://github.com/elasti
     * [Document Data](#document-data)
     * [Using Elasticquent With Custom Collections](#using-elasticquetn-with-custom-collections)
 * [Roadmap](#roadmap)
+
+## Reporting Issues
+
+If you do find an issue, please feel free to report it with [GitHub's bug tracker](https://github.com/elasticquent/Elasticquent/issues) for this project.
+
+Alternatively, fork the project and make a pull request :)
 
 ## Overview
 
