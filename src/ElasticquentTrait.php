@@ -14,7 +14,7 @@ trait ElasticquentTrait
     /**
      * @var array mapping properties
      */
-    private $mappingProperties;
+    public $mappingProperties;
 
     /**
      * Uses Timestamps In Index
