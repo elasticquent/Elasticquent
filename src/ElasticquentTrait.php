@@ -11,10 +11,6 @@ use \Elasticquent\ElasticquentResultCollection as ResultCollection;
  */
 trait ElasticquentTrait
 {
-    /**
-     * @var array mapping properties
-     */
-    public $mappingProperties;
 
     /**
      * Uses Timestamps In Index
