@@ -269,6 +269,15 @@ trait ElasticquentTrait
         return new ResultCollection($result, $instance = new static);
     }
 
+    public static function complexSearch($params)
+    {
+        $instance = new static;
+
+        $result = $instance->getElasticSearchClient()->search($params);
+
+        return new ResultCollection($result, $instance = new static);
+    }
+
     /**
      * Search
      *
