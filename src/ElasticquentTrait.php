@@ -327,6 +327,21 @@ trait ElasticquentTrait
     }
 
     /**
+     * Partial Update to Indexed Document
+     *
+     * @return array
+     */
+    public function updateIndex()
+    {
+        $params = $this->getBasicEsParams();
+
+        // Get our document body data.
+        $params['body']['doc'] = $this->getIndexDocumentData();
+
+        return $this->getElasticSearchClient()->update($params);
+    }
+
+    /**
      * Get Search Document
      *
      * Retrieve an ElasticSearch document
