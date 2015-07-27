@@ -11,10 +11,6 @@ use \Elasticquent\ElasticquentResultCollection as ResultCollection;
  */
 trait ElasticquentTrait
 {
-    /**
-     * @var array mapping properties
-     */
-    public $mappingProperties;
 
     /**
      * Uses Timestamps In Index
@@ -335,6 +331,21 @@ trait ElasticquentTrait
     public function removeFromIndex()
     {
         return $this->getElasticSearchClient()->delete($this->getBasicEsParams());
+    }
+
+    /**
+     * Partial Update to Indexed Document
+     *
+     * @return array
+     */
+    public function updateIndex()
+    {
+        $params = $this->getBasicEsParams();
+
+        // Get our document body data.
+        $params['body']['doc'] = $this->getIndexDocumentData();
+
+        return $this->getElasticSearchClient()->update($params);
     }
 
     /**
