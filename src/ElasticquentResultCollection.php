@@ -9,6 +9,7 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
     protected $shards;
     protected $hits;
     protected $aggregations = null;
+    protected $instance;
 
     /**
      * _construct
@@ -27,6 +28,9 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
         $this->shards       = $results['_shards'];
         $this->hits         = $results['hits'];
         $this->aggregations = isset($results['aggregations']) ? $results['aggregations'] : array();
+
+        // Save the instance we performed the search on.
+        $this->instance = $instance;
 
         // Now we need to assign our hits to the
         // items in the collection.
@@ -140,5 +144,23 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
         $sliced_items = array_slice($this->items, ($page - 1) * $pageLimit, $pageLimit);
 
         return new Paginator($sliced_items, $this->hits, $this->totalHits(), $pageLimit, $page, ['path' => Paginator::resolveCurrentPath()]);
+    }
+
+    /**
+     * Chunk the underlying collection array.
+     *
+     * @param  int   $size
+     * @param  bool  $preserveKeys
+     * @return static
+     */
+    public function chunk($size, $preserveKeys = false)
+    {
+        $chunks = [];
+
+        foreach (array_chunk($this->items, $size, $preserveKeys) as $chunk) {
+            $chunks[] = new static($chunk->instance);
+        }
+
+        return new static($chunks, $this->instance);
     }
 }
