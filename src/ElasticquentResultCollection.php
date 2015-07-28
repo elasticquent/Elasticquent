@@ -158,7 +158,7 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
         $chunks = [];
 
         foreach (array_chunk($this->items, $size, $preserveKeys) as $chunk) {
-            $chunks[] = new static($chunk->instance);
+            $chunks[] = new static($chunk, $this->instance);
         }
 
         return new static($chunks, $this->instance);
