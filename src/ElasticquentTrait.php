@@ -57,8 +57,8 @@ trait ElasticquentTrait
     {
         $config = array();
 
-        if (\Config::has('elasticquent.config')) {
-            $config = \Config::get('elasticquent.config');
+        if (config()->has('elasticquent.config')) {
+            $config = config()->get('elasticquent.config');
         }
 
         return new \Elasticsearch\Client($config);
@@ -85,8 +85,8 @@ trait ElasticquentTrait
         // The first thing we check is if there
         // is an elasticquery config file and if there is a
         // default index.
-        if (\Config::has('elasticquent.default_index')) {
-            return \Config::get('elasticquent.default_index');
+        if (config()->has('elasticquent.default_index')) {
+            return config()->get('elasticquent.default_index');
         }
 
         // Otherwise we will just go with 'default'
