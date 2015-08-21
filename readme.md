@@ -20,7 +20,7 @@ Elasticquent uses the [official Elasticsearch PHP API](https://github.com/elasti
     * [Search Collections](#search-collections)
     * [Search Collection Documents](#search-collection-documents)
     * [Chunking results from Elastiquent](#chunking-results-from-elastiquent)
-    * [Using the Search Collection Outside Elasticquent](#using-the-search-collection-outside-elasticquent)
+    * [Using the Search Collection Outside of Elasticquent](#using-the-search-collection-outside-of-elasticquent)
 * [More Options](#more-options)
     * [Document Ids](#document-ids)
     * [Document Data](#document-data)
@@ -242,17 +242,39 @@ You can also reindex an entire model:
 
 ## Searching
 
-There are three ways to search in Elasticquent. The first is a simple term search that searches all fields.
+There are three ways to search in Elasticquent. All three methods return a search collection.
+
+### Simple term search
+
+The first method is a simple term search that searches all fields.
 
 ```php
     $books = Book::search('Moby Dick');
 ```
 
+### Query Based Search
+
 The second is a query based search for more complex searching needs:
+
+```php
+    public static function searchByQuery($query = null, $aggregations = null, $sourceFields = null, $limit = null, $offset = null, $sort = null)
+```
+
+**Example:**
 
 ```php
     $books = Book::searchByQuery(array('match' => array('title' => 'Moby Dick')));
 ```
+Here's the list of available parameters:
+
+- `query` - Your ElasticSearch Query
+- `aggregations` - The Aggregations you wish to return. [See Aggregations for details](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-aggregations.html).
+- `sourceFields` - Limits returned set to the selected fields only
+- `limit` - Number of records to return
+- `offset` - Sets the record offset (use for paging results)
+- `sort` - Your sort query
+
+### Raw queries
 
 The final method is a raw query that will be sent to Elasticsearch. This method will provide you with the most flexibility
 when searching for records inside Elasticsearch:
@@ -273,17 +295,6 @@ This is the equivalent to:
 ```php
     $books = Book::searchByQuery(array('match' => array('title' => 'Moby Dick')));
 ```
-
-All methods will return a search collection.
-
-Here's the list of available parameters:
-
-- `query` - Your ElasticSearch Query
-- `aggregations` - The Aggregations you wish to return. [See Aggregations for details](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-aggregations.html).
-- `sourceFields` - Limits returned set to the selected fields only
-- `limit` - Number of records to return
-- `offset` - Sets the record offset (use for paging results)
-- `sort` - Your sort query
 
 ### Search Collections
 
