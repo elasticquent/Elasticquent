@@ -19,7 +19,8 @@ Elasticquent uses the [official Elasticsearch PHP API](https://github.com/elasti
 * [Searching](#searching)
     * [Search Collections](#search-collections)
     * [Search Collection Documents](#search-collection-documents)
-    * [Using the Search Collection Outside Elasticquent](#using-the-search-collection-outside-wlasticquent)
+    * [Chunking results from Elastiquent](#chunking-results-from-elastiquent)
+    * [Using the Search Collection Outside Elasticquent](#using-the-search-collection-outside-elasticquent)
 * [More Options](#more-options)
     * [Document Ids](#document-ids)
     * [Document Data](#document-data)
@@ -241,7 +242,7 @@ You can also reindex an entire model:
 
 ## Searching
 
-There are two ways to search in Elasticquent. The first is a simple term search that searches all fields.
+There are three ways to search in Elasticquent. The first is a simple term search that searches all fields.
 
 ```php
     $books = Book::search('Moby Dick');
@@ -253,9 +254,29 @@ The second is a query based search for more complex searching needs:
     $books = Book::searchByQuery(array('match' => array('title' => 'Moby Dick')));
 ```
 
-Both methods will return a search collection.
+The final method is a raw query that will be sent to Elasticsearch. This method will provide you with the most flexibility
+when searching for records inside Elasticsearch:
 
-Here's the list of available paramers:
+```php
+    $books = Book::complexSearch(array(
+        'body' => array(
+            'query' => array(
+                'match' => array(
+                    'title' => 'Moby Dick'
+                )
+            )
+        )
+    ));
+```
+
+This is the equivalent to:
+```php
+    $books = Book::searchByQuery(array('match' => array('title' => 'Moby Dick')));
+```
+
+All methods will return a search collection.
+
+Here's the list of available parameters:
 
 - `query` - Your ElasticSearch Query
 - `aggregations` - The Aggregations you wish to return. [See Aggregations for details](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-aggregations.html).
@@ -317,6 +338,16 @@ You can check the document score that Elasticsearch assigned to this document wi
 ```php
     $book->documentScore();
 ```
+
+### Chunking results from Elastiquent
+
+Similar to `Illuminate\Support\Collection`, the `chunk` method breaks the Elasticquent collection into multiple, smaller collections of a given size:
+
+```php
+    $all_books = Book::searchByQuery(array('match' => array('title' => 'Moby Dick')));
+    $books = $all_books->chunk(10);
+```
+
 
 ### Using the Search Collection Outside of Elasticquent
 

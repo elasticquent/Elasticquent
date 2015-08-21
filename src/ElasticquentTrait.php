@@ -265,6 +265,14 @@ trait ElasticquentTrait
         return new ResultCollection($result, $instance = new static);
     }
 
+    /**
+     * Perform a "complex" or custom search.
+     *
+     * Using this method, a custom query can be sent to Elasticsearch.
+     *
+     * @param $params
+     * @return ElasticquentResultCollection
+     */
     public static function complexSearch($params)
     {
         $instance = new static;
