@@ -525,11 +525,11 @@ trait ElasticquentTrait
             'index' => $instance->getIndexName(),
         );
 
-        if ($shards) {
+        if (!is_null($shards)) {
             $index['body']['settings']['number_of_shards'] = $shards;
         }
 
-        if ($replicas) {
+        if (!is_null($replicas)) {
             $index['body']['settings']['number_of_replicas'] = $replicas;
         }
 
