@@ -83,13 +83,31 @@ trait ElasticquentCollectionTrait
      */
     public function getElasticSearchClient()
     {
-        $config = array();
-
-        if (config()->has('elasticquent.config')) {
-            $config = config()->get('elasticquent.config');
-        }
+        $config = $this->getElasticConfig();
 
         return new \Elasticsearch\Client($config);
     }
 
+    /**
+     * Get the Elasticquent config
+     *
+     * @return array configuration
+     */
+    private function getElasticConfig()
+    {
+        $config = array();
+
+        // Laravel 4 support
+        if (!function_exists('config')) {
+            $config_helper = app('config');
+        } else {
+            $config_helper = config();
+        }
+
+        if ($config_helper->has('elasticquent.config')) {
+            $config = $config_helper->get('elasticquent.config');
+        }
+
+        return $config;
+    }
 }

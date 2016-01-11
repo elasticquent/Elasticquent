@@ -55,11 +55,7 @@ trait ElasticquentTrait
      */
     public function getElasticSearchClient()
     {
-        $config = array();
-
-        if (config()->has('elasticquent.config')) {
-            $config = config()->get('elasticquent.config');
-        }
+        $config = $this->getElasticConfig();
 
         return new \Elasticsearch\Client($config);
     }
@@ -85,8 +81,10 @@ trait ElasticquentTrait
         // The first thing we check is if there
         // is an elasticquery config file and if there is a
         // default index.
-        if (config()->has('elasticquent.default_index')) {
-            return config()->get('elasticquent.default_index');
+        $index_name = $this->getElasticConfig('elasticquent.default_index');
+
+        if (!empty($index_name)) {
+            return $index_name;
         }
 
         // Otherwise we will just go with 'default'
@@ -608,5 +606,28 @@ trait ElasticquentTrait
         }
 
         return $instance;
+    }
+
+    /**
+     * Get the Elasticquent config
+     *
+     * @return array configuration
+     */
+    private function getElasticConfig($key = 'elasticquent.config')
+    {
+        $config = array();
+
+        // Laravel 4 support
+        if (!function_exists('config')) {
+            $config_helper = app('config');
+        } else {
+            $config_helper = config();
+        }
+
+        if ($config_helper->has($key)) {
+            $config = $config_helper->get($key);
+        }
+
+        return $config;
     }
 }
