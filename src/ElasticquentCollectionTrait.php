@@ -8,6 +8,8 @@
  */
 trait ElasticquentCollectionTrait
 {
+    use ElasticquentClientTrait;
+
     /**
      * Add To Index
      *
@@ -76,38 +78,4 @@ trait ElasticquentCollectionTrait
         return $this->addToIndex();
     }
 
-    /**
-     * Get ElasticSearch Client
-     *
-     * @return \Elasticsearch\Client
-     */
-    public function getElasticSearchClient()
-    {
-        $config = $this->getElasticConfig();
-
-        return new \Elasticsearch\Client($config);
-    }
-
-    /**
-     * Get the Elasticquent config
-     *
-     * @return array configuration
-     */
-    private function getElasticConfig()
-    {
-        $config = array();
-
-        // Laravel 4 support
-        if (!function_exists('config')) {
-            $config_helper = app('config');
-        } else {
-            $config_helper = config();
-        }
-
-        if ($config_helper->has('elasticquent.config')) {
-            $config = $config_helper->get('elasticquent.config');
-        }
-
-        return $config;
-    }
 }
