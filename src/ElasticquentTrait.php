@@ -11,6 +11,7 @@ use \Elasticquent\ElasticquentResultCollection as ResultCollection;
  */
 trait ElasticquentTrait
 {
+    use ElasticquentClientTrait;
 
     /**
      * Uses Timestamps In Index
@@ -49,18 +50,6 @@ trait ElasticquentTrait
     protected $documentVersion = null;
 
     /**
-     * Get ElasticSearch Client
-     *
-     * @return \Elasticsearch\Client
-     */
-    public function getElasticSearchClient()
-    {
-        $config = $this->getElasticConfig();
-
-        return new \Elasticsearch\Client($config);
-    }
-
-    /**
      * New Collection
      *
      * @param array $models
@@ -81,7 +70,7 @@ trait ElasticquentTrait
         // The first thing we check is if there
         // is an elasticquery config file and if there is a
         // default index.
-        $index_name = $this->getElasticConfig('elasticquent.default_index');
+        $index_name = $this->getElasticConfig('default_index');
 
         if (!empty($index_name)) {
             return $index_name;
@@ -608,26 +597,4 @@ trait ElasticquentTrait
         return $instance;
     }
 
-    /**
-     * Get the Elasticquent config
-     *
-     * @return array configuration
-     */
-    private function getElasticConfig($key = 'elasticquent.config')
-    {
-        $config = array();
-
-        // Laravel 4 support
-        if (!function_exists('config')) {
-            $config_helper = app('config');
-        } else {
-            $config_helper = config();
-        }
-
-        if ($config_helper->has($key)) {
-            $config = $config_helper->get($key);
-        }
-
-        return $config;
-    }
 }
