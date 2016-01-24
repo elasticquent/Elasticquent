@@ -17,9 +17,9 @@ trait ElasticquentConfigTrait
 
         $key = $prefix . ($key ? '.' : '') . $key;
 
-        if (function_exists('config')) { // Laravel 5
+        if (function_exists('config')) { // Laravel 5.1+
             $config_helper = config();
-        } elseif (function_exists('app')) { // Laravel 4
+        } elseif (function_exists('app')) { // Laravel 4 and 5.0
             $config_helper = app('config');
         } else { // stand-alone Eloquent
             $config_helper = $this->getConfigHelper();
