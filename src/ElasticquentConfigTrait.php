@@ -11,24 +11,47 @@ trait ElasticquentConfigTrait
      * @param string $prefix filename of configuration file
      * @return array configuration
      */
-    protected function getElasticConfig($key = 'config', $prefix = 'elasticquent')
+    public function getElasticConfig($key = 'config', $prefix = 'elasticquent')
     {
         $config = array();
 
         $key = $prefix . ($key ? '.' : '') . $key;
 
-        // Laravel 4 support
-        if (!function_exists('config')) {
-            $config_helper = app('config');
-        } else {
+        if (function_exists('config')) { // Laravel 5
             $config_helper = config();
+        } elseif (function_exists('app')) { // Laravel 4
+            $config_helper = app('config');
+        } else { // stand-alone Eloquent
+            $config_helper = $this->getConfigHelper();
         }
 
-        if ($config_helper->has($key)) {
-            $config = $config_helper->get($key);
-        }
-
-        return $config;
+        return $config_helper->get($key);
     }
 
+    /**
+     * Inject given config file into an instance of Laravel's config
+     *
+     * @return object Illuminate\Config\Repository
+     */
+    protected function getConfigHelper()
+    {
+        $config_file = $this->getConfigFile();
+
+        if (!file_exists($config_file)) {
+            throw new \Exception('Config file not found.');
+        }
+
+        return new \Illuminate\Config\Repository(array('elasticquent' => require($config_file)));
+    }
+
+    /**
+     * Get the config path and file name to use when Laravel framework isn't present
+     * e.g. using Eloquent stand-alone or running unit tests
+     *
+     * @return string config file path 
+     */
+    protected function getConfigFile()
+    {
+        return __DIR__.'/config/elasticquent.php';
+    }
 }
