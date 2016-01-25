@@ -13,15 +13,16 @@ trait ElasticquentConfigTrait
      */
     public function getElasticConfig($key = 'config', $prefix = 'elasticquent')
     {
-        $config = array();
-
         $key = $prefix . ($key ? '.' : '') . $key;
 
-        if (function_exists('config')) { // Laravel 5.1+
+        if (function_exists('config')) {
+            // Get config helper for Laravel 5.1+
             $config_helper = config();
         } elseif (function_exists('app')) { // Laravel 4 and 5.0
+            // Get config helper for Laravel 4 & Laravel 5.1
             $config_helper = app('config');
-        } else { // stand-alone Eloquent
+        } else {
+            // Create a config helper when using stand-alone Eloquent
             $config_helper = $this->getConfigHelper();
         }
 
@@ -31,7 +32,8 @@ trait ElasticquentConfigTrait
     /**
      * Inject given config file into an instance of Laravel's config
      *
-     * @return object Illuminate\Config\Repository
+     * @throws \Exception when the configuration file is not found
+     * @return \Illuminate\Config\Repository configuration repository
      */
     protected function getConfigHelper()
     {
