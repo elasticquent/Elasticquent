@@ -1,7 +1,7 @@
 <?php namespace Elasticquent;
 
 use \Exception;
-use ElasticquentCollection as ElasticquentCollection;
+use ElasticquentCollection;
 use ElasticquentResultCollection as ResultCollection;
 
 /**
