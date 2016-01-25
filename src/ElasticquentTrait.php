@@ -382,18 +382,9 @@ trait ElasticquentTrait
             $params['id'] = $this->getKey();
         }
 
-        $fieldsParam = array();
-
-        if ($getSourceIfPossible) {
-            $fieldsParam[] = '_source';
-        }
-
-        if ($getTimestampIfPossible) {
-            $fieldsParam[] = '_timestamp';
-        }
-
-        if (!empty($fieldsParam)) {
-            $params['fields'] = implode(',', $fieldsParam);
+        $fields = $this->buildFieldsParameter($getSourceIfPossible, $getTimestampIfPossible);
+        if (!empty($fields)) {
+            $params['fields'] = implode(',', $fields);
         }
 
         if (is_numeric($limit)) {
@@ -405,6 +396,28 @@ trait ElasticquentTrait
         }
 
         return $params;
+    }
+
+    /**
+     * Build the 'fields' parameter depending on given options.
+     *
+     * @param bool $getSourceIfPossible
+     * @param bool $getTimestampIfPossible
+     * @return array
+     */
+    private function buildFieldsParameter($getSourceIfPossible, $getTimestampIfPossible)
+    {
+        $fieldsParam = array();
+
+        if ($getSourceIfPossible) {
+            $fieldsParam[] = '_source';
+        }
+
+        if ($getTimestampIfPossible) {
+            $fieldsParam[] = '_timestamp';
+        }
+
+        return $fieldsParam;
     }
 
     /**
