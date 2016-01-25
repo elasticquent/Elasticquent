@@ -1,7 +1,5 @@
 <?php
 
-use \Illuminate\Database\Eloquent\Model as Eloquent;
-
 class ElasticquentTraitTest extends PHPUnit_Framework_TestCase {
 
     public $modelData = array('name' => 'Test Name');
@@ -83,28 +81,4 @@ class ElasticquentTraitTest extends PHPUnit_Framework_TestCase {
         $this->assertNull($model->documentScore());
     }
 
-}
-
-class TestModel extends Eloquent implements \Elasticquent\ElasticquentInterface {
-
-    use Elasticquent\ElasticquentTrait;
-
-    protected $fillable = array('name');
-
-    function getTable()
-    {
-        return 'testing';
-    }
-}
-
-class CustomTestModel extends Eloquent implements \Elasticquent\ElasticquentInterface {
-
-    use Elasticquent\ElasticquentTrait;
-
-    protected $fillable = array('name');
-
-    function getIndexDocumentData()
-    {
-        return array('foo' => 'bar');
-    }
 }

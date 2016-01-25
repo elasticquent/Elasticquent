@@ -92,7 +92,7 @@ Now your Eloquent model has some extra methods that make it easier to index your
 
 ### Elasticsearch Configuration
 
-If you need to pass a special configuration array Elasticsearch, you can add that in an `elasticquent.php` config file at `/app/config/elasticquent.php`:
+If you need to pass a special configuration array Elasticsearch, you can add that in an `elasticquent.php` config file at `/app/config/elasticquent.php` for Laravel 4, or `/config/elasticquent.php` for Laravel 5:
 
 ```php
 <?php
@@ -112,9 +112,7 @@ return array(
 
     'config' => [
         'hosts'     => ['localhost:9200'],
-        'logging'   => true,
-        'logPath'   => storage_path() . '/logs/elasticsearch.log',
-        'logLevel'  => Monolog\Logger::WARNING,
+        'retries'   => 1,
     ],
 
     /*

@@ -1,5 +1,6 @@
 <?php namespace Elasticquent;
 
+use \Exception;
 use \Elasticquent\ElasticquentCollection as ElasticquentCollection;
 use \Elasticquent\ElasticquentResultCollection as ResultCollection;
 
