@@ -1,8 +1,8 @@
 <?php namespace Elasticquent;
 
 use \Exception;
-use \Elasticquent\ElasticquentCollection as ElasticquentCollection;
-use \Elasticquent\ElasticquentResultCollection as ResultCollection;
+use ElasticquentCollection as ElasticquentCollection;
+use ElasticquentResultCollection as ResultCollection;
 
 /**
  * Elasticquent Trait
@@ -232,19 +232,19 @@ trait ElasticquentTrait
 
         $params = $instance->getBasicEsParams(true, true, true, $limit, $offset);
 
-        if ($sourceFields) {
+        if (!empty($sourceFields)) {
             $params['body']['_source']['include'] = $sourceFields;
         }
 
-        if ($query) {
+        if (!empty($query)) {
             $params['body']['query'] = $query;
         }
 
-        if ($aggregations) {
+        if (!empty($aggregations)) {
             $params['body']['aggs'] = $aggregations;
         }
 
-        if ($sort) {
+        if (!empty($sort)) {
             $params['body']['sort'] = $sort;
         }
 
@@ -378,21 +378,21 @@ trait ElasticquentTrait
             'type' => $this->getTypeName(),
         );
 
-        if ($getIdIfPossible and $this->getKey()) {
+        if ($getIdIfPossible && $this->getKey()) {
             $params['id'] = $this->getKey();
         }
 
         $fieldsParam = array();
 
         if ($getSourceIfPossible) {
-            array_push($fieldsParam, '_source');
+            $fieldsParam[] = '_source';
         }
 
         if ($getTimestampIfPossible) {
-            array_push($fieldsParam, '_timestamp');
+            $fieldsParam[] = '_timestamp';
         }
 
-        if ($fieldsParam) {
+        if (!empty($fieldsParam)) {
             $params['fields'] = implode(',', $fieldsParam);
         }
 
