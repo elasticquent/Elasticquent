@@ -11,7 +11,7 @@ trait ElasticquentConfigTrait
      * @param string $prefix filename of configuration file
      * @return array configuration
      */
-    public function getElasticConfig($key = 'config', $prefix = 'elasticquent')
+    protected function getElasticConfig($key = 'config', $prefix = 'elasticquent')
     {
         $key = $prefix . ($key ? '.' : '') . $key;
 
