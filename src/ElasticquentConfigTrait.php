@@ -18,7 +18,7 @@ trait ElasticquentConfigTrait
         if (function_exists('config')) {
             // Get config helper for Laravel 5.1+
             $config_helper = config();
-        } elseif (function_exists('app')) { // Laravel 4 and 5.0
+        } elseif (function_exists('app')) {
             // Get config helper for Laravel 4 & Laravel 5.1
             $config_helper = app('config');
         } else {
