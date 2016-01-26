@@ -10,7 +10,7 @@
  * This mock accepts search parameters, converts them into a parameter array and returns
  * results in the format that we would expect if we were to hit a real database, and
  * specifically returns results consistent with the ElasticSearch PHP client version
- * 2.1 documentation.
+ * 2.0 documentation.
  *
  * The Elasticquent method will then format the response and we test that the resulting 
  * Elasticquent results collection methods return the results we expect to verify this. 
