@@ -18,12 +18,21 @@ class ElasticquentTraitTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * Test getTypeName()
+     * Test type name inferred from table name
      */
-    public function testGetTypeName()
+    public function testTypeNameInferredFromTableName()
     {
         $model = $this->testingModel();
-        $this->assertEquals('testing', $model->getTypeName());
+        $this->assertEquals('test_table', $model->getTypeName());
+    }
+
+    /**
+     * Test type name overrides table name 
+     */
+    public function testTypeNameOverridesTableName()
+    {
+        $model = new TestModelWithCustomTypeName;
+        $this->assertEquals('test_type_name', $model->getTypeName());
     }
 
     /**
