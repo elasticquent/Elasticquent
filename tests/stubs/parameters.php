@@ -18,3 +18,21 @@ function searchParams($searchTerm)
     $params['body'] = ['query' => ['match' => ['_all' => $searchTerm]]];
     return $params;
 }
+
+function complexParameters()
+{
+    $params = basicParameters();
+    $params['body'] = [
+        'query' => [
+            'filtered' => [
+                'filter' => [
+                    'term' => [ 'my_field' => 'abc' ]
+                ],
+                'query' => [
+                    'match' => [ 'my_other_field' => 'xyz' ]
+                ]
+            ]
+        ]
+    ];
+    return $params;   
+}

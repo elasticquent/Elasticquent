@@ -18,16 +18,7 @@
 
 class ElasticSearchMethodsTest extends PHPUnit_Framework_TestCase
 {
-    public function setUp()
-    {
-        $this->model = new SearchTestModel;
-    }
-
-    public function testSuccessfulSearch()
-    {
-        $result = $this->model::search('with results');
-
-        $expectedHits = [
+    protected $expectedHits = [
             'total' => 2,
             'max_score' => 0.7768564,
             'hits' => [
@@ -50,13 +41,22 @@ class ElasticSearchMethodsTest extends PHPUnit_Framework_TestCase
             ]
         ];
 
+    public function setUp()
+    {
+        $this->model = new SearchTestModel;
+    }
+
+    public function testSuccessfulSearch()
+    {
+        $result = $this->model::search('with results');
+
         $this->assertInstanceOf('Elasticquent\ElasticquentResultCollection', $result);
         $this->assertEquals(2, $result->totalHits());
         $this->assertEquals(0.7768564, $result->maxScore());
         $this->assertEquals(['total' => 5,'successful' => 5,'unsuccessful' => 0], $result->getShards());
         $this->assertEquals(8, $result->took());
         $this->assertFalse($result->timedOut());
-        $this->assertEquals($expectedHits, $result->getHits());
+        $this->assertEquals($this->expectedHits, $result->getHits());
         $this->assertEmpty($result->getAggregations());
     }
 
@@ -78,5 +78,14 @@ class ElasticSearchMethodsTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($result->timedOut());
         $this->assertEquals($expectedHits, $result->getHits());
         $this->assertEmpty($result->getAggregations());
+    }
+
+    public function testComplexSearch()
+    {
+        $params = complexParameters();
+        $result = $this->model::complexSearch($params);
+
+        $this->assertInstanceOf('Elasticquent\ElasticquentResultCollection', $result);
+        $this->assertEquals($this->expectedHits, $result->getHits());
     }
 }
