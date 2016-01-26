@@ -1,4 +1,4 @@
-<?php namespace Elasticquent;
+<?php
 
 use \Exception;
 use Elasticquent\ElasticquentResultCollection as ResultCollection;
@@ -223,7 +223,7 @@ trait ElasticquentTrait
      * @param int   $offset
      * @param array $sort
      *
-     * @return ResultCollection
+     * @return ElasticquentResultCollection
      */
     public static function searchByQuery($query = null, $aggregations = null, $sourceFields = null, $limit = null, $offset = null, $sort = null)
     {
@@ -249,7 +249,7 @@ trait ElasticquentTrait
 
         $result = $instance->getElasticSearchClient()->search($params);
 
-        return new ResultCollection($result, $instance = new static);
+        return new \Elasticquent\ElasticquentResultCollection($result, $instance = new static);
     }
 
     /**
@@ -266,7 +266,7 @@ trait ElasticquentTrait
 
         $result = $instance->getElasticSearchClient()->search($params);
 
-        return new ResultCollection($result, $instance = new static);
+        return new \Elasticquent\ElasticquentResultCollection($result, $instance = new static);
     }
 
     /**
@@ -276,7 +276,7 @@ trait ElasticquentTrait
      *
      * @param string $term
      *
-     * @return ResultCollection
+     * @return ElasticquentResultCollection
      */
     public static function search($term = null)
     {
@@ -288,7 +288,7 @@ trait ElasticquentTrait
 
         $result = $instance->getElasticSearchClient()->search($params);
 
-        return new ResultCollection($result, $instance = new static);
+        return new \Elasticquent\ElasticquentResultCollection($result, $instance = new static);
     }
 
     /**
