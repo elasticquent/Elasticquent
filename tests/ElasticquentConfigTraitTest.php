@@ -1,5 +1,10 @@
 <?php
 
+/*
+ * For this test we inject the trait directly into the test class.
+ * This allows us to test a key methods that has visibility "protected".
+ */
+
 class ElasticquentConfigTraitTest extends PHPUnit_Framework_TestCase
 {
     use Elasticquent\ElasticquentTrait;
