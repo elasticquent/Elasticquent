@@ -259,7 +259,7 @@ The first method is a simple term search that searches all fields.
 The second is a query based search for more complex searching needs:
 
 ```php
-    public static function searchByQuery($query = null, $aggregations = null, $sourceFields = null, $limit = null, $offset = null, $sort = null)
+    public static function searchByQuery($query = null, $filter = null, $aggregations = null, $sourceFields = null, $limit = null, $offset = null, $sort = null)
 ```
 
 **Example:**
