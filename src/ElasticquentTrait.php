@@ -299,7 +299,7 @@ trait ElasticquentTrait
 
         $result = $instance->getElasticSearchClient()->search($params);
 
-        return new \Elasticquent\ElasticquentResultCollection($result, $instance = new static);
+        return new ResultCollection($result, $instance = new static);
     }
 
     /**
