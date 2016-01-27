@@ -1,9 +1,7 @@
-<?php
+<?php namespace Elasticquent;
 
-namespace Elasticquent;
-
-use Exception;
-use ElasticquentCollection;
+use \Exception;
+use Elasticquent\ElasticquentResultCollection as ResultCollection;
 
 /**
  * Elasticquent Trait
