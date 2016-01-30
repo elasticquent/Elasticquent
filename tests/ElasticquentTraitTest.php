@@ -9,12 +9,10 @@ class ElasticquentTraitTest extends PHPUnit_Framework_TestCase {
      *
      * @return void
      */
-    public function testingModel()
+    public function setup()
     {
-        $model = new TestModel;
-        $model->fill($this->modelData);
-
-        return $model;
+        $this->model = new TestModel;
+        $this->model->fill($this->modelData);
     }
 
     /**
@@ -22,8 +20,7 @@ class ElasticquentTraitTest extends PHPUnit_Framework_TestCase {
      */
     public function testGetTypeName()
     {
-        $model = $this->testingModel();
-        $this->assertEquals('test_table', $model->getTypeName());
+        $this->assertEquals('test_table', $this->model->getTypeName());
     }
 
     /**
@@ -31,13 +28,11 @@ class ElasticquentTraitTest extends PHPUnit_Framework_TestCase {
      */
     public function testBasicPropertiesGetters()
     {
-        $model = $this->testingModel();
+        $this->model->useTimestampsInIndex();
+        $this->assertTrue($this->model->usesTimestampsInIndex());
 
-        $model->useTimestampsInIndex();
-        $this->assertTrue($model->usesTimestampsInIndex());
-
-        $model->dontUseTimestampsInIndex();
-        $this->assertFalse($model->usesTimestampsInIndex());
+        $this->model->dontUseTimestampsInIndex();
+        $this->assertFalse($this->model->usesTimestampsInIndex());
     }
 
     /**
@@ -45,12 +40,10 @@ class ElasticquentTraitTest extends PHPUnit_Framework_TestCase {
      */
     public function testMappingSetup()
     {
-        $model = $this->testingModel();
-
         $mapping = array('foo' => 'bar');
 
-        $model->setMappingProperties($mapping);
-        $this->assertEquals($mapping, $model->getMappingProperties());
+        $this->model->setMappingProperties($mapping);
+        $this->assertEquals($mapping, $this->model->getMappingProperties());
     }
 
     /**
@@ -59,8 +52,7 @@ class ElasticquentTraitTest extends PHPUnit_Framework_TestCase {
     public function testIndexDocumentData()
     {
         // Basic
-        $model = $this->testingModel();
-        $this->assertEquals($this->modelData, $model->getIndexDocumentData());
+        $this->assertEquals($this->modelData, $this->model->getIndexDocumentData());
 
         // Custom
         $custom = new CustomTestModel();
@@ -75,10 +67,8 @@ class ElasticquentTraitTest extends PHPUnit_Framework_TestCase {
      */
     public function testDocumentNullStates()
     {
-        $model = $this->testingModel();
-        
-        $this->assertFalse($model->isDocument());
-        $this->assertNull($model->documentScore());
+        $this->assertFalse($this->model->isDocument());
+        $this->assertNull($this->model->documentScore());
     }
 
 }
