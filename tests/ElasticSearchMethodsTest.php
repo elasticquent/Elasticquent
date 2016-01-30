@@ -80,6 +80,15 @@ class ElasticSearchMethodsTest extends PHPUnit_Framework_TestCase
         $this->assertEmpty($result->getAggregations());
     }
 
+    public function testSearchWithEmptyParamters()
+    {
+        $this->model::search();
+        $this->model::search(null);
+        $this->model::search('');
+
+        $this->addToAssertionCount(3);  // does not throw an exception
+    }
+
     public function testComplexSearch()
     {
         $params = complexParameters();

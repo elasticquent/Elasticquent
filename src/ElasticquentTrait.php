@@ -288,7 +288,7 @@ trait ElasticquentTrait
      *
      * @return ElasticquentResultCollection
      */
-    public static function search($term = null)
+    public static function search($term = '')
     {
         $instance = new static;
 
