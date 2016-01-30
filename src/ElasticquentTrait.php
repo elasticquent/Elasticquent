@@ -51,6 +51,15 @@ trait ElasticquentTrait
     protected $documentVersion = null;
 
     /**
+     * Mapping Properties
+     *
+     * Elasticsearch mapping properties
+     *
+     * @var null|array
+     */
+    protected $mappingProperties = null;
+
+    /**
      * New Collection
      *
      * @param array $models
