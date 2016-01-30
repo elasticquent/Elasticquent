@@ -23,7 +23,7 @@ class ElasticquentTraitTest extends PHPUnit_Framework_TestCase {
     public function testGetTypeName()
     {
         $model = $this->testingModel();
-        $this->assertEquals('testing', $model->getTypeName());
+        $this->assertEquals('test_table', $model->getTypeName());
     }
 
     /**
