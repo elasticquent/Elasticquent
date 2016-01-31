@@ -12,7 +12,7 @@ use Exception;
  */
 trait ElasticquentTrait
 {
-    use ElasticquentClientTrait;
+    use ElasticquentClientTrait, EloquentMethods;
 
     /**
      * Uses Timestamps In Index
