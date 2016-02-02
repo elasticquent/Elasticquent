@@ -77,9 +77,8 @@ trait ElasticquentTrait
      */
     public function getIndexName()
     {
-        // The first thing we check is if there
-        // is an elasticquery config file and if there is a
-        // default index.
+        // The first thing we check is if there is an elasticquent
+        // config file and if there is a default index.
         $index_name = $this->getElasticConfig('default_index');
 
         if (!empty($index_name)) {
@@ -111,17 +110,19 @@ trait ElasticquentTrait
     /**
      * Use Timestamps In Index.
      */
-    public function useTimestampsInIndex()
+    public function useTimestampsInIndex($shouldUse = true)
     {
-        $this->usesTimestampsInIndex = true;
+        $this->usesTimestampsInIndex = $shouldUse;
     }
 
     /**
      * Don't Use Timestamps In Index.
+     *
+     * @deprecated
      */
     public function dontUseTimestampsInIndex()
     {
-        $this->usesTimestampsInIndex = false;
+        $this->useTimestampsInIndex(false);
     }
 
     /**
@@ -267,7 +268,7 @@ trait ElasticquentTrait
      *
      * Using this method, a custom query can be sent to Elasticsearch.
      *
-     * @param $params
+     * @param  $params parameters to be passed directly to Elasticsearch
      * @return ElasticquentResultCollection
      */
     public static function complexSearch($params)
@@ -410,8 +411,8 @@ trait ElasticquentTrait
     /**
      * Build the 'fields' parameter depending on given options.
      *
-     * @param bool $getSourceIfPossible
-     * @param bool $getTimestampIfPossible
+     * @param bool   $getSourceIfPossible
+     * @param bool   $getTimestampIfPossible
      * @return array
      */
     private function buildFieldsParameter($getSourceIfPossible, $getTimestampIfPossible)
@@ -602,7 +603,7 @@ trait ElasticquentTrait
             }
         }
 
-        $instance->setRawAttributes((array) $attributes, true);
+        $instance->setRawAttributes((array)$attributes, true);
 
         // In addition to setting the attributes
         // from the index, we will set the score as well.

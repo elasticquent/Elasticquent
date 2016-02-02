@@ -12,12 +12,10 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
     protected $instance;
 
     /**
-     * _construct
+     * Create a new instance containing Elasticsearch results
      *
-     * @param   $results elasticsearch results
+     * @param $results elasticsearch results
      * @param $instance
-     *
-     * @return \Elasticquent\ElasticquentResultCollection
      */
     public function __construct($results, $instance)
     {
