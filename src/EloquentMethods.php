@@ -25,7 +25,7 @@ trait EloquentMethods
      * @param  array  $attributes
      * @param  bool  $exists
      */
-    abstract public function newInstance($attributes =[], $exists = false);
+    abstract public function newInstance($attributes = [], $exists = false);
 
     /**
      * Get a new query builder for the model's table.

@@ -63,7 +63,7 @@ trait ElasticquentTrait
      * New Collection
      *
      * @param array $models
-     * @return Collection
+     * @return ElasticquentCollection
      */
     public function newCollection(array $models = array())
     {
