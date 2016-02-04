@@ -138,15 +138,17 @@ If you want a simple way to create indexes, Elasticquent models have a function 
 
     Book::createIndex($shards = null, $replicas = null);
 
-For mapping, you can set a `mappingProperties` property in your model and use some mapping functions from there:
+For mapping, you should override the `getMappingProperties` method in your model and use some mapping functions from there:
 
 ```php
-protected $mappingProperties = array(
-   'title' => array(
-        'type' => 'string',
-        'analyzer' => 'standard'
-    )
-);
+public function getMappingProperties(){
+  return array(
+     'title' => array(
+          'type' => 'string',
+          'analyzer' => 'standard'
+      )
+  );
+}
 ```
 
 If you'd like to setup a model's type mapping based on your mapping properties, you can use:
