@@ -520,6 +520,26 @@ trait ElasticquentTrait
     }
 
     /**
+     * Index Exists ?
+     *
+     * @return bool
+     */
+    public static function indexExists()
+    {
+        $instance = new static;
+
+        $client = $instance->getElasticSearchClient();
+
+        $index = array(
+            'index' => $instance->getIndexName(),
+        );
+
+        return $client->indices()->exists($index);
+
+
+    }
+
+    /**
      * Create Index
      *
      * @param int $shards
@@ -605,7 +625,7 @@ trait ElasticquentTrait
      */
     public static function deleteAllDocuments()
     {
-        return self::deleteDocuments(array('match_all'=>[]));
+        return self::deleteDocuments(array('match_all' => []));
     }
 
     /**
