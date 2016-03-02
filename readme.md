@@ -1,5 +1,4 @@
 # Elasticquent
-
 _Elasticsearch for Eloquent Laravel Models_
 
 Elasticquent makes working with [Elasticsearch](http://www.elasticsearch.org/) and [Eloquent](http://laravel.com/docs/eloquent) models easier by mapping them to Elasticsearch types. You can use the default settings or define how Elasticsearch should index and search your Eloquent models right in the model.
@@ -7,38 +6,38 @@ Elasticquent makes working with [Elasticsearch](http://www.elasticsearch.org/) a
 Elasticquent uses the [official Elasticsearch PHP API](https://github.com/elasticsearch/elasticsearch-php). To get started, you should have a basic knowledge of how Elasticsearch works (indexes, types, mappings, etc).
 
 # Elasticsearch Requirements
-
-You must be running _at least_ Elasticsearch 1.0. Elasticsearch 0.9 and below *will not work* and are not supported.
+You must be running _at least_ Elasticsearch 1.0. Elasticsearch 0.9 and below _will not work_ and are not supported.
 
 ## Contents
+- [Overview](#overview)
+  - [How Elasticquent Works](#how-elasticquent-works)
 
-* [Overview](#overview)
-    * [How Elasticquent Works](#how-elasticquent-works)
-* [Setup](#setup)
-    * [Elasticsearch Configuration](#elasticsearch-configuration)
-    * [Indexes and Mapping](#indexes-and-mapping)
-    * [Setting a Custom Index Name](#setting-a-custom-index-name)
-    * [Setting a Custom Type Name](#setting-a-custom-type-name)
-* [Indexing Documents](#indexing-documents)
-* [Searching](#searching)
-    * [Search Collections](#search-collections)
-    * [Search Collection Documents](#search-collection-documents)
-    * [Chunking results from Elastiquent](#chunking-results-from-elastiquent)
-    * [Using the Search Collection Outside of Elasticquent](#using-the-search-collection-outside-of-elasticquent)
-* [More Options](#more-options)
-    * [Document Ids](#document-ids)
-    * [Document Data](#document-data)
-    * [Using Elasticquent With Custom Collections](#using-elasticquetn-with-custom-collections)
-* [Roadmap](#roadmap)
+- [Setup](#setup)
+  - [Elasticsearch Configuration](#elasticsearch-configuration)
+  - [Indexes and Mapping](#indexes-and-mapping)
+  - [Setting a Custom Index Name](#setting-a-custom-index-name)
+  - [Setting a Custom Type Name](#setting-a-custom-type-name)
+
+- [Indexing Documents](#indexing-documents)
+- [Searching](#searching)
+  - [Search Collections](#search-collections)
+  - [Search Collection Documents](#search-collection-documents)
+  - [Chunking results from Elastiquent](#chunking-results-from-elastiquent)
+  - [Using the Search Collection Outside of Elasticquent](#using-the-search-collection-outside-of-elasticquent)
+
+- [More Options](#more-options)
+  - [Document Ids](#document-ids)
+  - [Document Data](#document-data)
+  - [Using Elasticquent With Custom Collections](#using-elasticquetn-with-custom-collections)
+
+- [Roadmap](#roadmap)
 
 ## Reporting Issues
-
 If you do find an issue, please feel free to report it with [GitHub's bug tracker](https://github.com/elasticquent/Elasticquent/issues) for this project.
 
 Alternatively, fork the project and make a pull request :)
 
 ## Overview
-
 Elasticquent allows you take an Eloquent model and easily index and search its contents in Elasticsearch.
 
 ```php
@@ -65,16 +64,16 @@ Plus, you can still use all the Eloquent collection functionality:
 Check out the rest of the documentation for how to get started using Elasticsearch and Elasticquent!
 
 ### How Elasticquent Works
-
 When using a database, Eloquent models are populated from data read from a database table. With Elasticquent, models are populated by data indexed in Elasticsearch. The whole idea behind using Elasticsearch for search is that its fast and light, so you model functionality will be dictated by what data has been indexed for your document.
 
 ## Setup
-
 Before you start using Elasticquent, make sure you've installed [Elasticsearch](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/_installation.html).
 
 To get started, add Elasticquent to you composer.json file:
 
-    "elasticquent/elasticquent": "dev-master"
+```
+"elasticquent/elasticquent": "dev-master"
+```
 
 Once you've run a `composer update`, add the Elasticquent trait to any Eloquent model that you want to be able to index in Elasticsearch:
 
@@ -91,7 +90,6 @@ class Book extends Eloquent {
 Now your Eloquent model has some extra methods that make it easier to index your model's data using Elasticsearch.
 
 ### Elasticsearch Configuration
-
 If you need to pass a special configuration array Elasticsearch, you can add that in an `elasticquent.php` config file at `/app/config/elasticquent.php` for Laravel 4, or `/config/elasticquent.php` for Laravel 5:
 
 ```php
@@ -127,16 +125,16 @@ return array(
     'default_index' => 'my_custom_index_name',
 
 );
-
 ```
 
 ### Indexes and Mapping
-
 While you can definitely build your indexes and mapping through the Elasticsearch API, you can also use some helper methods to build indexes and types right from your models.
 
 If you want a simple way to create indexes, Elasticquent models have a function for that:
 
-    Book::createIndex($shards = null, $replicas = null);
+```
+Book::createIndex($shards = null, $replicas = null);
+```
 
 For mapping, you can set a `mappingProperties` property in your model and use some mapping functions from there:
 
@@ -175,7 +173,6 @@ You can also get the type mapping and check if it exists.
 ```
 
 ### Setting a Custom Index Name
-
 Elastiquent will use `default` as your index name, but you can set a custom index name by creating an `elasticquent.php` config file in `/app/config/`:
 
 ```php
@@ -198,7 +195,6 @@ return array(
 ```
 
 ### Setting a Custom Type Name
-
 By default, Elasticquent will use the table name of your models as the type name for indexing. If you'd like to override it, you can with the `getTypeName` function.
 
 ```php
@@ -215,7 +211,6 @@ To check if the type for the Elasticquent model exists yet, use `typeExists`:
 ```
 
 ## Indexing Documents
-
 To index all the entries in an Eloquent model, use `addAllToIndex`:
 
 ```php
@@ -243,11 +238,9 @@ You can also reindex an entire model:
 ```
 
 ## Searching
-
 There are three ways to search in Elasticquent. All three methods return a search collection.
 
 ### Simple term search
-
 The first method is a simple term search that searches all fields.
 
 ```php
@@ -255,7 +248,6 @@ The first method is a simple term search that searches all fields.
 ```
 
 ### Query Based Search
-
 The second is a query based search for more complex searching needs:
 
 ```php
@@ -267,8 +259,8 @@ The second is a query based search for more complex searching needs:
 ```php
     $books = Book::searchByQuery(array('match' => array('title' => 'Moby Dick')));
 ```
-Here's the list of available parameters:
 
+Here's the list of available parameters:
 - `query` - Your ElasticSearch Query
 - `aggregations` - The Aggregations you wish to return. [See Aggregations for details](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-aggregations.html).
 - `sourceFields` - Limits returned set to the selected fields only
@@ -277,9 +269,7 @@ Here's the list of available parameters:
 - `sort` - Your sort query
 
 ### Raw queries
-
-The final method is a raw query that will be sent to Elasticsearch. This method will provide you with the most flexibility
-when searching for records inside Elasticsearch:
+The final method is a raw query that will be sent to Elasticsearch. This method will provide you with the most flexibility when searching for records inside Elasticsearch:
 
 ```php
     $books = Book::complexSearch(array(
@@ -294,12 +284,12 @@ when searching for records inside Elasticsearch:
 ```
 
 This is the equivalent to:
+
 ```php
     $books = Book::searchByQuery(array('match' => array('title' => 'Moby Dick')));
 ```
 
 ### Search Collections
-
 When you search on an Elasticquent model, you get a search collection with some special functions.
 
 You can get total hits:
@@ -339,7 +329,6 @@ And access search aggregations - [See Aggregations for details](http://www.elast
 ```
 
 ### Search Collection Documents
-
 Items in a search result collection will have some extra data that comes from Elasticsearch. You can always check and see if a model is a document or not by using the `isDocument` function:
 
 ```php
@@ -353,7 +342,6 @@ You can check the document score that Elasticsearch assigned to this document wi
 ```
 
 ### Chunking results from Elastiquent
-
 Similar to `Illuminate\Support\Collection`, the `chunk` method breaks the Elasticquent collection into multiple, smaller collections of a given size:
 
 ```php
@@ -361,9 +349,7 @@ Similar to `Illuminate\Support\Collection`, the `chunk` method breaks the Elasti
     $books = $all_books->chunk(10);
 ```
 
-
 ### Using the Search Collection Outside of Elasticquent
-
 If you're dealing with raw search data from outside of Elasticquent, you can use the Elasticquent search results collection to turn that data into a collection.
 
 ```php
@@ -377,17 +363,13 @@ $params = array(
 $params['body']['query']['match']['title'] = 'Moby Dick';
 
 $collection = new \Elasticquent\ElasticquentResultCollection($client->search($params), new Book);
-
 ```
 
 ## More Options
-
 ### Document IDs
-
 Elasticquent will use whatever is set as the `primaryKey` for your Eloquent models as the id for your Elasticsearch documents.
 
 ### Document Data
-
 By default, Elasticquent will use the entire attribute array for your Elasticsearch documents. However, if you want to customize how your search documents are structured, you can set a `getIndexDocumentData` function that returns you own custom document array.
 
 ```php
@@ -400,10 +382,10 @@ function getIndexDocumentData()
     );
 }
 ```
+
 Be careful with this, as Elasticquent reads the document source into the Eloquent model attributes when creating a search result collection, so make sure you are indexing enough data for your the model functionality you want to use.
 
 ### Using Elasticquent With Custom Collections
-
 If you are using a custom collection with your Eloquent models, you just need to add the `ElasticquentCollectionTrait` to your collection so you can use `addToIndex`.
 
 ```php
@@ -413,9 +395,19 @@ class MyCollection extends \Illuminate\Database\Eloquent\Collection {
 }
 ```
 
+## Deleting Documents in A type:
+If you are using elastic version >= 2, you have to install [delete-by-query plugin](https://www.elastic.co/guide/en/elasticsearch/plugins/2.0/plugins-delete-by-query.html)
+### delete All Document
+```php
+    Book::deleteAllDocuments();
+```
+### delete Document By Query
+```php
+    $query = array('match' => array('is_published' => 0));
+    Book::deleteDocuments($query);
+```
+
 ## Roadmap
-
 Elasticquent currently needs:
-
-* Tests that mock ES API calls.
-* Support for routes
+- Tests that mock ES API calls.
+- Support for routes

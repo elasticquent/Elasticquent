@@ -1,8 +1,8 @@
-<?php
+<?php namespace Elasticquent;
 
-namespace Elasticquent;
-
-use Exception;
+use \Exception;
+use \Elasticquent\ElasticquentCollection as ElasticquentCollection;
+use \Elasticquent\ElasticquentResultCollection as ResultCollection;
 
 /**
  * Elasticquent Trait
@@ -12,7 +12,7 @@ use Exception;
  */
 trait ElasticquentTrait
 {
-    use ElasticquentClientTrait, EloquentMethods;
+    use ElasticquentClientTrait;
 
     /**
      * Uses Timestamps In Index
@@ -51,19 +51,10 @@ trait ElasticquentTrait
     protected $documentVersion = null;
 
     /**
-     * Mapping Properties
-     *
-     * Elasticsearch mapping properties
-     *
-     * @var null|array
-     */
-    protected $mappingProperties = null;
-
-    /**
      * New Collection
      *
      * @param array $models
-     * @return ElasticquentCollection
+     * @return Collection
      */
     public function newCollection(array $models = array())
     {
@@ -77,8 +68,9 @@ trait ElasticquentTrait
      */
     public function getIndexName()
     {
-        // The first thing we check is if there is an elasticquent
-        // config file and if there is a default index.
+        // The first thing we check is if there
+        // is an elasticquery config file and if there is a
+        // default index.
         $index_name = $this->getElasticConfig('default_index');
 
         if (!empty($index_name)) {
@@ -110,19 +102,17 @@ trait ElasticquentTrait
     /**
      * Use Timestamps In Index.
      */
-    public function useTimestampsInIndex($shouldUse = true)
+    public function useTimestampsInIndex()
     {
-        $this->usesTimestampsInIndex = $shouldUse;
+        $this->usesTimestampsInIndex = true;
     }
 
     /**
      * Don't Use Timestamps In Index.
-     *
-     * @deprecated
      */
     public function dontUseTimestampsInIndex()
     {
-        $this->useTimestampsInIndex(false);
+        $this->usesTimestampsInIndex = false;
     }
 
     /**
@@ -230,14 +220,20 @@ trait ElasticquentTrait
      * @param array $query
      * @param array $aggregations
      * @param array $sourceFields
-     * @param int   $limit
-     * @param int   $offset
+     * @param int $limit
+     * @param int $offset
      * @param array $sort
      *
-     * @return ElasticquentResultCollection
+     * @return ResultCollection
      */
-    public static function searchByQuery($query = null, $aggregations = null, $sourceFields = null, $limit = null, $offset = null, $sort = null)
-    {
+    public static function searchByQuery(
+        $query = null,
+        $aggregations = null,
+        $sourceFields = null,
+        $limit = null,
+        $offset = null,
+        $sort = null
+    ) {
         $instance = new static;
 
         $params = $instance->getBasicEsParams(true, true, true, $limit, $offset);
@@ -260,7 +256,7 @@ trait ElasticquentTrait
 
         $result = $instance->getElasticSearchClient()->search($params);
 
-        return new \Elasticquent\ElasticquentResultCollection($result, $instance = new static);
+        return new ResultCollection($result, $instance = new static);
     }
 
     /**
@@ -268,7 +264,7 @@ trait ElasticquentTrait
      *
      * Using this method, a custom query can be sent to Elasticsearch.
      *
-     * @param  $params parameters to be passed directly to Elasticsearch
+     * @param $params
      * @return ElasticquentResultCollection
      */
     public static function complexSearch($params)
@@ -277,7 +273,7 @@ trait ElasticquentTrait
 
         $result = $instance->getElasticSearchClient()->search($params);
 
-        return new \Elasticquent\ElasticquentResultCollection($result, $instance = new static);
+        return new ResultCollection($result, $instance = new static);
     }
 
     /**
@@ -287,9 +283,9 @@ trait ElasticquentTrait
      *
      * @param string $term
      *
-     * @return ElasticquentResultCollection
+     * @return ResultCollection
      */
-    public static function search($term = '')
+    public static function search($term = null)
     {
         $instance = new static;
 
@@ -299,7 +295,7 @@ trait ElasticquentTrait
 
         $result = $instance->getElasticSearchClient()->search($params);
 
-        return new \Elasticquent\ElasticquentResultCollection($result, $instance = new static);
+        return new ResultCollection($result, $instance = new static);
     }
 
     /**
@@ -376,16 +372,21 @@ trait ElasticquentTrait
      * @param bool $getIdIfPossible
      * @param bool $getSourceIfPossible
      * @param bool $getTimestampIfPossible
-     * @param int  $limit
-     * @param int  $offset
+     * @param int $limit
+     * @param int $offset
      *
      * @return array
      */
-    public function getBasicEsParams($getIdIfPossible = true, $getSourceIfPossible = false, $getTimestampIfPossible = false, $limit = null, $offset = null)
-    {
+    public function getBasicEsParams(
+        $getIdIfPossible = true,
+        $getSourceIfPossible = false,
+        $getTimestampIfPossible = false,
+        $limit = null,
+        $offset = null
+    ) {
         $params = array(
             'index' => $this->getIndexName(),
-            'type' => $this->getTypeName(),
+            'type'  => $this->getTypeName(),
         );
 
         if ($getIdIfPossible && $this->getKey()) {
@@ -411,8 +412,8 @@ trait ElasticquentTrait
     /**
      * Build the 'fields' parameter depending on given options.
      *
-     * @param bool   $getSourceIfPossible
-     * @param bool   $getTimestampIfPossible
+     * @param bool $getSourceIfPossible
+     * @param bool $getTimestampIfPossible
      * @return array
      */
     private function buildFieldsParameter($getSourceIfPossible, $getTimestampIfPossible)
@@ -472,7 +473,7 @@ trait ElasticquentTrait
         $mapping = $instance->getBasicEsParams();
 
         $params = array(
-            '_source' => array('enabled' => true),
+            '_source'    => array('enabled' => true),
             'properties' => $instance->getMappingProperties(),
         );
 
@@ -579,6 +580,32 @@ trait ElasticquentTrait
         $params = $instance->getBasicEsParams();
 
         return $instance->getElasticSearchClient()->indices()->existsType($params);
+    }
+
+    /**
+     * Delete Documents in A type by query.
+     * Delete By Query Plugin required
+     * https://www.elastic.co/guide/en/elasticsearch/plugins/2.0/plugins-delete-by-query.html#plugins-delete-by-query
+     * @param array $query
+     */
+    public static function deleteDocuments($query = array())
+    {
+        $instance = new static;
+        $params = $instance->getBasicEsParams();
+        $params['body']['query'] = $query;
+
+        return $instance->getElasticSearchClient()->deleteByQuery($params);
+    }
+
+    /**
+     * Delete all Documents in A type.
+     * Delete By Query Plugin required
+     * https://www.elastic.co/guide/en/elasticsearch/plugins/2.0/plugins-delete-by-query.html#plugins-delete-by-query
+     * @return array
+     */
+    public static function deleteAllDocuments()
+    {
+        return self::deleteDocuments(array('match_all'=>[]));
     }
 
     /**
