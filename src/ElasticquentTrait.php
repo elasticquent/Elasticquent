@@ -520,34 +520,14 @@ trait ElasticquentTrait
     }
 
     /**
-     * Index Exists ?
-     *
-     * @return bool
-     */
-    public static function indexExists()
-    {
-        $instance = new static;
-
-        $client = $instance->getElasticSearchClient();
-
-        $index = array(
-            'index' => $instance->getIndexName(),
-        );
-
-        return $client->indices()->exists($index);
-
-
-    }
-
-    /**
      * Create Index
      *
      * @param int $shards
      * @param int $replicas
-     *
+     * @param array $extraSettings
      * @return array
      */
-    public static function createIndex($shards = null, $replicas = null)
+    public static function createIndex($shards = null, $replicas = null, $extraSettings = array())
     {
         $instance = new static;
 
@@ -563,6 +543,9 @@ trait ElasticquentTrait
 
         if (!is_null($replicas)) {
             $index['body']['settings']['number_of_replicas'] = $replicas;
+        }
+        if (count($extraSettings)) {
+            $index['body']['settings'] = $extraSettings;
         }
 
         return $client->indices()->create($index);
@@ -603,44 +586,20 @@ trait ElasticquentTrait
     }
 
     /**
-     * Check f document already exists?
+     * Index Exists.
      *
-     * Retrieve an ElasticSearch document
-     * for this enty.
+     * Does this type exist?
      *
-     * @return array
+     * @return bool
      */
-    public function isDocumentExists()
-    {
-        return $this->getElasticSearchClient()->exists($this->getBasicEsParams());
-    }
-
-
-    /**
-     * Delete Documents in A type by query.
-     * Delete By Query Plugin required
-     * https://www.elastic.co/guide/en/elasticsearch/plugins/2.0/plugins-delete-by-query.html#plugins-delete-by-query
-     * @param array $query
-     */
-    public static function deleteDocuments($query = array())
+    public static function indexExists()
     {
         $instance = new static;
-        $params = $instance->getBasicEsParams();
-        $params['body']['query'] = $query;
+        $params = ['index' => $instance->getIndexName()];
 
-        return $instance->getElasticSearchClient()->deleteByQuery($params);
+        return $instance->getElasticSearchClient()->indices()->exists($params);
     }
 
-    /**
-     * Delete all Documents in A type.
-     * Delete By Query Plugin required
-     * https://www.elastic.co/guide/en/elasticsearch/plugins/2.0/plugins-delete-by-query.html#plugins-delete-by-query
-     * @return array
-     */
-    public static function deleteAllDocuments()
-    {
-        return self::deleteDocuments(array('match_all' => []));
-    }
 
     /**
      * New From Hit Builder
