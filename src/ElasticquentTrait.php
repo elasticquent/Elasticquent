@@ -603,6 +603,20 @@ trait ElasticquentTrait
     }
 
     /**
+     * Check f document already exists?
+     *
+     * Retrieve an ElasticSearch document
+     * for this enty.
+     *
+     * @return array
+     */
+    public function isDocumentExists()
+    {
+        return $this->getElasticSearchClient()->exists($this->getBasicEsParams());
+    }
+
+
+    /**
      * Delete Documents in A type by query.
      * Delete By Query Plugin required
      * https://www.elastic.co/guide/en/elasticsearch/plugins/2.0/plugins-delete-by-query.html#plugins-delete-by-query
