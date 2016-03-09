@@ -13,9 +13,10 @@ trait ElasticquentCollectionTrait
     /**
      * Add To Index
      *
-     * Add all documents in this collection to to the Elasticsearch document index.
+     * Add all documents in this collection to
+     * to the Elasticsearch document index.
      *
-     * @return null|array
+     * @return mixed
      */
     public function addToIndex()
     {

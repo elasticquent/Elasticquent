@@ -54,6 +54,6 @@ trait ElasticquentConfigTrait
      */
     protected function getConfigFile()
     {
-        return __DIR__ . '/config/elasticquent.php';
+        return __DIR__.'/config/elasticquent.php';
     }
 }
