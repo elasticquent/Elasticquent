@@ -159,22 +159,4 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
 
         return new Paginator($sliced_items, $this->hits, $this->totalHits(), $pageLimit, $page, ['path' => Paginator::resolveCurrentPath()]);
     }
-
-    /**
-     * Chunk the underlying collection array.
-     *
-     * @param  int   $size
-     * @param  bool  $preserveKeys
-     * @return static
-     */
-    public function chunk($size, $preserveKeys = false)
-    {
-        $chunks = [];
-
-        foreach (array_chunk($this->items, $size, $preserveKeys) as $chunk) {
-            $chunks[] = new static($chunk, $this->instance);
-        }
-
-        return new static($chunks, $this->instance);
-    }
 }
