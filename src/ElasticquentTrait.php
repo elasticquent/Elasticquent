@@ -584,9 +584,11 @@ trait ElasticquentTrait
     public function newFromHitBuilder($hit = array())
     {
         $instance = $this->newInstance(array(), true);
-
-        $attributes = $hit['_source'];
-
+        $keyname = $instance->getKeyName();    
+        
+        $attributes = $hit['_source'];                        
+        $attributes[$keyname] = $hit['_id'];
+        
         // Add fields to attributes
         if (isset($hit['fields'])) {
             foreach ($hit['fields'] as $key => $value) {
