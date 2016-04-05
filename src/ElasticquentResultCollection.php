@@ -17,7 +17,7 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
      * @param $results elasticsearch results
      * @param $instance
      */
-    public function __construct($results, $instance)
+    public function __construct($results, $instance = null)
     {
         // Take our result data and map it
         // to some class properties.
@@ -28,11 +28,27 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
         $this->aggregations = isset($results['aggregations']) ? $results['aggregations'] : array();
 
         // Save the instance we performed the search on.
-        $this->instance = $instance;
+        // This is only done when Elasticquent creates the collection at first.
+        if ($instance !== null) {
+            $this->instance = $instance;
+        }
 
         // Now we need to assign our hits to the
         // items in the collection.
         $this->items = $this->hitsToItems($instance);
+    }
+
+    /**
+     * Set the model instance we performed the search on.
+     *
+     * @param $instance
+     * @return $this
+     */
+    public function setInstance($instance)
+    {
+        $this->instance = $instance;
+
+        return $this;
     }
 
     /**
@@ -142,23 +158,5 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
         $sliced_items = array_slice($this->items, ($page - 1) * $pageLimit, $pageLimit);
 
         return new Paginator($sliced_items, $this->hits, $this->totalHits(), $pageLimit, $page, ['path' => Paginator::resolveCurrentPath()]);
-    }
-
-    /**
-     * Chunk the underlying collection array.
-     *
-     * @param  int   $size
-     * @param  bool  $preserveKeys
-     * @return static
-     */
-    public function chunk($size, $preserveKeys = false)
-    {
-        $chunks = [];
-
-        foreach (array_chunk($this->items, $size, $preserveKeys) as $chunk) {
-            $chunks[] = new static($chunk, $this->instance);
-        }
-
-        return new static($chunks, $this->instance);
     }
 }
