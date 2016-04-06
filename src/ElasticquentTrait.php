@@ -138,6 +138,16 @@ trait ElasticquentTrait
     }
 
     /**
+     * Get Index Settings
+     *
+     * @return array
+     */
+    public function getIndexSettings()
+    {
+        return $this->indexSettings;
+    }
+
+    /**
      * Is Elasticsearch Document
      *
      * Is the data in this module sourced
@@ -527,12 +537,25 @@ trait ElasticquentTrait
             'index' => $instance->getIndexName(),
         );
 
+        $settings = $instance->getIndexSettings();
+        if (!is_null($settings)) {
+            $index['body']['settings'] = $settings;
+        }
+
         if (!is_null($shards)) {
             $index['body']['settings']['number_of_shards'] = $shards;
         }
 
         if (!is_null($replicas)) {
             $index['body']['settings']['number_of_replicas'] = $replicas;
+        }
+
+        $mappingProperties = $instance->getMappingProperties();
+        if (!is_null($mappingProperties)) {
+            $index['body']['mappings'][$instance->getTypeName()] = [
+                '_source' => array('enabled' => true),
+                'properties' => $mappingProperties,
+            ];
         }
 
         return $client->indices()->create($index);
