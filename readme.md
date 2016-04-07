@@ -138,6 +138,55 @@ If you want a simple way to create indexes, Elasticquent models have a function 
 
     Book::createIndex($shards = null, $replicas = null);
 
+For custom analyzer, you can set an `indexSettings` property in your model and define the analyzers from there:
+
+```php
+    /**
+     * The elasticsearch settings.
+     *
+     * @var array
+     */
+    protected $indexSettings = [
+        'analysis' => [
+            'char_filter' => [
+                'replace' => [
+                    'type' => 'mapping',
+                    'mappings' => [
+                        '&=> and '
+                    ],
+                ],
+            ],
+            'filter' => [
+                'word_delimiter' => [
+                    'type' => 'word_delimiter',
+                    'split_on_numerics' => false,
+                    'split_on_case_change' => true,
+                    'generate_word_parts' => true,
+                    'generate_number_parts' => true,
+                    'catenate_all' => true,
+                    'preserve_original' => true,
+                    'catenate_numbers' => true,
+                ]
+            ],
+            'analyzer' => [
+                'default' => [
+                    'type' => 'custom',
+                    'char_filter' => [
+                        'html_strip',
+                        'replace',
+                    ],
+                    'tokenizer' => 'whitespace',
+                    'filter' => [
+                        'lowercase',
+                        'word_delimiter',
+                    ],
+                ],
+            ],
+        ],
+    ];
+
+```
+
 For mapping, you can set a `mappingProperties` property in your model and use some mapping functions from there:
 
 ```php
