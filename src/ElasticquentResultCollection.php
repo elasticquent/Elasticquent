@@ -9,64 +9,40 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
     protected $shards;
     protected $hits;
     protected $aggregations = null;
-    protected $instance;
 
     /**
      * Create a new instance containing Elasticsearch results
      *
-     * @param $results elasticsearch results
-     * @param $instance
+     * @param  mixed  $items
+     * @param  array  $meta
+     * @return void
      */
-    public function __construct($results, $instance = null)
+    public function __construct($items, $meta = null)
     {
-        // Take our result data and map it
+        parent::__construct($items);
+
+        // Take our result meta and map it
         // to some class properties.
-        $this->took         = $results['took'];
-        $this->timed_out    = $results['timed_out'];
-        $this->shards       = $results['_shards'];
-        $this->hits         = $results['hits'];
-        $this->aggregations = isset($results['aggregations']) ? $results['aggregations'] : array();
-
-        // Save the instance we performed the search on.
-        // This is only done when Elasticquent creates the collection at first.
-        if ($instance !== null) {
-            $this->instance = $instance;
+        if (is_array($meta)) {
+            $this->setMeta($meta);
         }
-
-        // Now we need to assign our hits to the
-        // items in the collection.
-        $this->items = $this->hitsToItems($instance);
     }
 
     /**
-     * Set the model instance we performed the search on.
+     * Set the result meta.
      *
-     * @param $instance
+     * @param array $meta
      * @return $this
      */
-    public function setInstance($instance)
+    public function setMeta(array $meta)
     {
-        $this->instance = $instance;
+        $this->took = data_get($meta, 'took');
+        $this->timed_out = data_get($meta, 'timed_out');
+        $this->shards = data_get($meta, '_shards');
+        $this->hits = data_get($meta, 'hits');
+        $this->aggregations = data_get($meta, 'aggregations', []);
 
         return $this;
-    }
-
-    /**
-     * Hits To Items
-     *
-     * @param Eloquent model instance $instance
-     *
-     * @return array
-     */
-    private function hitsToItems($instance)
-    {
-        $items = array();
-
-        foreach ($this->hits['hits'] as $hit) {
-            $items[] = $instance->newFromHitBuilder($hit);
-        }
-
-        return $items;
     }
 
     /**
