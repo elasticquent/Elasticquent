@@ -13,12 +13,23 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
     /**
      * Create a new instance containing Elasticsearch results
      *
+     * @todo Remove backwards compatible detection at further point
+     * @deprecated Initialize with params ($results, $instance) is deprecated,
+     *    please use Model::hydrateElasticsearchResult($results).
+     *
      * @param  mixed  $items
      * @param  array  $meta
      * @return void
      */
     public function __construct($items, $meta = null)
     {
+        // Detect if arguments are old deprecated version ($results, $instance)
+        if (isset($items['hits']) and $meta instanceof \Illuminate\Database\Eloquent\Model) {
+            $instance = $meta;
+            $meta = $items;
+            $items = $instance::hydrateElasticsearchResult($meta);
+        }
+
         parent::__construct($items);
 
         // Take our result meta and map it

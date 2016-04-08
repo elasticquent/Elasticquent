@@ -263,10 +263,7 @@ trait ElasticquentTrait
 
         $result = $instance->getElasticSearchClient()->search($params);
 
-        $items = $result['hits']['hits'];
-        $collection = $instance->hydrateElasticquentResult($items, $result);
-
-        return $collection;
+        return static::hydrateElasticsearchResult($result);
     }
 
     /**
@@ -283,10 +280,7 @@ trait ElasticquentTrait
 
         $result = $instance->getElasticSearchClient()->search($params);
 
-        $items = $result['hits']['hits'];
-        $collection = $instance->hydrateElasticquentResult($items, $result);
-
-        return $collection;
+        return static::hydrateElasticsearchResult($result);
     }
 
     /**
@@ -308,10 +302,7 @@ trait ElasticquentTrait
 
         $result = $instance->getElasticSearchClient()->search($params);
 
-        $items = $result['hits']['hits'];
-        $collection = $instance->hydrateElasticquentResult($items, $result);
-
-        return $collection;
+        return static::hydrateElasticsearchResult($result);
     }
 
     /**
@@ -645,6 +636,18 @@ trait ElasticquentTrait
         }
 
         return $instance;
+    }
+
+    /**
+     * Create a elacticquent result collection of models from plain elasticsearch result.
+     *
+     * @param  array  $result
+     * @return \Elasticquent\ElasticquentResultCollection
+     */
+    public static function hydrateElasticsearchResult(array $result)
+    {
+        $items = $result['hits']['hits'];
+        return static::hydrateElasticquentResult($items, $meta = $result);
     }
 
     /**
