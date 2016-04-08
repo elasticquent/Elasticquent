@@ -3,6 +3,7 @@
 namespace Elasticquent;
 
 use Exception;
+use ReflectionMethod;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
@@ -685,25 +686,27 @@ trait ElasticquentTrait
      * @param  \Illuminate\Database\Eloquent\Model  $model
      */
     public static function loadRelationsAttributesRecursive(Model $model)
-    {
-        $attributes = $model->getAttributes();
-
-        foreach ($attributes as $key => $value) {
-            if (is_callable($model, $key)) {
-                $relation = $model->$key();
-                if ($relation instanceof Relation) {
-                    // Check if the relation field is single model or collections
-                    if (!static::isMultiLevelArray($value)) {
-                        $value = [$value];
-                    }
-                    $models = static::hydrateRecursive($relation->getModel(), $value, $relation);
-                    // Unset attribute before match relation
-                    unset($model[$key]);
-                    $relation->match([$model], $models, $key);
-                }
+  {
+    $attributes = $model->getAttributes();
+    foreach ($attributes as $key => $value) {
+      if (method_exists($model, $key) ) {
+        $refl = new ReflectionMethod($model, $key);
+        if($refl->class != "Illuminate\Database\Eloquent\Model"){
+          $relation = $model->$key();
+          if ($relation instanceof Relation) {
+            // Check if the relation field is single model or collections
+            if (!static::isMultiLevelArray($value)) {
+              $value = [$value];
             }
+            $models = static::hydrateRecursive($relation->getModel(), $value, $relation);
+            // Unset attribute before match relation
+            unset($model[$key]);
+            $relation->match([$model], $models, $key);
+          }
         }
+      }
     }
+  }
 
     /**
      * Get the pivot attribute from a model.
