@@ -85,6 +85,15 @@ Once you've run a `composer update`, you need to register Laravel service provid
 ],
 ```
 
+We also provide a facade for elasticsearch-php client (which has connected using our settings), add following to your `config/app.php` if you need so.
+
+```php
+'aliases' => [
+    ...
+    'Es' => Elasticquent\ElasticquentElasticsearchFacade::class,
+],
+```
+
 Then add the Elasticquent trait to any Eloquent model that you want to be able to index in Elasticsearch:
 
 ```php

@@ -25,6 +25,14 @@ class ElasticquentServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        // Support class
+        $this->app->singleton('elasticquent.support', function () {
+            return new ElasticquentSupport;
+        });
+
+        // Elasticsearch client instance
+        $this->app->singleton('elasticquent.elasticsearch', function ($app) {
+            return $app->make('elasticquent.support')->getElasticSearchClient();
+        });
     }
 }
