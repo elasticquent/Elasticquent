@@ -47,11 +47,11 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
      */
     public function setMeta(array $meta)
     {
-        $this->took = data_get($meta, 'took');
-        $this->timed_out = data_get($meta, 'timed_out');
-        $this->shards = data_get($meta, '_shards');
-        $this->hits = data_get($meta, 'hits');
-        $this->aggregations = data_get($meta, 'aggregations', []);
+        $this->took = $meta['took'];
+        $this->timed_out = $meta['timed_out'];
+        $this->shards = $meta['_shards'];
+        $this->hits = $meta['hits'];
+        $this->aggregations = array_get($meta, 'aggregations', []);
 
         return $this;
     }
