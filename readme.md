@@ -76,7 +76,16 @@ To get started, add Elasticquent to you composer.json file:
 
     "elasticquent/elasticquent": "dev-master"
 
-Once you've run a `composer update`, add the Elasticquent trait to any Eloquent model that you want to be able to index in Elasticsearch:
+Once you've run a `composer update`, you need to register Laravel service provider, in your `config/app.php`:
+
+```php
+'providers' => [
+    ...
+    Elasticquent\ElasticquentServiceProvider::class,
+],
+```
+
+Then add the Elasticquent trait to any Eloquent model that you want to be able to index in Elasticsearch:
 
 ```php
 use Elasticquent\ElasticquentTrait;
@@ -92,7 +101,11 @@ Now your Eloquent model has some extra methods that make it easier to index your
 
 ### Elasticsearch Configuration
 
-If you need to pass a special configuration array Elasticsearch, you can add that in an `elasticquent.php` config file at `/app/config/elasticquent.php` for Laravel 4, or `/config/elasticquent.php` for Laravel 5:
+By default, Elasticquent will connect to `localhost:9200` and use `default` as index name, you can change this and the other settings in the configuration file. You can add the `elasticquent.php` config file at `/app/config/elasticquent.php` for Laravel 4, or use the following Artisan command to publish the configuration file into your config directory for Laravel 5:
+
+```shell
+$ php artisan vendor:publish --provider="Elasticquent\ElasticquentServiceProvider"
+```
 
 ```php
 <?php
@@ -221,29 +234,6 @@ You can also get the type mapping and check if it exists.
 ```php
     Book::mappingExists();
     Book::getMapping();
-```
-
-### Setting a Custom Index Name
-
-Elastiquent will use `default` as your index name, but you can set a custom index name by creating an `elasticquent.php` config file in `/app/config/`:
-
-```php
-<?php
-
-return array(
-
-    /*
-    |--------------------------------------------------------------------------
-    | Default Index Name
-    |--------------------------------------------------------------------------
-    |
-    | This is the index name that Elastiquent will use for all
-    | Elastiquent models.
-    */
-
-    'default_index' => 'my_custom_index_name',
-
-);
 ```
 
 ### Setting a Custom Type Name
