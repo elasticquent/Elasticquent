@@ -689,7 +689,7 @@ trait ElasticquentTrait
         $attributes = $model->getAttributes();
 
         foreach ($attributes as $key => $value) {
-            if (method_exists($model, $key)) {
+            if (is_callable($model, $key)) {
                 $relation = $model->$key();
                 if ($relation instanceof Relation) {
                     // Check if the relation field is single model or collections
