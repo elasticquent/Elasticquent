@@ -424,7 +424,7 @@ $params = array(
 
 $params['body']['query']['match']['title'] = 'Moby Dick';
 
-$collection = new \Elasticquent\ElasticquentResultCollection($client->search($params), new Book);
+$collection = Book::hydrateElasticsearchResult($client->search($params));
 
 ```
 

@@ -9,64 +9,51 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
     protected $shards;
     protected $hits;
     protected $aggregations = null;
-    protected $instance;
 
     /**
      * Create a new instance containing Elasticsearch results
      *
-     * @param $results elasticsearch results
-     * @param $instance
+     * @todo Remove backwards compatible detection at further point
+     * @deprecated Initialize with params ($results, $instance) is deprecated,
+     *    please use Model::hydrateElasticsearchResult($results).
+     *
+     * @param  mixed  $items
+     * @param  array  $meta
+     * @return void
      */
-    public function __construct($results, $instance = null)
+    public function __construct($items, $meta = null)
     {
-        // Take our result data and map it
-        // to some class properties.
-        $this->took         = $results['took'];
-        $this->timed_out    = $results['timed_out'];
-        $this->shards       = $results['_shards'];
-        $this->hits         = $results['hits'];
-        $this->aggregations = isset($results['aggregations']) ? $results['aggregations'] : array();
-
-        // Save the instance we performed the search on.
-        // This is only done when Elasticquent creates the collection at first.
-        if ($instance !== null) {
-            $this->instance = $instance;
+        // Detect if arguments are old deprecated version ($results, $instance)
+        if (isset($items['hits']) and $meta instanceof \Illuminate\Database\Eloquent\Model) {
+            $instance = $meta;
+            $meta = $items;
+            $items = $instance::hydrateElasticsearchResult($meta);
         }
 
-        // Now we need to assign our hits to the
-        // items in the collection.
-        $this->items = $this->hitsToItems($instance);
+        parent::__construct($items);
+
+        // Take our result meta and map it
+        // to some class properties.
+        if (is_array($meta)) {
+            $this->setMeta($meta);
+        }
     }
 
     /**
-     * Set the model instance we performed the search on.
+     * Set the result meta.
      *
-     * @param $instance
+     * @param array $meta
      * @return $this
      */
-    public function setInstance($instance)
+    public function setMeta(array $meta)
     {
-        $this->instance = $instance;
+        $this->took = isset($meta['took']) ? $meta['took'] : null;
+        $this->timed_out = isset($meta['timed_out']) ? $meta['timed_out'] : null;
+        $this->shards = isset($meta['_shards']) ? $meta['_shards'] : null;
+        $this->hits = isset($meta['hits']) ? $meta['hits'] : null;
+        $this->aggregations = isset($meta['aggregations']) ? $meta['aggregations'] : [];
 
         return $this;
-    }
-
-    /**
-     * Hits To Items
-     *
-     * @param Eloquent model instance $instance
-     *
-     * @return array
-     */
-    private function hitsToItems($instance)
-    {
-        $items = array();
-
-        foreach ($this->hits['hits'] as $hit) {
-            $items[] = $instance->newFromHitBuilder($hit);
-        }
-
-        return $items;
     }
 
     /**

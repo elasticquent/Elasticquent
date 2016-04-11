@@ -264,7 +264,7 @@ trait ElasticquentTrait
 
         $result = $instance->getElasticSearchClient()->search($params);
 
-        return new \Elasticquent\ElasticquentResultCollection($result, $instance = new static);
+        return static::hydrateElasticsearchResult($result);
     }
 
     /**
@@ -281,7 +281,7 @@ trait ElasticquentTrait
 
         $result = $instance->getElasticSearchClient()->search($params);
 
-        return new \Elasticquent\ElasticquentResultCollection($result, $instance = new static);
+        return static::hydrateElasticsearchResult($result);
     }
 
     /**
@@ -303,7 +303,7 @@ trait ElasticquentTrait
 
         $result = $instance->getElasticSearchClient()->search($params);
 
-        return new \Elasticquent\ElasticquentResultCollection($result, $instance = new static);
+        return static::hydrateElasticsearchResult($result);
     }
 
     /**
@@ -640,6 +640,36 @@ trait ElasticquentTrait
     }
 
     /**
+     * Create a elacticquent result collection of models from plain elasticsearch result.
+     *
+     * @param  array  $result
+     * @return \Elasticquent\ElasticquentResultCollection
+     */
+    public static function hydrateElasticsearchResult(array $result)
+    {
+        $items = $result['hits']['hits'];
+        return static::hydrateElasticquentResult($items, $meta = $result);
+    }
+
+    /**
+     * Create a elacticquent result collection of models from plain arrays.
+     *
+     * @param  array  $items
+     * @param  array  $meta
+     * @return \Elasticquent\ElasticquentResultCollection
+     */
+    public static function hydrateElasticquentResult(array $items, $meta = null)
+    {
+        $instance = new static;
+
+        $items = array_map(function ($item) use ($instance) {
+            return $instance->newFromHitBuilder($item);
+        }, $items);
+
+        return $instance->newElasticquentResultCollection($items, $meta);
+    }
+
+    /**
      * Create a new model instance that is existing recursive.
      *
      * @param  \Illuminate\Database\Eloquent\Model  $model
@@ -730,6 +760,18 @@ trait ElasticquentTrait
                 $model->setRelation($key, $pivot);
             }
         }
+    }
+
+    /**
+     * Create a new Elasticquent Result Collection instance.
+     *
+     * @param  array  $models
+     * @param  array  $meta
+     * @return \Elasticquent\ElasticquentResultCollection
+     */
+    public function newElasticquentResultCollection(array $models = [], $meta = null)
+    {
+        return new ElasticquentResultCollection($models, $meta);
     }
 
     /**
