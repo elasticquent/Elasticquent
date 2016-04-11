@@ -362,7 +362,7 @@ trait ElasticquentTrait
      * Get Search Document
      *
      * Retrieve an ElasticSearch document
-     * for this enty.
+     * for this entity.
      *
      * @return array
      */
@@ -609,10 +609,10 @@ trait ElasticquentTrait
      */
     public function newFromHitBuilder($hit = array())
     {
-        $keyname = $this->getKeyName();
+        $key_name = $this->getKeyName();
         
         $attributes = $hit['_source'];
-        $attributes[$keyname] = is_numeric($hit['_id']) ? intval($hit['_id']) : $hit['_id'];
+        $attributes[$key_name] = is_numeric($hit['_id']) ? intval($hit['_id']) : $hit['_id'];
         
         // Add fields to attributes
         if (isset($hit['fields'])) {
@@ -644,7 +644,7 @@ trait ElasticquentTrait
      *
      * @param  \Illuminate\Database\Eloquent\Model  $model
      * @param  array  $attributes
-     * @param  \Illuminate\Database\Eloquent\Relation  $parentRelation
+     * @param  \Illuminate\Database\Eloquent\Relations\Relation  $parentRelation
      * @return static
      */
     public static function newFromBuilderRecursive(Model $model, array $attributes = [], Relation $parentRelation = null)
@@ -664,9 +664,9 @@ trait ElasticquentTrait
     /**
      * Create a collection of models from plain arrays recursive.
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
-     * @param  \Illuminate\Database\Eloquent\Relation  $parentRelation
-     * @param  array  $items
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param  \Illuminate\Database\Eloquent\Relations\Relation $parentRelation
+     * @param  array $items
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public static function hydrateRecursive(Model $model, array $items, Relation $parentRelation = null)
@@ -683,36 +683,41 @@ trait ElasticquentTrait
     /**
      * Get the relations attributes from a model.
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  \Illuminate\Database\Eloquent\Model $model
      */
     public static function loadRelationsAttributesRecursive(Model $model)
-  {
-    $attributes = $model->getAttributes();
-    foreach ($attributes as $key => $value) {
-      if (method_exists($model, $key) ) {
-        $refl = new ReflectionMethod($model, $key);
-        if($refl->class != "Illuminate\Database\Eloquent\Model"){
-          $relation = $model->$key();
-          if ($relation instanceof Relation) {
-            // Check if the relation field is single model or collections
-            if (!static::isMultiLevelArray($value)) {
-              $value = [$value];
+    {
+        $attributes = $model->getAttributes();
+
+        foreach ($attributes as $key => $value) {
+            if (method_exists($model, $key)) {
+                $reflection_method = new ReflectionMethod($model, $key);
+
+                if ($reflection_method->class != "Illuminate\Database\Eloquent\Model") {
+                    $relation = $model->$key();
+
+                    if ($relation instanceof Relation) {
+                        // Check if the relation field is single model or collections
+                        if (!static::isMultiLevelArray($value)) {
+                            $value = [$value];
+                        }
+
+                        $models = static::hydrateRecursive($relation->getModel(), $value, $relation);
+
+                        // Unset attribute before match relation
+                        unset($model[$key]);
+                        $relation->match([$model], $models, $key);
+                    }
+                }
             }
-            $models = static::hydrateRecursive($relation->getModel(), $value, $relation);
-            // Unset attribute before match relation
-            unset($model[$key]);
-            $relation->match([$model], $models, $key);
-          }
         }
-      }
     }
-  }
 
     /**
      * Get the pivot attribute from a model.
      *
      * @param  \Illuminate\Database\Eloquent\Model  $model
-     * @param  \Illuminate\Database\Eloquent\Relation  $parentRelation
+     * @param  \Illuminate\Database\Eloquent\Relations\Relation  $parentRelation
      */
     public static function loadPivotAttribute(Model $model, Relation $parentRelation = null)
     {
