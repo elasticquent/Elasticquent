@@ -27,6 +27,6 @@ return array(
     | Elasticquent models.
     */
 
-    'default_index' => 'default',
+    'default_index' => 'my_custom_index_name',
 
 );

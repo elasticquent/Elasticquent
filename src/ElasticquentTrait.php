@@ -612,7 +612,10 @@ trait ElasticquentTrait
         $key_name = $this->getKeyName();
         
         $attributes = $hit['_source'];
-        $attributes[$key_name] = is_numeric($hit['_id']) ? intval($hit['_id']) : $hit['_id'];
+
+        if (isset($hit['_id'])) {
+            $attributes[$key_name] = is_numeric($hit['_id']) ? intval($hit['_id']) : $hit['_id'];
+        }
         
         // Add fields to attributes
         if (isset($hit['fields'])) {
