@@ -6,6 +6,7 @@ use Exception;
 use ReflectionMethod;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Elasticquent Trait
@@ -735,7 +736,7 @@ trait ElasticquentTrait
                             if ($relation instanceof BelongsTo) {
                                 $model->{$relation->getForeignKey()} = $value[$relation->getOtherKey()];
                             }
-                            
+
                             $value = [$value];
                         }
 
