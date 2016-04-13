@@ -610,13 +610,13 @@ trait ElasticquentTrait
     public function newFromHitBuilder($hit = array())
     {
         $key_name = $this->getKeyName();
-        
+
         $attributes = $hit['_source'];
 
         if (isset($hit['_id'])) {
             $attributes[$key_name] = is_numeric($hit['_id']) ? intval($hit['_id']) : $hit['_id'];
         }
-        
+
         // Add fields to attributes
         if (isset($hit['fields'])) {
             foreach ($hit['fields'] as $key => $value) {
@@ -732,6 +732,10 @@ trait ElasticquentTrait
                     if ($relation instanceof Relation) {
                         // Check if the relation field is single model or collections
                         if (!static::isMultiLevelArray($value)) {
+                            if ($relation instanceof BelongsTo) {
+                                $model->{$relation->getForeignKey()} = $value[$relation->getOtherKey()];
+                            }
+                            
                             $value = [$value];
                         }
 
