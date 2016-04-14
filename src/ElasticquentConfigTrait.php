@@ -5,6 +5,25 @@ namespace Elasticquent;
 trait ElasticquentConfigTrait
 {
     /**
+     * Get Index Name
+     *
+     * @return string
+     */
+    public function getIndexName()
+    {
+        // The first thing we check is if there is an elasticquent
+        // config file and if there is a default index.
+        $index_name = $this->getElasticConfig('default_index');
+
+        if (!empty($index_name)) {
+            return $index_name;
+        }
+
+        // Otherwise we will just go with 'default'
+        return 'default';
+    }
+
+    /**
      * Get the Elasticquent config
      *
      * @param string $key the configuration key
