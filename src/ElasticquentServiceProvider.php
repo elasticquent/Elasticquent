@@ -13,9 +13,11 @@ class ElasticquentServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->publishes([
-            __DIR__.'/config/elasticquent.php' => config_path('elasticquent.php'),
-        ]);
+        if (ElasticquentSupport::isLaravel5()) {
+            $this->publishes([
+                __DIR__.'/config/elasticquent.php' => config_path('elasticquent.php'),
+            ]);
+        }
     }
 
     /**
