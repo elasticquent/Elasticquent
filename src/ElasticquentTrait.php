@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
  */
 trait ElasticquentTrait
 {
-    use ElasticquentClientTrait, EloquentMethods;
+    use ElasticquentClientTrait;
 
     /**
      * Uses Timestamps In Index
