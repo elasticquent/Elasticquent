@@ -49,7 +49,7 @@ Elasticquent allows you take an Eloquent model and easily index and search its c
 When you search, instead of getting a plain array of search results, you instead get an Eloquent collection with some special Elasticsearch functionality.
 
 ```php
-    $books = Book::search('Moby Dick')->get();
+    $books = Book::search('Moby Dick');
     echo $books->totalHits();
 ```
 
