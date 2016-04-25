@@ -14,8 +14,8 @@ return array(
     */
 
     'config' => [
-        'hosts'     => ['localhost:9200'],
-        'retries'   => 1,
+        'hosts'     => [env('ES_HOST', 'localhost') . ':' . env('ES_PORT', 9200)],
+        'retries'   => env('ES_RETRIES', 1),
     ],
 
     /*
@@ -27,6 +27,6 @@ return array(
     | Elasticquent models.
     */
 
-    'default_index' => 'my_custom_index_name',
+    'default_index' => env('ES_INDEX', 'default'),
 
 );
