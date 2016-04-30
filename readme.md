@@ -247,7 +247,27 @@ You can also get the type mapping and check if it exists.
 
 ### Setting a Custom Index Name
 
-By default, Elasticquent will look for the default index in Elasticquent's configuration file. If the configuration cannot be found, it'll use a hardcoded string with the value of `default`. If you'd like to override it, you can do so with the `getIndexName` function.
+By default, Elasticquent will look for the `default_index` key within your configuration file(`config/elasticquent.php`). To set the default value for an index being used, you can edit this file and set the `default_index` key:
+
+```php
+return array(
+
+   // Other configuration keys ...
+   
+   /*
+    |--------------------------------------------------------------------------
+    | Default Index Name
+    |--------------------------------------------------------------------------
+    |
+    | This is the index name that Elastiquent will use for all
+    | Elastiquent models.
+    */
+    
+   'default_index' => 'my_custom_index_name',
+);
+```
+
+If you'd like to have a more dynamic index, you can also override the default configuration with a `getIndexName` method inside your Eloquent model:
 
 ```php
 function getIndexName()
@@ -255,6 +275,8 @@ function getIndexName()
     return 'custom_index_name';
 }
 ```
+
+Note: If no index was specified, Elasticquent will use a hardcoded string with the value of `default`.
 
 ### Setting a Custom Type Name
 
