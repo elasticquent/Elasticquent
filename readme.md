@@ -245,6 +245,17 @@ You can also get the type mapping and check if it exists.
     Book::getMapping();
 ```
 
+### Setting a Custom Index Name
+
+By default, Elasticquent will look for the default index in Elasticquent's configuration file. If the configuration cannot be found, it'll use a hardcoded string with the value of `default`. If you'd like to override it, you can do so with the `getIndexName` function.
+
+```php
+function getIndexName()
+{
+    return 'custom_index_name';
+}
+```
+
 ### Setting a Custom Type Name
 
 By default, Elasticquent will use the table name of your models as the type name for indexing. If you'd like to override it, you can with the `getTypeName` function.
