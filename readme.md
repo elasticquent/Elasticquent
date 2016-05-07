@@ -56,8 +56,7 @@ When you search, instead of getting a plain array of search results, you instead
 Plus, you can still use all the Eloquent collection functionality:
 
 ```php
-    $books = $books->filter(function($book)
-    {
+    $books = $books->filter(function ($book) {
         return $book->hasISBN();
     });
 ```
@@ -99,10 +98,9 @@ Then add the Elasticquent trait to any Eloquent model that you want to be able t
 ```php
 use Elasticquent\ElasticquentTrait;
 
-class Book extends Eloquent {
-
+class Book extends Eloquent
+{
     use ElasticquentTrait;
-
 }
 ```
 
@@ -488,8 +486,8 @@ Be careful with this, as Elasticquent reads the document source into the Eloquen
 If you are using a custom collection with your Eloquent models, you just need to add the `ElasticquentCollectionTrait` to your collection so you can use `addToIndex`.
 
 ```php
-class MyCollection extends \Illuminate\Database\Eloquent\Collection {
-
+class MyCollection extends \Illuminate\Database\Eloquent\Collection
+{
     use ElasticquentCollectionTrait;
 }
 ```
