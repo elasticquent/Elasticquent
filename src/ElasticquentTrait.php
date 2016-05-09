@@ -688,6 +688,9 @@ trait ElasticquentTrait
         $instance = $model;
 
         $items = array_map(function ($item) use ($instance, $parentRelation) {
+            // Convert all null relations into empty arrays
+            $item = $item ?: [];
+            
             return static::newFromBuilderRecursive($instance, $item, $parentRelation);
         }, $items);
 
@@ -712,7 +715,7 @@ trait ElasticquentTrait
 
                     if ($relation instanceof Relation) {
                         // Check if the relation field is single model or collections
-                        if (!static::isMultiLevelArray($value)) {
+                        if (is_null($value) === true || !static::isMultiLevelArray($value)) {
                             $value = [$value];
                         }
 
