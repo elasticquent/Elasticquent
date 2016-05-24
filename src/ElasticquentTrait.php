@@ -259,6 +259,8 @@ trait ElasticquentTrait
     public static function complexSearch($params)
     {
         $instance = new static;
+        $params['index'] = $instance->getIndexName();
+        $params['type'] = $instance->getTypeName();
 
         $result = $instance->getElasticSearchClient()->search($params);
 
@@ -712,8 +714,11 @@ trait ElasticquentTrait
 
                     if ($relation instanceof Relation) {
                         // Check if the relation field is single model or collections
-                        if (!static::isMultiLevelArray($value)) {
+                        if (is_array($value) && !static::isMultiLevelArray($value)) {
                             $value = [$value];
+                        }
+                        if(is_null($value)){
+                            $value = [];
                         }
 
                         $models = static::hydrateRecursive($relation->getModel(), $value, $relation);
