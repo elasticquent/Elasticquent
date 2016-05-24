@@ -259,6 +259,8 @@ trait ElasticquentTrait
     public static function complexSearch($params)
     {
         $instance = new static;
+        $params['index'] = $instance->getIndexName();
+        $params['type'] = $instance->getTypeName();
 
         $result = $instance->getElasticSearchClient()->search($params);
 
