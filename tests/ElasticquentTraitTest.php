@@ -1,8 +1,10 @@
 <?php
 
-class ElasticquentTraitTest extends PHPUnit_Framework_TestCase {
+class ElasticquentTraitTest extends PHPUnit_Framework_TestCase
+{
 
-    public $modelData = array('name' => 'Test Name');
+    public $modelData = ['name' => 'Test Name'];
+
 
     /**
      * Testing Model
@@ -15,6 +17,7 @@ class ElasticquentTraitTest extends PHPUnit_Framework_TestCase {
         $this->model->fill($this->modelData);
     }
 
+
     /**
      * Test type name inferred from table name
      */
@@ -23,14 +26,16 @@ class ElasticquentTraitTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('test_table', $this->model->getTypeName());
     }
 
+
     /**
-     * Test type name overrides table name 
+     * Test type name overrides table name
      */
     public function testTypeNameOverridesTableName()
     {
         $model = new TestModelWithCustomTypeName;
         $this->assertEquals('test_type_name', $model->getTypeName());
     }
+
 
     /**
      * Test Basic Properties Getters
@@ -44,16 +49,18 @@ class ElasticquentTraitTest extends PHPUnit_Framework_TestCase {
         $this->assertFalse($this->model->usesTimestampsInIndex());
     }
 
+
     /**
      * Testing Mapping Setup
      */
     public function testMappingSetup()
     {
-        $mapping = array('foo' => 'bar');
+        $mapping = ['foo' => 'bar'];
 
         $this->model->setMappingProperties($mapping);
         $this->assertEquals($mapping, $this->model->getMappingProperties());
     }
+
 
     /**
      * Test Index Document Data
@@ -67,9 +74,9 @@ class ElasticquentTraitTest extends PHPUnit_Framework_TestCase {
         $custom = new CustomTestModel();
         $custom->fill($this->modelData);
 
-        $this->assertEquals(
-                array('foo' => 'bar'), $custom->getIndexDocumentData());
+        $this->assertEquals(['foo' => 'bar'], $custom->getIndexDocumentData());
     }
+
 
     /**
      * Test Document Null States

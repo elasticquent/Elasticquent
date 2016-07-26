@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
  */
 trait ElasticquentTrait
 {
+
     use ElasticquentClientTrait;
 
     /**
@@ -53,16 +54,19 @@ trait ElasticquentTrait
      */
     protected $documentVersion = null;
 
+
     /**
      * New Collection
      *
      * @param array $models
+     *
      * @return ElasticquentCollection
      */
-    public function newCollection(array $models = array())
+    public function newCollection(array $models = [])
     {
         return new ElasticquentCollection($models);
     }
+
 
     /**
      * Get Type Name
@@ -74,6 +78,7 @@ trait ElasticquentTrait
         return $this->getTable();
     }
 
+
     /**
      * Uses Timestamps In Index.
      */
@@ -82,6 +87,7 @@ trait ElasticquentTrait
         return $this->usesTimestampsInIndex;
     }
 
+
     /**
      * Use Timestamps In Index.
      */
@@ -89,6 +95,7 @@ trait ElasticquentTrait
     {
         $this->usesTimestampsInIndex = $shouldUse;
     }
+
 
     /**
      * Don't Use Timestamps In Index.
@@ -100,6 +107,7 @@ trait ElasticquentTrait
         $this->useTimestampsInIndex(false);
     }
 
+
     /**
      * Get Mapping Properties
      *
@@ -110,16 +118,19 @@ trait ElasticquentTrait
         return $this->mappingProperties;
     }
 
+
     /**
      * Set Mapping Properties
      *
      * @param    array $mapping
+     *
      * @internal param array $mapping
      */
     public function setMappingProperties(array $mapping = null)
     {
         $this->mappingProperties = $mapping;
     }
+
 
     /**
      * Get Index Settings
@@ -130,6 +141,7 @@ trait ElasticquentTrait
     {
         return $this->indexSettings;
     }
+
 
     /**
      * Is Elasticsearch Document
@@ -144,6 +156,7 @@ trait ElasticquentTrait
         return $this->isDocument;
     }
 
+
     /**
      * Get Document Score
      *
@@ -154,6 +167,7 @@ trait ElasticquentTrait
         return $this->documentScore;
     }
 
+
     /**
      * Document Version
      *
@@ -163,6 +177,7 @@ trait ElasticquentTrait
     {
         return $this->documentVersion;
     }
+
 
     /**
      * Get Index Document Data
@@ -177,6 +192,7 @@ trait ElasticquentTrait
         return $this->toArray();
     }
 
+
     /**
      * Index Documents
      *
@@ -188,10 +204,11 @@ trait ElasticquentTrait
     {
         $instance = new static;
 
-        $all = $instance->newQuery()->get(array('*'));
+        $all = $instance->newQuery()->get(['*']);
 
         return $all->addToIndex();
     }
+
 
     /**
      * Re-Index All Content
@@ -202,10 +219,11 @@ trait ElasticquentTrait
     {
         $instance = new static;
 
-        $all = $instance->newQuery()->get(array('*'));
+        $all = $instance->newQuery()->get(['*']);
 
         return $all->reindex();
     }
+
 
     /**
      * Search By Query
@@ -221,25 +239,31 @@ trait ElasticquentTrait
      *
      * @return ElasticquentResultCollection
      */
-    public static function searchByQuery($query = null, $aggregations = null, $sourceFields = null, $limit = null, $offset = null, $sort = null)
-    {
+    public static function searchByQuery(
+        $query = null,
+        $aggregations = null,
+        $sourceFields = null,
+        $limit = null,
+        $offset = null,
+        $sort = null
+    ) {
         $instance = new static;
 
         $params = $instance->getBasicEsParams(true, true, true, $limit, $offset);
 
-        if (!empty($sourceFields)) {
+        if ( ! empty($sourceFields)) {
             $params['body']['_source']['include'] = $sourceFields;
         }
 
-        if (!empty($query)) {
+        if ( ! empty($query)) {
             $params['body']['query'] = $query;
         }
 
-        if (!empty($aggregations)) {
+        if ( ! empty($aggregations)) {
             $params['body']['aggs'] = $aggregations;
         }
 
-        if (!empty($sort)) {
+        if ( ! empty($sort)) {
             $params['body']['sort'] = $sort;
         }
 
@@ -248,12 +272,14 @@ trait ElasticquentTrait
         return static::hydrateElasticsearchResult($result);
     }
 
+
     /**
      * Perform a "complex" or custom search.
      *
      * Using this method, a custom query can be sent to Elasticsearch.
      *
      * @param  $params parameters to be passed directly to Elasticsearch
+     *
      * @return ElasticquentResultCollection
      */
     public static function complexSearch($params)
@@ -264,6 +290,7 @@ trait ElasticquentTrait
 
         return static::hydrateElasticsearchResult($result);
     }
+
 
     /**
      * Search
@@ -287,6 +314,7 @@ trait ElasticquentTrait
         return static::hydrateElasticsearchResult($result);
     }
 
+
     /**
      * Add to Search Index
      *
@@ -295,7 +323,7 @@ trait ElasticquentTrait
      */
     public function addToIndex()
     {
-        if (!$this->exists) {
+        if ( ! $this->exists) {
             throw new Exception('Document does not exist.');
         }
 
@@ -314,6 +342,7 @@ trait ElasticquentTrait
         return $this->getElasticSearchClient()->index($params);
     }
 
+
     /**
      * Remove From Search Index
      *
@@ -323,6 +352,7 @@ trait ElasticquentTrait
     {
         return $this->getElasticSearchClient()->delete($this->getBasicEsParams());
     }
+
 
     /**
      * Partial Update to Indexed Document
@@ -339,6 +369,7 @@ trait ElasticquentTrait
         return $this->getElasticSearchClient()->update($params);
     }
 
+
     /**
      * Get Search Document
      *
@@ -351,6 +382,7 @@ trait ElasticquentTrait
     {
         return $this->getElasticSearchClient()->get($this->getBasicEsParams());
     }
+
 
     /**
      * Get Basic Elasticsearch Params
@@ -366,19 +398,24 @@ trait ElasticquentTrait
      *
      * @return array
      */
-    public function getBasicEsParams($getIdIfPossible = true, $getSourceIfPossible = false, $getTimestampIfPossible = false, $limit = null, $offset = null)
-    {
-        $params = array(
+    public function getBasicEsParams(
+        $getIdIfPossible = true,
+        $getSourceIfPossible = false,
+        $getTimestampIfPossible = false,
+        $limit = null,
+        $offset = null
+    ) {
+        $params = [
             'index' => $this->getIndexName(),
-            'type' => $this->getTypeName(),
-        );
+            'type'  => $this->getTypeName(),
+        ];
 
         if ($getIdIfPossible && $this->getKey()) {
             $params['id'] = $this->getKey();
         }
 
         $fields = $this->buildFieldsParameter($getSourceIfPossible, $getTimestampIfPossible);
-        if (!empty($fields)) {
+        if ( ! empty($fields)) {
             $params['fields'] = implode(',', $fields);
         }
 
@@ -393,16 +430,18 @@ trait ElasticquentTrait
         return $params;
     }
 
+
     /**
      * Build the 'fields' parameter depending on given options.
      *
-     * @param bool   $getSourceIfPossible
-     * @param bool   $getTimestampIfPossible
+     * @param bool $getSourceIfPossible
+     * @param bool $getTimestampIfPossible
+     *
      * @return array
      */
     private function buildFieldsParameter($getSourceIfPossible, $getTimestampIfPossible)
     {
-        $fieldsParam = array();
+        $fieldsParam = [];
 
         if ($getSourceIfPossible) {
             $fieldsParam[] = '_source';
@@ -414,6 +453,7 @@ trait ElasticquentTrait
 
         return $fieldsParam;
     }
+
 
     /**
      * Mapping Exists
@@ -429,6 +469,7 @@ trait ElasticquentTrait
         return (empty($mapping)) ? false : true;
     }
 
+
     /**
      * Get Mapping
      *
@@ -443,6 +484,7 @@ trait ElasticquentTrait
         return $instance->getElasticSearchClient()->indices()->getMapping($params);
     }
 
+
     /**
      * Put Mapping.
      *
@@ -456,15 +498,16 @@ trait ElasticquentTrait
 
         $mapping = $instance->getBasicEsParams();
 
-        $params = array(
-            '_source' => array('enabled' => true),
+        $params = [
+            '_source'    => ['enabled' => true],
             'properties' => $instance->getMappingProperties(),
-        );
+        ];
 
         $mapping['body'][$instance->getTypeName()] = $params;
 
         return $instance->getElasticSearchClient()->indices()->putMapping($mapping);
     }
+
 
     /**
      * Delete Mapping
@@ -479,6 +522,7 @@ trait ElasticquentTrait
 
         return $instance->getElasticSearchClient()->indices()->deleteMapping($params);
     }
+
 
     /**
      * Rebuild Mapping
@@ -503,6 +547,7 @@ trait ElasticquentTrait
         return $instance->putMapping();
     }
 
+
     /**
      * Create Index
      *
@@ -517,33 +562,34 @@ trait ElasticquentTrait
 
         $client = $instance->getElasticSearchClient();
 
-        $index = array(
+        $index = [
             'index' => $instance->getIndexName(),
-        );
+        ];
 
         $settings = $instance->getIndexSettings();
-        if (!is_null($settings)) {
+        if ( ! is_null($settings)) {
             $index['body']['settings'] = $settings;
         }
 
-        if (!is_null($shards)) {
+        if ( ! is_null($shards)) {
             $index['body']['settings']['number_of_shards'] = $shards;
         }
 
-        if (!is_null($replicas)) {
+        if ( ! is_null($replicas)) {
             $index['body']['settings']['number_of_replicas'] = $replicas;
         }
 
         $mappingProperties = $instance->getMappingProperties();
-        if (!is_null($mappingProperties)) {
+        if ( ! is_null($mappingProperties)) {
             $index['body']['mappings'][$instance->getTypeName()] = [
-                '_source' => array('enabled' => true),
+                '_source'    => ['enabled' => true],
                 'properties' => $mappingProperties,
             ];
         }
 
         return $client->indices()->create($index);
     }
+
 
     /**
      * Delete Index
@@ -556,12 +602,13 @@ trait ElasticquentTrait
 
         $client = $instance->getElasticSearchClient();
 
-        $index = array(
+        $index = [
             'index' => $instance->getIndexName(),
-        );
+        ];
 
         return $client->indices()->delete($index);
     }
+
 
     /**
      * Type Exists.
@@ -579,6 +626,7 @@ trait ElasticquentTrait
         return $instance->getElasticSearchClient()->indices()->existsType($params);
     }
 
+
     /**
      * New From Hit Builder
      *
@@ -588,16 +636,16 @@ trait ElasticquentTrait
      *
      * @return static
      */
-    public function newFromHitBuilder($hit = array())
+    public function newFromHitBuilder($hit = [])
     {
         $key_name = $this->getKeyName();
-        
+
         $attributes = $hit['_source'];
 
         if (isset($hit['_id'])) {
             $attributes[$key_name] = is_numeric($hit['_id']) ? intval($hit['_id']) : $hit['_id'];
         }
-        
+
         // Add fields to attributes
         if (isset($hit['fields'])) {
             foreach ($hit['fields'] as $key => $value) {
@@ -623,23 +671,28 @@ trait ElasticquentTrait
         return $instance;
     }
 
+
     /**
      * Create a elacticquent result collection of models from plain elasticsearch result.
      *
-     * @param  array  $result
+     * @param  array $result
+     *
      * @return \Elasticquent\ElasticquentResultCollection
      */
     public static function hydrateElasticsearchResult(array $result)
     {
         $items = $result['hits']['hits'];
+
         return static::hydrateElasticquentResult($items, $meta = $result);
     }
+
 
     /**
      * Create a elacticquent result collection of models from plain arrays.
      *
-     * @param  array  $items
-     * @param  array  $meta
+     * @param  array $items
+     * @param  array $meta
+     *
      * @return \Elasticquent\ElasticquentResultCollection
      */
     public static function hydrateElasticquentResult(array $items, $meta = null)
@@ -653,16 +706,21 @@ trait ElasticquentTrait
         return $instance->newElasticquentResultCollection($items, $meta);
     }
 
+
     /**
      * Create a new model instance that is existing recursive.
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
-     * @param  array  $attributes
-     * @param  \Illuminate\Database\Eloquent\Relations\Relation  $parentRelation
+     * @param  \Illuminate\Database\Eloquent\Model              $model
+     * @param  array                                            $attributes
+     * @param  \Illuminate\Database\Eloquent\Relations\Relation $parentRelation
+     *
      * @return static
      */
-    public static function newFromBuilderRecursive(Model $model, array $attributes = [], Relation $parentRelation = null)
-    {
+    public static function newFromBuilderRecursive(
+        Model $model,
+        array $attributes = [],
+        Relation $parentRelation = null
+    ) {
         $instance = $model->newInstance([], $exists = true);
 
         $instance->setRawAttributes((array)$attributes, $sync = true);
@@ -675,12 +733,14 @@ trait ElasticquentTrait
         return $instance;
     }
 
+
     /**
      * Create a collection of models from plain arrays recursive.
      *
-     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param  \Illuminate\Database\Eloquent\Model              $model
      * @param  \Illuminate\Database\Eloquent\Relations\Relation $parentRelation
-     * @param  array $items
+     * @param  array                                            $items
+     *
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public static function hydrateRecursive(Model $model, array $items, Relation $parentRelation = null)
@@ -690,12 +750,13 @@ trait ElasticquentTrait
         $items = array_map(function ($item) use ($instance, $parentRelation) {
             // Convert all null relations into empty arrays
             $item = $item ?: [];
-            
+
             return static::newFromBuilderRecursive($instance, $item, $parentRelation);
         }, $items);
 
         return $instance->newCollection($items);
     }
+
 
     /**
      * Get the relations attributes from a model.
@@ -715,7 +776,7 @@ trait ElasticquentTrait
 
                     if ($relation instanceof Relation) {
                         // Check if the relation field is single model or collections
-                        if (is_null($value) === true || !static::isMultiLevelArray($value)) {
+                        if (is_null($value) === true || ! static::isMultiLevelArray($value)) {
                             $value = [$value];
                         }
 
@@ -730,11 +791,12 @@ trait ElasticquentTrait
         }
     }
 
+
     /**
      * Get the pivot attribute from a model.
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
-     * @param  \Illuminate\Database\Eloquent\Relations\Relation  $parentRelation
+     * @param  \Illuminate\Database\Eloquent\Model              $model
+     * @param  \Illuminate\Database\Eloquent\Relations\Relation $parentRelation
      */
     public static function loadPivotAttribute(Model $model, Relation $parentRelation = null)
     {
@@ -749,11 +811,13 @@ trait ElasticquentTrait
         }
     }
 
+
     /**
      * Create a new Elasticquent Result Collection instance.
      *
-     * @param  array  $models
-     * @param  array  $meta
+     * @param  array $models
+     * @param  array $meta
+     *
      * @return \Elasticquent\ElasticquentResultCollection
      */
     public function newElasticquentResultCollection(array $models = [], $meta = null)
@@ -761,21 +825,24 @@ trait ElasticquentTrait
         return new ElasticquentResultCollection($models, $meta);
     }
 
+
     /**
      * Check if an array is multi-level array like [[id], [id], [id]].
      *
      * For detect if a relation field is single model or collections.
      *
-     * @param  array  $array
+     * @param  array $array
+     *
      * @return boolean
      */
     private static function isMultiLevelArray(array $array)
     {
         foreach ($array as $key => $value) {
-            if (!is_array($value)) {
+            if ( ! is_array($value)) {
                 return false;
             }
         }
+
         return true;
     }
 }

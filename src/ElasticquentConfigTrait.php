@@ -4,6 +4,7 @@ namespace Elasticquent;
 
 trait ElasticquentConfigTrait
 {
+
     /**
      * Get Index Name
      *
@@ -15,7 +16,7 @@ trait ElasticquentConfigTrait
         // config file and if there is a default index.
         $index_name = $this->getElasticConfig('default_index');
 
-        if (!empty($index_name)) {
+        if ( ! empty($index_name)) {
             return $index_name;
         }
 
@@ -23,11 +24,13 @@ trait ElasticquentConfigTrait
         return 'default';
     }
 
+
     /**
      * Get the Elasticquent config
      *
-     * @param string $key the configuration key
+     * @param string $key    the configuration key
      * @param string $prefix filename of configuration file
+     *
      * @return array configuration
      */
     public function getElasticConfig($key = 'config', $prefix = 'elasticquent')
@@ -48,6 +51,7 @@ trait ElasticquentConfigTrait
         return $config_helper->get($key);
     }
 
+
     /**
      * Inject given config file into an instance of Laravel's config
      *
@@ -58,18 +62,19 @@ trait ElasticquentConfigTrait
     {
         $config_file = $this->getConfigFile();
 
-        if (!file_exists($config_file)) {
+        if ( ! file_exists($config_file)) {
             throw new \Exception('Config file not found.');
         }
 
-        return new \Illuminate\Config\Repository(array('elasticquent' => require($config_file)));
+        return new \Illuminate\Config\Repository(['elasticquent' => require($config_file)]);
     }
+
 
     /**
      * Get the config path and file name to use when Laravel framework isn't present
      * e.g. using Eloquent stand-alone or running unit tests
      *
-     * @return string config file path 
+     * @return string config file path
      */
     protected function getConfigFile()
     {

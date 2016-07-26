@@ -2,6 +2,7 @@
 
 interface ElasticquentInterface
 {
+
     /**
      * Get ElasticSearch Client
      *
@@ -9,13 +10,16 @@ interface ElasticquentInterface
      */
     public function getElasticSearchClient();
 
+
     /**
      * New Collection
      *
      * @param array $models
+     *
      * @return Collection
      */
-    public function newCollection(array $models = array());
+    public function newCollection(array $models = []);
+
 
     /**
      * Get Index Name
@@ -24,6 +28,7 @@ interface ElasticquentInterface
      */
     public function getIndexName();
 
+
     /**
      * Get Type Name
      *
@@ -31,10 +36,12 @@ interface ElasticquentInterface
      */
     public function getTypeName();
 
+
     /**
      * Uses Timestamps In Index.
      */
     public function usesTimestampsInIndex();
+
 
     /**
      * Get Mapping Properties
@@ -43,12 +50,14 @@ interface ElasticquentInterface
      */
     public function getMappingProperties();
 
+
     /**
      * Set Mapping Properties
      *
      * @param   array $mapping
      */
     public function setMappingProperties(array $mapping = null);
+
 
     /**
      * Get Index Document Data
@@ -60,6 +69,7 @@ interface ElasticquentInterface
      */
     public function getIndexDocumentData();
 
+
     /**
      * Index Documents
      *
@@ -69,10 +79,12 @@ interface ElasticquentInterface
      */
     public static function addAllToIndex();
 
+
     /**
      * Search a Type.
      */
-    public static function search($query = array());
+    public static function search($query = []);
+
 
     /**
      * Add to Search Index
@@ -81,12 +93,14 @@ interface ElasticquentInterface
      */
     public function addToIndex();
 
+
     /**
      * Remove From Search Index
      *
      * @return
      */
     public function removeFromIndex();
+
 
     /**
      * Get Search Document
@@ -97,6 +111,7 @@ interface ElasticquentInterface
      * @return
      */
     public function getIndexedDocument();
+
 
     /**
      * Get Basic Elasticsearch Params
@@ -110,6 +125,7 @@ interface ElasticquentInterface
      */
     public function getBasicEsParams($getIdIfPossible = true);
 
+
     /**
      * Is Elasticsearch Document.
      *
@@ -120,12 +136,14 @@ interface ElasticquentInterface
      */
     public function isDocument();
 
+
     /**
      * Get Document Score
      *
      * @return null|float
      */
     public function documentScore();
+
 
     /**
      * Put Mapping.
@@ -136,12 +154,14 @@ interface ElasticquentInterface
      */
     public static function putMapping($ignoreConflicts = false);
 
+
     /**
      * Delete Mapping
      *
      * @return
      */
     public static function deleteMapping();
+
 
     /**
      * Rebuild Mapping
@@ -153,6 +173,7 @@ interface ElasticquentInterface
      */
     public static function rebuildMapping();
 
+
     /**
      * Get Mapping
      *
@@ -162,6 +183,7 @@ interface ElasticquentInterface
      * @return
      */
     public static function getMapping();
+
 
     /**
      * Type Exists

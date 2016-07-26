@@ -4,7 +4,9 @@ namespace Elasticquent;
 
 trait ElasticquentClientTrait
 {
+
     use ElasticquentConfigTrait;
+
 
     /**
      * Get ElasticSearch Client

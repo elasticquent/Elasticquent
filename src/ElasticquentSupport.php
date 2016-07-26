@@ -6,7 +6,9 @@ use Illuminate\Foundation\Application;
 
 class ElasticquentSupport
 {
+
     use ElasticquentClientTrait;
+
 
     public static function isLaravel5()
     {

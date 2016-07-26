@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 
 class ElasticquentServiceProvider extends ServiceProvider
 {
+
     /**
      * Bootstrap services.
      *
@@ -15,10 +16,11 @@ class ElasticquentServiceProvider extends ServiceProvider
     {
         if (ElasticquentSupport::isLaravel5()) {
             $this->publishes([
-                __DIR__.'/config/elasticquent.php' => config_path('elasticquent.php'),
+                __DIR__ . '/config/elasticquent.php' => config_path('elasticquent.php'),
             ]);
         }
     }
+
 
     /**
      * Register services.

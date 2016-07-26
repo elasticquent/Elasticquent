@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 
     /*
     |--------------------------------------------------------------------------
@@ -14,8 +14,8 @@ return array(
     */
 
     'config' => [
-        'hosts'     => ['localhost:9200'],
-        'retries'   => 1,
+        'hosts'   => ['localhost:9200'],
+        'retries' => 1,
     ],
 
     /*
@@ -29,4 +29,4 @@ return array(
 
     'default_index' => 'my_custom_index_name',
 
-);
+];
