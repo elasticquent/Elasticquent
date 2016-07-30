@@ -4,7 +4,7 @@ namespace Elasticquent;
 
 use Exception;
 use ReflectionMethod;
-use Illuminate\Database\Eloquent\Model;complexSearch
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
 /**
