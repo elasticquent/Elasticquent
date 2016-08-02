@@ -243,7 +243,7 @@ trait ElasticquentTrait
         if (!empty($sort)) {
             $params['body']['sort'] = $sort;
         }
-        
+
         if (!empty($highlight)) {
             $params['body']['highlight'] = $highlight;
         }
@@ -437,7 +437,7 @@ trait ElasticquentTrait
     /**
      * Get Mapping
      *
-     * @return void
+     * @return array
      */
     public static function getMapping()
     {
