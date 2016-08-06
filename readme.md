@@ -146,6 +146,14 @@ return array(
 
     'default_index' => 'my_custom_index_name',
 
+    /*
+    |--------------------------------------------------------------------------
+    | Should We Replace The Source with Highlights
+    |--------------------------------------------------------------------------
+    |
+    */
+    'highlight_in_source' => true,
+    
 );
 
 ```
@@ -354,6 +362,7 @@ Here's the list of available parameters:
 - `limit` - Number of records to return
 - `offset` - Sets the record offset (use for paging results)
 - `sort` - Your sort query
+- `highlight` - Your highlight config
 
 ### Raw queries
 
