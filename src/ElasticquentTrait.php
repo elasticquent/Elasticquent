@@ -609,6 +609,15 @@ trait ElasticquentTrait
                 $attributes[$key] = $value;
             }
         }
+        
+        // Replace highlight to attributes
+        if ($this->getConfigIsHighlightTheSource()) {
+            if (isset($hit['highlight'])) {
+                foreach ($hit['highlight'] as $key => $value) {
+                    $attributes[$key] = $value;
+                }
+            }
+        }
 
         $instance = $this::newFromBuilderRecursive($this, $attributes);
 

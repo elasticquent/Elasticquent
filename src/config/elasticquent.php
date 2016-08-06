@@ -29,4 +29,13 @@ return array(
 
     'default_index' => 'my_custom_index_name',
 
+    /*
+    |--------------------------------------------------------------------------
+    | Should We Replace The Source with Highlights
+    |--------------------------------------------------------------------------
+    |
+    */
+    'highlight_in_source' => true,
+    
+
 );
