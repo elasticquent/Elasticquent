@@ -31,7 +31,7 @@ return array(
 
     /*
     |--------------------------------------------------------------------------
-    | Should We Replace The Source with Highlights
+    | Should We Replace The Source With Highlight
     |--------------------------------------------------------------------------
     |
     */
