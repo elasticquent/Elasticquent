@@ -614,7 +614,10 @@ trait ElasticquentTrait
         if ($this->getConfigIsHighlightTheSource()) {
             if (isset($hit['highlight'])) {
                 foreach ($hit['highlight'] as $key => $value) {
-                    $attributes[$key] = $value;
+                    //todo have no idea why the type of $value is array
+                    if (is_scalar($attributes[$key])) {
+                        $attributes[$key] = $value[0];
+                    }
                 }
             }
         }
