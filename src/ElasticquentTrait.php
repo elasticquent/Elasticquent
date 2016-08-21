@@ -71,7 +71,7 @@ trait ElasticquentTrait
      */
     public function getTypeName()
     {
-        return $this->getTable();
+        return get_class($this);
     }
 
     /**
