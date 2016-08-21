@@ -30,6 +30,7 @@ class ElasticquentMultiSearch extends Model implements ElasticquentInterface
     public function setIndexName($indices)
     {
         $this->indices = $indices;
+        return $this;
     }
 
     public function getIndexName()
@@ -44,6 +45,7 @@ class ElasticquentMultiSearch extends Model implements ElasticquentInterface
     public function setTypeName($types)
     {
         $this->types = $types;
+        return $this;
 
     }
 
