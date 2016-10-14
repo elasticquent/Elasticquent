@@ -11,12 +11,10 @@ use Psr\Http\Message\ResponseInterface;
 
 trait ElasticquentClientTrait
 {
-
     use ElasticquentConfigTrait;
 
-
     /**
-     * Get ElasticSearch Client
+     * Get ElasticSearch Client.
      *
      * @return \Elasticsearch\Client
      */
@@ -27,7 +25,7 @@ trait ElasticquentClientTrait
         // elasticsearch v2.0 using builder
         if (class_exists('\Elasticsearch\ClientBuilder')) {
             $awsConfig = $this->getElasticConfig('aws');
-            if ( ! empty($awsConfig) && array_get($this->getElasticConfig('aws'), 'iam', false)) {
+            if (!empty($awsConfig) && array_get($this->getElasticConfig('aws'), 'iam', false)) {
                 if ($handler = $this->getAwsESHandler()) {
                     array_set($config, 'handler', $handler);
                 }
@@ -40,7 +38,6 @@ trait ElasticquentClientTrait
         return new \Elasticsearch\Client($config);
     }
 
-
     /**
      * @return bool|\Closure
      */
@@ -51,12 +48,12 @@ trait ElasticquentClientTrait
             return false;
         }
 
-        $key    = array_get($awsConfig, 'key');
+        $key = array_get($awsConfig, 'key');
         $secret = array_get($awsConfig, 'secret');
         $region = array_get($awsConfig, 'region', 'us-west-2');
 
         $psr7Handler = \Aws\default_http_handler();
-        $signer      = new SignatureV4('es', $region);
+        $signer = new SignatureV4('es', $region);
 
         $handler = function (array $request) use (
             $psr7Handler,
@@ -87,11 +84,10 @@ trait ElasticquentClientTrait
                 'headers'        => $response->getHeaders(),
                 'body'           => $response->getBody()->detach(),
                 'transfer_stats' => ['total_time' => 0],
-                'effective_url'  => (string)$psr7Request->getUri(),
+                'effective_url'  => (string) $psr7Request->getUri(),
             ]);
         };
 
         return $handler;
     }
-
 }

@@ -1,18 +1,18 @@
-<?php namespace Elasticquent;
+<?php
+
+namespace Elasticquent;
 
 interface ElasticquentInterface
 {
-
     /**
-     * Get ElasticSearch Client
+     * Get ElasticSearch Client.
      *
      * @return Elasticsearch\Client
      */
     public function getElasticSearchClient();
 
-
     /**
-     * New Collection
+     * New Collection.
      *
      * @param array $models
      *
@@ -20,47 +20,41 @@ interface ElasticquentInterface
      */
     public function newCollection(array $models = []);
 
-
     /**
-     * Get Index Name
+     * Get Index Name.
      *
      * @return string
      */
     public function getIndexName();
 
-
     /**
-     * Get Type Name
+     * Get Type Name.
      *
      * @return string
      */
     public function getTypeName();
-
 
     /**
      * Uses Timestamps In Index.
      */
     public function usesTimestampsInIndex();
 
-
     /**
-     * Get Mapping Properties
+     * Get Mapping Properties.
      *
      * @return array
      */
     public function getMappingProperties();
 
-
     /**
-     * Set Mapping Properties
+     * Set Mapping Properties.
      *
      * @param   array $mapping
      */
     public function setMappingProperties(array $mapping = null);
 
-
     /**
-     * Get Index Document Data
+     * Get Index Document Data.
      *
      * Get the data that ElasticSearch will
      * index for this particular document.
@@ -69,9 +63,8 @@ interface ElasticquentInterface
      */
     public function getIndexDocumentData();
 
-
     /**
-     * Index Documents
+     * Index Documents.
      *
      * Index all documents in an Eloquent model.
      *
@@ -79,31 +72,27 @@ interface ElasticquentInterface
      */
     public static function addAllToIndex();
 
-
     /**
      * Search a Type.
      */
     public static function search($query = []);
 
-
     /**
-     * Add to Search Index
+     * Add to Search Index.
      *
      * @return
      */
     public function addToIndex();
 
-
     /**
-     * Remove From Search Index
+     * Remove From Search Index.
      *
      * @return
      */
     public function removeFromIndex();
 
-
     /**
-     * Get Search Document
+     * Get Search Document.
      *
      * Retrieve an ElasticSearch document
      * for this enty.
@@ -112,9 +101,8 @@ interface ElasticquentInterface
      */
     public function getIndexedDocument();
 
-
     /**
-     * Get Basic Elasticsearch Params
+     * Get Basic Elasticsearch Params.
      *
      * Most Elasticsearch API calls need the index and
      * type passed in a parameter array.
@@ -124,7 +112,6 @@ interface ElasticquentInterface
      * @return array
      */
     public function getBasicEsParams($getIdIfPossible = true);
-
 
     /**
      * Is Elasticsearch Document.
@@ -136,14 +123,12 @@ interface ElasticquentInterface
      */
     public function isDocument();
 
-
     /**
-     * Get Document Score
+     * Get Document Score.
      *
      * @return null|float
      */
     public function documentScore();
-
 
     /**
      * Put Mapping.
@@ -154,17 +139,15 @@ interface ElasticquentInterface
      */
     public static function putMapping($ignoreConflicts = false);
 
-
     /**
-     * Delete Mapping
+     * Delete Mapping.
      *
      * @return
      */
     public static function deleteMapping();
 
-
     /**
-     * Rebuild Mapping
+     * Rebuild Mapping.
      *
      * This will delete and then re-add
      * the mapping for this model.
@@ -173,9 +156,8 @@ interface ElasticquentInterface
      */
     public static function rebuildMapping();
 
-
     /**
-     * Get Mapping
+     * Get Mapping.
      *
      * Get our existing Elasticsearch mapping
      * for this model.
@@ -184,9 +166,8 @@ interface ElasticquentInterface
      */
     public static function getMapping();
 
-
     /**
-     * Type Exists
+     * Type Exists.
      *
      * Does this type exist?
      *

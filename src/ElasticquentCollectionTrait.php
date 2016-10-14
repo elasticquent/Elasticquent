@@ -1,19 +1,19 @@
-<?php namespace Elasticquent;
+<?php
+
+namespace Elasticquent;
 
 /**
- * Elasticquent Collection Trait
+ * Elasticquent Collection Trait.
  *
  * Elasticsearch functions that you
  * can run on collections of documents.
  */
 trait ElasticquentCollectionTrait
 {
-
     use ElasticquentClientTrait;
 
-
     /**
-     * Add To Index
+     * Add To Index.
      *
      * Add all documents in this collection to to the Elasticsearch document index.
      *
@@ -22,7 +22,7 @@ trait ElasticquentCollectionTrait
     public function addToIndex()
     {
         if ($this->isEmpty()) {
-            return null;
+            return;
         }
 
         $params = [];
@@ -42,9 +42,8 @@ trait ElasticquentCollectionTrait
         return $this->getElasticSearchClient()->bulk($params);
     }
 
-
     /**
-     * Delete From Index
+     * Delete From Index.
      *
      * @return array
      */
@@ -67,9 +66,8 @@ trait ElasticquentCollectionTrait
         return $this->getElasticSearchClient()->bulk($params);
     }
 
-
     /**
-     * Reindex
+     * Reindex.
      *
      * Delete the items and then re-index them.
      *
@@ -81,5 +79,4 @@ trait ElasticquentCollectionTrait
 
         return $this->addToIndex();
     }
-
 }

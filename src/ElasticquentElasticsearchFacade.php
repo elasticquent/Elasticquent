@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Facade;
  */
 class ElasticquentElasticsearchFacade extends Facade
 {
-
     /**
      * Get the registered name of the component.
      *

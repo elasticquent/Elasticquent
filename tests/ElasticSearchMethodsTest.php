@@ -18,7 +18,6 @@
 
 class ElasticSearchMethodsTest extends PHPUnit_Framework_TestCase
 {
-
     protected $expectedHits = [
         'total'     => 2,
         'max_score' => 0.7768564,
@@ -29,7 +28,7 @@ class ElasticSearchMethodsTest extends PHPUnit_Framework_TestCase
                 '_score'  => 0.7768564,
                 '_source' => [
                     'name' => 'foo',
-                ]
+                ],
             ],
             [
                 '_index'  => 'my_custom_index_name',
@@ -37,17 +36,15 @@ class ElasticSearchMethodsTest extends PHPUnit_Framework_TestCase
                 '_score'  => 0.5634561,
                 '_source' => [
                     'name' => 'bar',
-                ]
+                ],
             ],
-        ]
+        ],
     ];
-
 
     public function setUp()
     {
         $this->model = new SearchTestModel;
     }
-
 
     public function testSuccessfulSearch()
     {
@@ -63,7 +60,6 @@ class ElasticSearchMethodsTest extends PHPUnit_Framework_TestCase
         $this->assertEmpty($result->getAggregations());
     }
 
-
     public function testUnsuccessfulSearch()
     {
         $result = $this->model->search('with no results');
@@ -71,7 +67,7 @@ class ElasticSearchMethodsTest extends PHPUnit_Framework_TestCase
         $expectedHits = [
             'total'     => 0,
             'max_score' => null,
-            'hits'      => []
+            'hits'      => [],
         ];
 
         $this->assertInstanceOf('Elasticquent\ElasticquentResultCollection', $result);
@@ -84,7 +80,6 @@ class ElasticSearchMethodsTest extends PHPUnit_Framework_TestCase
         $this->assertEmpty($result->getAggregations());
     }
 
-
     public function testSearchWithEmptyParamters()
     {
         $this->model->search();
@@ -93,7 +88,6 @@ class ElasticSearchMethodsTest extends PHPUnit_Framework_TestCase
 
         $this->addToAssertionCount(3);  // does not throw an exception
     }
-
 
     public function testComplexSearch()
     {

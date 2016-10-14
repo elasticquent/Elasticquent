@@ -7,11 +7,9 @@ use Mockery as m;
 
 class SearchTestModel extends Eloquent implements ElasticquentInterface
 {
-
     use ElasticquentTrait;
 
     protected $table = 'test_table';
-
 
     public function getElasticSearchClient()
     {

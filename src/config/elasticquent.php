@@ -39,6 +39,6 @@ return [
         'key'    => 'YOUR_AWS_KEY',
         'secret' => 'YOUR_AWS_SECRET',
         'region' => 'us-west-2',
-    ]
+    ],
 
 ];

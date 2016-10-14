@@ -1,10 +1,11 @@
-<?php namespace Elasticquent;
+<?php
+
+namespace Elasticquent;
 
 use Elasticquent\ElasticquentPaginator as Paginator;
 
 class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collection
 {
-
     protected $took;
 
     protected $timed_out;
@@ -15,9 +16,8 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
 
     protected $aggregations = null;
 
-
     /**
-     * Create a new instance containing Elasticsearch results
+     * Create a new instance containing Elasticsearch results.
      *
      * @todo       Remove backwards compatible detection at further point
      * @deprecated Initialize with params ($results, $instance) is deprecated,
@@ -33,8 +33,8 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
         // Detect if arguments are old deprecated version ($results, $instance)
         if (isset($items['hits']) and $meta instanceof \Illuminate\Database\Eloquent\Model) {
             $instance = $meta;
-            $meta     = $items;
-            $items    = $instance::hydrateElasticsearchResult($meta);
+            $meta = $items;
+            $items = $instance::hydrateElasticsearchResult($meta);
         }
 
         parent::__construct($items);
@@ -46,7 +46,6 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
         }
     }
 
-
     /**
      * Set the result meta.
      *
@@ -56,18 +55,17 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
      */
     public function setMeta(array $meta)
     {
-        $this->took         = isset($meta['took']) ? $meta['took'] : null;
-        $this->timed_out    = isset($meta['timed_out']) ? $meta['timed_out'] : null;
-        $this->shards       = isset($meta['_shards']) ? $meta['_shards'] : null;
-        $this->hits         = isset($meta['hits']) ? $meta['hits'] : null;
+        $this->took = isset($meta['took']) ? $meta['took'] : null;
+        $this->timed_out = isset($meta['timed_out']) ? $meta['timed_out'] : null;
+        $this->shards = isset($meta['_shards']) ? $meta['_shards'] : null;
+        $this->hits = isset($meta['hits']) ? $meta['hits'] : null;
         $this->aggregations = isset($meta['aggregations']) ? $meta['aggregations'] : [];
 
         return $this;
     }
 
-
     /**
-     * Total Hits
+     * Total Hits.
      *
      * @return int
      */
@@ -76,9 +74,8 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
         return $this->hits['total'];
     }
 
-
     /**
-     * Max Score
+     * Max Score.
      *
      * @return float
      */
@@ -87,9 +84,8 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
         return $this->hits['max_score'];
     }
 
-
     /**
-     * Get Shards
+     * Get Shards.
      *
      * @return array
      */
@@ -98,9 +94,8 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
         return $this->shards;
     }
 
-
     /**
-     * Took
+     * Took.
      *
      * @return string
      */
@@ -109,20 +104,18 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
         return $this->took;
     }
 
-
     /**
-     * Timed Out
+     * Timed Out.
      *
      * @return bool
      */
     public function timedOut()
     {
-        return (bool)$this->timed_out;
+        return (bool) $this->timed_out;
     }
 
-
     /**
-     * Get Hits
+     * Get Hits.
      *
      * Get the raw hits array from
      * Elasticsearch results.
@@ -134,9 +127,8 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
         return $this->hits;
     }
 
-
     /**
-     * Get aggregations
+     * Get aggregations.
      *
      * Get the raw hits array from
      * Elasticsearch results.
@@ -148,9 +140,8 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
         return $this->aggregations;
     }
 
-
     /**
-     * Paginate Collection
+     * Paginate Collection.
      *
      * @param int $pageLimit
      *

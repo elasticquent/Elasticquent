@@ -6,13 +6,11 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
 
 class CustomTestModel extends Eloquent implements ElasticquentInterface
 {
-
     use ElasticquentTrait;
 
     protected $fillable = ['name'];
 
-
-    function getIndexDocumentData()
+    public function getIndexDocumentData()
     {
         return ['foo' => 'bar'];
     }

@@ -24,7 +24,7 @@ function successfulResults()
                     '_score'  => 0.7768564,
                     '_source' => [
                         'name' => 'foo',
-                    ]
+                    ],
                 ],
                 [
                     '_index'  => 'my_custom_index_name',
@@ -32,7 +32,7 @@ function successfulResults()
                     '_score'  => 0.5634561,
                     '_source' => [
                         'name' => 'bar',
-                    ]
+                    ],
                 ],
             ],
         ],

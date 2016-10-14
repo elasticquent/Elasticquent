@@ -14,7 +14,7 @@ function basicParameters()
 
 function searchParams($searchTerm)
 {
-    $params         = basicParameters();
+    $params = basicParameters();
     $params['body'] = ['query' => ['match' => ['_all' => $searchTerm]]];
 
     return $params;
@@ -22,18 +22,18 @@ function searchParams($searchTerm)
 
 function complexParameters()
 {
-    $params         = basicParameters();
+    $params = basicParameters();
     $params['body'] = [
         'query' => [
             'filtered' => [
                 'filter' => [
-                    'term' => ['my_field' => 'abc']
+                    'term' => ['my_field' => 'abc'],
                 ],
                 'query'  => [
-                    'match' => ['my_other_field' => 'xyz']
-                ]
-            ]
-        ]
+                    'match' => ['my_other_field' => 'xyz'],
+                ],
+            ],
+        ],
     ];
 
     return $params;
