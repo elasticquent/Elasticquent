@@ -53,7 +53,6 @@ final class ElasticSearchClientFactory
             '\GuzzleHttp\Psr7\Request',
             '\GuzzleHttp\Psr7\Uri',
             '\GuzzleHttp\Ring\Future\CompletedFutureArray',
-            '\Psr\Http\Message\ResponseInterface',
         ];
 
         foreach ($classExistsChecks as $classExistsCheck) {
