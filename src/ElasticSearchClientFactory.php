@@ -2,13 +2,6 @@
 
 namespace Elasticquent;
 
-use Aws\Credentials\Credentials;
-use Aws\Signature\SignatureV4;
-use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Psr7\Uri;
-use GuzzleHttp\Ring\Future\CompletedFutureArray;
-use Psr\Http\Message\ResponseInterface;
-
 final class ElasticSearchClientFactory
 {
     use ElasticquentConfigTrait;
@@ -54,6 +47,21 @@ final class ElasticSearchClientFactory
      */
     private function getAwsESHandler()
     {
+        $classExistsChecks = [
+            '\Aws\Credentials\Credentials',
+            '\Aws\Signature\SignatureV4',
+            '\GuzzleHttp\Psr7\Request',
+            '\GuzzleHttp\Psr7\Uri',
+            '\GuzzleHttp\Ring\Future\CompletedFutureArray',
+            '\Psr\Http\Message\ResponseInterface',
+        ];
+
+        foreach ($classExistsChecks as $classExistsCheck) {
+            if (!class_exists($classExistsCheck)) {
+                return false;
+            }
+        }
+
         $awsConfig = $this->getElasticConfig('aws');
         if (empty($awsConfig)) {
             return false;
@@ -64,7 +72,7 @@ final class ElasticSearchClientFactory
         $region = array_get($awsConfig, 'region', 'us-west-2');
 
         $psr7Handler = \Aws\default_http_handler();
-        $signer = new SignatureV4('es', $region);
+        $signer = new \Aws\Signature\SignatureV4('es', $region);
 
         $handler = function (array $request) use (
             $psr7Handler,
@@ -75,22 +83,22 @@ final class ElasticSearchClientFactory
             // Amazon ES listens on standard ports (443 for HTTPS, 80 for HTTP).
             $request['headers']['host'][0] = parse_url($request['headers']['host'][0], PHP_URL_HOST);
 
-            $credentials = new Credentials($key, $secret);
+            $credentials = new \Aws\Credentials\Credentials($key, $secret);
 
             // Create a PSR-7 request from the array passed to the handler
-            $psr7Request = new Request($request['http_method'],
-                (new Uri($request['uri']))->withScheme($request['scheme'])->withHost($request['headers']['host'][0]), $request['headers'],
-                $request['body']);
+            $psr7Request = new \GuzzleHttp\Psr7\Request($request['http_method'],
+                (new \GuzzleHttp\Psr7\Uri($request['uri']))->withScheme($request['scheme'])->withHost($request['headers']['host'][0]),
+                $request['headers'], $request['body']);
 
             // Sign the PSR-7 request with credentials from the environment
             $signedRequest = $signer->signRequest($psr7Request, $credentials);
 
             // Send the signed request to Amazon ES
-            /** @var ResponseInterface $response */
+            /** @var \Psr\Http\Message\ResponseInterface $response */
             $response = $psr7Handler($signedRequest)->wait();
 
             // Convert the PSR-7 response to a RingPHP response
-            return new CompletedFutureArray([
+            return new \GuzzleHttp\Ring\Future\CompletedFutureArray([
                 'status'         => $response->getStatusCode(),
                 'headers'        => $response->getHeaders(),
                 'body'           => $response->getBody()->detach(),
