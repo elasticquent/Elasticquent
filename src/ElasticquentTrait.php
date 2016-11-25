@@ -213,6 +213,7 @@ trait ElasticquentTrait
      * Search with a query array
      *
      * @param array $query
+     * @param array $filter
      * @param array $aggregations
      * @param array $sourceFields
      * @param int   $limit
@@ -221,7 +222,7 @@ trait ElasticquentTrait
      *
      * @return ElasticquentResultCollection
      */
-    public static function searchByQuery($query = null, $aggregations = null, $sourceFields = null, $limit = null, $offset = null, $sort = null)
+    public static function searchByQuery($query = null, $filter = null, $aggregations = null, $sourceFields = null, $limit = null, $offset = null, $sort = null)
     {
         $instance = new static;
 
@@ -233,6 +234,10 @@ trait ElasticquentTrait
 
         if (!empty($query)) {
             $params['body']['query'] = $query;
+        }
+        
+        if (!empty($filter)) {
+            $params['body']['filter'] = $filter;
         }
 
         if (!empty($aggregations)) {
