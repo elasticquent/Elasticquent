@@ -379,7 +379,7 @@ trait ElasticquentTrait
 
         $fields = $this->buildFieldsParameter($getSourceIfPossible, $getTimestampIfPossible);
         if (!empty($fields)) {
-            $params['fields'] = implode(',', $fields);
+            $params['stored_fields'] = implode(',', $fields);
         }
 
         if (is_numeric($limit)) {
@@ -599,8 +599,8 @@ trait ElasticquentTrait
         }
         
         // Add fields to attributes
-        if (isset($hit['fields'])) {
-            foreach ($hit['fields'] as $key => $value) {
+        if (isset($hit['stored_fields'])) {
+            foreach ($hit['stored_fields'] as $key => $value) {
                 $attributes[$key] = $value;
             }
         }
