@@ -248,7 +248,7 @@ trait ElasticquentTrait
     {
         $instance = new static;
 
-        $params = $instance->getBasicEsParams(true, true, true, $limit, $offset);
+        $params = $instance->getBasicEsParams(true, false, false, $limit, $offset);
 
         if (!empty($sourceFields)) {
             $params['body']['_source']['include'] = $sourceFields;
