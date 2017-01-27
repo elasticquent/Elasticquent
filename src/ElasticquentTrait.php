@@ -54,6 +54,29 @@ trait ElasticquentTrait
     protected $documentVersion = null;
 
     /**
+     * Sync Eloquent model changes to ElasticSearch
+     *
+     */
+    public static function bootElasticquentTrait()
+    {
+        $instance = new static;
+
+        if ($instance->getElasticConfig('sync')) {
+            static::created(function ($model) {
+                $model->addToIndex();
+            });
+
+            static::saved(function ($model) {
+                $model->reIndex();
+            });
+
+            static::deleted(function ($model) {
+                $model->removeFromIndex();
+            });
+        }
+    }
+
+    /**
      * New Collection
      *
      * @param array $models
@@ -632,7 +655,34 @@ trait ElasticquentTrait
     public static function hydrateElasticsearchResult(array $result)
     {
         $items = $result['hits']['hits'];
-        return static::hydrateElasticquentResult($items, $meta = $result);
+        $instance = new static;
+
+        if ($instance->getElasticConfig('use_live')) {
+            return static::hydrateElasticquentResultLive($items, $meta = $result);
+        } else {
+            return static::hydrateElasticquentResult($items, $meta = $result);
+        }
+    }
+
+    /**
+     * Create a elacticquent result collection of models from eloquent results
+     *
+     * @param  array  $result
+     * @return \Elasticquent\ElasticquentResultCollection
+     */
+    public static function hydrateElasticquentResultLive(array $hits, $meta = null)
+    {
+        $instance = new static;
+        $_ids = array_pluck($hits, '_id', $key = null);
+        $results = static::find($_ids);
+
+        // Arrange the results according to elasticsearch sorting
+        $items = [];
+        foreach ($hits as $hit) {
+            $items[] = $results->find($hit['_id']);
+        }
+
+        return $instance->newElasticquentResultCollection($items, $meta);
     }
 
     /**
