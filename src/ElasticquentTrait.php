@@ -54,6 +54,29 @@ trait ElasticquentTrait
     protected $documentVersion = null;
 
     /**
+     * Sync Eloquent model changes to ElasticSearch
+     *
+     */
+    public static function bootElasticquentTrait()
+    {
+        $instance = new static;
+
+        if ($instance->getElasticConfig('sync')) {
+            static::created(function ($model) {
+                $model->addToIndex();
+            });
+
+            static::saved(function ($model) {
+                $model->reIndex();
+            });
+
+            static::deleted(function ($model) {
+                $model->removeFromIndex();
+            });
+        }
+    }
+
+    /**
      * New Collection
      *
      * @param array $models
@@ -225,7 +248,7 @@ trait ElasticquentTrait
     {
         $instance = new static;
 
-        $params = $instance->getBasicEsParams(true, true, true, $limit, $offset);
+        $params = $instance->getBasicEsParams(true, false, false, $limit, $offset);
 
         if (!empty($sourceFields)) {
             $params['body']['_source']['include'] = $sourceFields;
@@ -591,13 +614,13 @@ trait ElasticquentTrait
     public function newFromHitBuilder($hit = array())
     {
         $key_name = $this->getKeyName();
-        
+
         $attributes = $hit['_source'];
 
         if (isset($hit['_id'])) {
             $attributes[$key_name] = is_numeric($hit['_id']) ? intval($hit['_id']) : $hit['_id'];
         }
-        
+
         // Add fields to attributes
         if (isset($hit['fields'])) {
             foreach ($hit['fields'] as $key => $value) {
@@ -632,7 +655,34 @@ trait ElasticquentTrait
     public static function hydrateElasticsearchResult(array $result)
     {
         $items = $result['hits']['hits'];
-        return static::hydrateElasticquentResult($items, $meta = $result);
+        $instance = new static;
+
+        if ($instance->getElasticConfig('use_live')) {
+            return static::hydrateElasticquentResultLive($items, $meta = $result);
+        } else {
+            return static::hydrateElasticquentResult($items, $meta = $result);
+        }
+    }
+
+    /**
+     * Create a elacticquent result collection of models from eloquent results
+     *
+     * @param  array  $result
+     * @return \Elasticquent\ElasticquentResultCollection
+     */
+    public static function hydrateElasticquentResultLive(array $hits, $meta = null)
+    {
+        $instance = new static;
+        $_ids = array_pluck($hits, '_id', $key = null);
+        $results = static::find($_ids);
+
+        // Arrange the results according to elasticsearch sorting
+        $items = [];
+        foreach ($hits as $hit) {
+            $items[] = $results->find($hit['_id']);
+        }
+
+        return $instance->newElasticquentResultCollection($items, $meta);
     }
 
     /**
@@ -690,7 +740,7 @@ trait ElasticquentTrait
         $items = array_map(function ($item) use ($instance, $parentRelation) {
             // Convert all null relations into empty arrays
             $item = $item ?: [];
-            
+
             return static::newFromBuilderRecursive($instance, $item, $parentRelation);
         }, $items);
 
