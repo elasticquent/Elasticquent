@@ -12,10 +12,10 @@ return array(
     |
     | http://www.elasticsearch.org/guide/en/elasticsearch/client/php-api/current/_configuration.html
     */
-
-    'config' => [
-        'hosts'     => ['localhost:9200'],
-        'retries'   => 1,
+    'aws_signiutue' => false,
+    'config'        => [
+        'hosts'   => ['localhost:9200'],
+        'retries' => 1,
     ],
 
     /*
