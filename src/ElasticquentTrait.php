@@ -504,6 +504,26 @@ trait ElasticquentTrait
     }
 
     /**
+     * Index Exists.
+     *
+     * Does this index exist?
+     *
+     * @return bool
+     */
+    public static function indexExists()
+    {
+        $instance = new static;
+
+        $client = $instance->getElasticSearchClient();
+
+        $index = array(
+            'index' => $instance->getIndexName(),
+        );
+
+        return $client->indices()->exists($index);
+    }
+
+    /**
      * Create Index
      *
      * @param int $shards
