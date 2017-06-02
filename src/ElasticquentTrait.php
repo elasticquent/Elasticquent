@@ -710,7 +710,8 @@ trait ElasticquentTrait
             if (method_exists($model, $key)) {
                 $reflection_method = new ReflectionMethod($model, $key);
 
-                if ($reflection_method->class != "Illuminate\Database\Eloquent\Model") {
+                // Check if method class has or inherits Illuminate\Database\Eloquent\Model
+                if(!static::isClassInClass("Illuminate\Database\Eloquent\Model", $reflection_method->class)) {
                     $relation = $model->$key();
 
                     if ($relation instanceof Relation) {
@@ -778,4 +779,36 @@ trait ElasticquentTrait
         }
         return true;
     }
+
+    /**
+     * Check the hierarchy of the given class (including the given class itself)
+     * to find out if the class is part of the other class.
+     *
+     * @param $classNeedle
+     * @param $classHaystack
+     * @return bool
+     */
+    private static function isClassInClass($classNeedle, $classHaystack)
+    {
+        // Check for the same
+        if($classNeedle == $classHaystack) {
+            return true;
+        }
+
+        // Check for parent
+        $classHaystackReflected = new \ReflectionClass($classHaystack);
+        while ($parent = $classHaystackReflected->getParentClass()) {
+            /**
+             * @var \ReflectionClass $parent
+             */
+            if($parent->getName() == $classNeedle) {
+                return true;
+            }
+            $classHaystackReflected = $parent;
+        }
+
+        return false;
+
+    }
+
 }
