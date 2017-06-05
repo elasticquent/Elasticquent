@@ -784,8 +784,8 @@ trait ElasticquentTrait
      * Check the hierarchy of the given class (including the given class itself)
      * to find out if the class is part of the other class.
      *
-     * @param $classNeedle
-     * @param $classHaystack
+     * @param string $classNeedle
+     * @param string $classHaystack
      * @return bool
      */
     private static function isClassInClass($classNeedle, $classHaystack)
