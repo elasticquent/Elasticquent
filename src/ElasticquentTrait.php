@@ -614,7 +614,9 @@ trait ElasticquentTrait
         if ($this->getConfigIsHighlightTheSource()) {
             if (isset($hit['highlight'])) {
                 foreach ($hit['highlight'] as $key => $value) {
-                    //todo have no idea why the type of $value is array
+                    // assume you set "number_of_fragments"=>1 on highlight setting
+                    // does not support multi fragments highlight for convinience
+                    // https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-highlighting.html
                     if (is_scalar($attributes[$key])) {
                         $attributes[$key] = $value[0];
                     }
