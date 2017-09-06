@@ -1,24 +1,31 @@
-<?php namespace Elasticquent;
+<?php
+
+namespace Elasticquent;
 
 use Elasticquent\ElasticquentPaginator as Paginator;
 
 class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collection
 {
     protected $took;
+
     protected $timed_out;
+
     protected $shards;
+
     protected $hits;
+
     protected $aggregations = null;
 
     /**
-     * Create a new instance containing Elasticsearch results
+     * Create a new instance containing Elasticsearch results.
      *
-     * @todo Remove backwards compatible detection at further point
+     * @todo       Remove backwards compatible detection at further point
      * @deprecated Initialize with params ($results, $instance) is deprecated,
      *    please use Model::hydrateElasticsearchResult($results).
      *
-     * @param  mixed  $items
-     * @param  array  $meta
+     * @param  mixed $items
+     * @param  array $meta
+     *
      * @return void
      */
     public function __construct($items, $meta = null)
@@ -43,6 +50,7 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
      * Set the result meta.
      *
      * @param array $meta
+     *
      * @return $this
      */
     public function setMeta(array $meta)
@@ -57,7 +65,7 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
     }
 
     /**
-     * Total Hits
+     * Total Hits.
      *
      * @return int
      */
@@ -67,7 +75,7 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
     }
 
     /**
-     * Max Score
+     * Max Score.
      *
      * @return float
      */
@@ -77,7 +85,7 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
     }
 
     /**
-     * Get Shards
+     * Get Shards.
      *
      * @return array
      */
@@ -87,7 +95,7 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
     }
 
     /**
-     * Took
+     * Took.
      *
      * @return string
      */
@@ -97,7 +105,7 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
     }
 
     /**
-     * Timed Out
+     * Timed Out.
      *
      * @return bool
      */
@@ -107,7 +115,7 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
     }
 
     /**
-     * Get Hits
+     * Get Hits.
      *
      * Get the raw hits array from
      * Elasticsearch results.
@@ -120,7 +128,7 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
     }
 
     /**
-     * Get aggregations
+     * Get aggregations.
      *
      * Get the raw hits array from
      * Elasticsearch results.
@@ -133,7 +141,7 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
     }
 
     /**
-     * Paginate Collection
+     * Paginate Collection.
      *
      * @param int $pageLimit
      *
@@ -142,7 +150,8 @@ class ElasticquentResultCollection extends \Illuminate\Database\Eloquent\Collect
     public function paginate($pageLimit = 25)
     {
         $page = Paginator::resolveCurrentPage() ?: 1;
-       
-        return new Paginator($this->items, $this->hits, $this->totalHits(), $pageLimit, $page, ['path' => Paginator::resolveCurrentPath()]);
+
+        return new Paginator($this->items, $this->hits, $this->totalHits(), $pageLimit, $page,
+            ['path' => Paginator::resolveCurrentPath()]);
     }
 }

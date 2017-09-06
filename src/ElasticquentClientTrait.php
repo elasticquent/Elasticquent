@@ -7,21 +7,14 @@ trait ElasticquentClientTrait
     use ElasticquentConfigTrait;
 
     /**
-     * Get ElasticSearch Client
+     * Get ElasticSearch Client.
      *
      * @return \Elasticsearch\Client
      */
     public function getElasticSearchClient()
     {
-        $config = $this->getElasticConfig();
+        $factory = new ElasticSearchClientFactory();
 
-        // elasticsearch v2.0 using builder
-        if (class_exists('\Elasticsearch\ClientBuilder')) {
-            return \Elasticsearch\ClientBuilder::fromConfig($config);
-        }
-
-        // elasticsearch v1
-        return new \Elasticsearch\Client($config);
+        return $factory->getClient();
     }
-
 }

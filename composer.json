@@ -27,6 +27,9 @@
     "phpunit/phpunit": "~4.2|~5.0",
     "mockery/mockery": "^0.9.4"
   },
+  "suggest": {
+    "aws/aws-sdk-php": "^3.19"
+  },
   "autoload": {
     "psr-4": {
       "Elasticquent\\": "src/"

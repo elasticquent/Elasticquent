@@ -1,11 +1,11 @@
 <?php
 
-class ElasticquentTraitTest extends PHPUnit_Framework_TestCase {
-
-    public $modelData = array('name' => 'Test Name');
+class ElasticquentTraitTest extends PHPUnit_Framework_TestCase
+{
+    public $modelData = ['name' => 'Test Name'];
 
     /**
-     * Testing Model
+     * Testing Model.
      *
      * @return void
      */
@@ -16,7 +16,7 @@ class ElasticquentTraitTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * Test type name inferred from table name
+     * Test type name inferred from table name.
      */
     public function testTypeNameInferredFromTableName()
     {
@@ -24,7 +24,7 @@ class ElasticquentTraitTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * Test type name overrides table name 
+     * Test type name overrides table name.
      */
     public function testTypeNameOverridesTableName()
     {
@@ -33,7 +33,7 @@ class ElasticquentTraitTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * Test Basic Properties Getters
+     * Test Basic Properties Getters.
      */
     public function testBasicPropertiesGetters()
     {
@@ -45,18 +45,18 @@ class ElasticquentTraitTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * Testing Mapping Setup
+     * Testing Mapping Setup.
      */
     public function testMappingSetup()
     {
-        $mapping = array('foo' => 'bar');
+        $mapping = ['foo' => 'bar'];
 
         $this->model->setMappingProperties($mapping);
         $this->assertEquals($mapping, $this->model->getMappingProperties());
     }
 
     /**
-     * Test Index Document Data
+     * Test Index Document Data.
      */
     public function testIndexDocumentData()
     {
@@ -67,17 +67,15 @@ class ElasticquentTraitTest extends PHPUnit_Framework_TestCase {
         $custom = new CustomTestModel();
         $custom->fill($this->modelData);
 
-        $this->assertEquals(
-                array('foo' => 'bar'), $custom->getIndexDocumentData());
+        $this->assertEquals(['foo' => 'bar'], $custom->getIndexDocumentData());
     }
 
     /**
-     * Test Document Null States
+     * Test Document Null States.
      */
     public function testDocumentNullStates()
     {
         $this->assertFalse($this->model->isDocument());
         $this->assertNull($this->model->documentScore());
     }
-
 }
