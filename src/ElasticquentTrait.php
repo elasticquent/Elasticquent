@@ -665,7 +665,9 @@ trait ElasticquentTrait
     {
         $instance = $model->newInstance([], $exists = true);
 
-        $instance->setRawAttributes((array)$attributes, $sync = true);
+        foreach($attributes as $k=>$v) {
+            $instance->setAttribute($k, $v);
+        }
 
         // Load relations recursive
         static::loadRelationsAttributesRecursive($instance);
