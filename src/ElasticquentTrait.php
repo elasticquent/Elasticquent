@@ -242,6 +242,9 @@ trait ElasticquentTrait
         if (!empty($sort)) {
             $params['body']['sort'] = $sort;
         }
+        //getting error on search becuase of fields _source and _timestamp so, remove it.
+        unset($params['fields']);
+//        dd($params);
 
         $result = $instance->getElasticSearchClient()->search($params);
 
@@ -281,6 +284,9 @@ trait ElasticquentTrait
         $params = $instance->getBasicEsParams();
 
         $params['body']['query']['match']['_all'] = $term;
+
+        //getting error on search becuase of fields _source and _timestamp so, remove it.
+        unset($params['fields']);
 
         $result = $instance->getElasticSearchClient()->search($params);
 
@@ -371,6 +377,13 @@ trait ElasticquentTrait
         $params = array(
             'index' => $this->getIndexName(),
             'type' => $this->getTypeName(),
+            'client' => [
+                'curl' => [
+                    CURLOPT_HTTPHEADER => [
+                        'Content-type: application/json',
+                    ]
+                ]
+            ]
         );
 
         if ($getIdIfPossible && $this->getKey()) {
@@ -591,13 +604,13 @@ trait ElasticquentTrait
     public function newFromHitBuilder($hit = array())
     {
         $key_name = $this->getKeyName();
-        
+
         $attributes = $hit['_source'];
 
         if (isset($hit['_id'])) {
             $attributes[$key_name] = is_numeric($hit['_id']) ? intval($hit['_id']) : $hit['_id'];
         }
-        
+
         // Add fields to attributes
         if (isset($hit['fields'])) {
             foreach ($hit['fields'] as $key => $value) {
@@ -690,7 +703,7 @@ trait ElasticquentTrait
         $items = array_map(function ($item) use ($instance, $parentRelation) {
             // Convert all null relations into empty arrays
             $item = $item ?: [];
-            
+
             return static::newFromBuilderRecursive($instance, $item, $parentRelation);
         }, $items);
 

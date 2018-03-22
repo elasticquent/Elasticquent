@@ -24,7 +24,15 @@ trait ElasticquentCollectionTrait
         }
 
         $params = array();
-
+        $params = [
+            'client' => [
+                'curl' => [
+                    CURLOPT_HTTPHEADER => [
+                        'Content-type: application/json',
+                    ]
+                ]
+            ]
+        ];
         foreach ($this->all() as $item) {
             $params['body'][] = array(
                 'index' => array(
@@ -36,7 +44,7 @@ trait ElasticquentCollectionTrait
 
             $params['body'][] = $item->getIndexDocumentData();
         }
-
+//        dd($params);
         return $this->getElasticSearchClient()->bulk($params);
     }
 
@@ -50,7 +58,15 @@ trait ElasticquentCollectionTrait
         $all = $this->all();
 
         $params = array();
-
+        $params = [
+            'client' => [
+                'curl' => [
+                    CURLOPT_HTTPHEADER => [
+                        'Content-type: application/json',
+                    ]
+                ]
+            ]
+        ];
         foreach ($all as $item) {
             $params['body'][] = array(
                 'delete' => array(
