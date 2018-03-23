@@ -225,7 +225,7 @@ trait ElasticquentTrait
     {
         $instance = new static;
 
-        $params = $instance->getBasicEsParams(true, true, true, $limit, $offset);
+        $params = $instance->getBasicEsParams(true, $limit, $offset);
 
         if (!empty($sourceFields)) {
             $params['body']['_source']['include'] = $sourceFields;
@@ -366,7 +366,7 @@ trait ElasticquentTrait
      *
      * @return array
      */
-    public function getBasicEsParams($getIdIfPossible = true, $getSourceIfPossible = false, $getTimestampIfPossible = false, $limit = null, $offset = null)
+    public function getBasicEsParams($getIdIfPossible = true, $limit = null, $offset = null)
     {
         $params = array(
             'index' => $this->getIndexName(),
@@ -375,11 +375,6 @@ trait ElasticquentTrait
 
         if ($getIdIfPossible && $this->getKey()) {
             $params['id'] = $this->getKey();
-        }
-
-        $fields = $this->buildFieldsParameter($getSourceIfPossible, $getTimestampIfPossible);
-        if (!empty($fields)) {
-            $params['fields'] = implode(',', $fields);
         }
 
         if (is_numeric($limit)) {
