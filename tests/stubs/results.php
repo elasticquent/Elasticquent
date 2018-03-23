@@ -20,7 +20,7 @@ function successfulResults()
             'hits' => [
                 [
                     '_index' => 'my_custom_index_name',
-                    '_type' => 'test_table',
+                    '_type' => 'SearchTestModel',
                     '_score' => 0.7768564,
                     '_source' => [
                         'name' => 'foo',
@@ -28,7 +28,7 @@ function successfulResults()
                 ],
                 [
                     '_index' => 'my_custom_index_name',
-                    '_type' => 'test_table',
+                    '_type' => 'SearchTestModel',
                     '_score' => 0.5634561,
                     '_source' => [
                         'name' => 'bar',
