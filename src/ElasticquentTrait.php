@@ -228,7 +228,11 @@ trait ElasticquentTrait
         $params = $instance->getBasicEsParams(true, $limit, $offset);
 
         if (!empty($sourceFields)) {
-            $params['body']['_source']['include'] = $sourceFields;
+            if( isset($sourceFields['include']) || isset($sourceFields['exclude']) ) {
+                $params['body']['_source'] = $sourceFields;
+            }else{
+                $params['body']['_source']['include'] = $sourceFields;
+            }            
         }
 
         if (!empty($query)) {
