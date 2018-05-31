@@ -707,7 +707,7 @@ trait ElasticquentTrait
                 $reflection_method = new ReflectionMethod($model, $key);
 
                 // Check if method class has or inherits Illuminate\Database\Eloquent\Model
-                if(!static::isClassInClass("Illuminate\Database\Eloquent\Model", $reflection_method->class)) {
+                if(static::isClassInClass("Illuminate\Database\Eloquent\Model", $reflection_method->class)) {
                     $relation = $model->$key();
 
                     if ($relation instanceof Relation) {
