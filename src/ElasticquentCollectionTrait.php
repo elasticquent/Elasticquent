@@ -12,8 +12,9 @@ trait ElasticquentCollectionTrait
 
     /**
      * @var int The number of records (ie. models) to send to Elasticsearch in one go
+     * Also, the number of models to get from the database at a time using Eloquent's chunk()
      */
-    static protected $entriesToSendToElasticSearchInOneGo = 1000;
+    static public $entriesToSendToElasticSearchInOneGo = 500;
 
     /**
      * Add To Index
@@ -28,15 +29,14 @@ trait ElasticquentCollectionTrait
             return null;
         }
 
+        // Use an stdClass to store result of elasticsearch operation
+        $result = new \stdClass;
+
         // Iterate according to the amount configured, and put that iteration's worth of records into elastic search
         // This is done so that we do not exceed the maximum request size
-        $all = $this->all();
-        $iteration = 0;
-        do {
-            $thousand = array_slice($all, (0 + ($iteration * static::$entriesToSendToElasticSearchInOneGo)),  static::$entriesToSendToElasticSearchInOneGo);
-
+        $chunkingResult = $this->chunk(static::$entriesToSendToElasticSearchInOneGo, function ($collectionChunk) use ($result) {
             $params = array();
-            foreach ($thousand as $item) {
+            foreach ($collectionChunk as $item) {
                 $params['body'][] = array(
                     'index' => array(
                         '_id' => $item->getKey(),
@@ -48,18 +48,23 @@ trait ElasticquentCollectionTrait
                 $params['body'][] = $item->getIndexDocumentData();
             }
 
-            $result = $this->getElasticSearchClient()->bulk($params);
+            $result->result = $this->getElasticSearchClient()->bulk($params);
 
             // Check for errors
             if ( (array_key_exists('errors', $result) && $result['errors'] != false ) || (array_key_exists('Message', $result) && stristr('Request size exceeded', $result['Message']) !== false)) {
-                break;
+                return false;
             }
 
             // Remove vars immediately to prevent them hanging around in memory, in case we have a large number of iterations
-            unset($thousand, $params);
+            unset($collectionChunk, $params);
+        });
 
-            ++$iteration;
-        } while (count($all) > ($iteration * static::$entriesToSendToElasticSearchInOneGo) );
+        // Get the result or null it
+        if ($chunkingResult && property_exists($result, 'result')) {
+            $result = $result->result;
+        } else {
+            $result = null;
+        }
 
         return $result;
     }
