@@ -232,7 +232,11 @@ trait ElasticquentTrait
         }
 
         if (!empty($query)) {
-            $params['body']['query'] = $query;
+            if (is_array($query)) {
+                $params['body']['query'] = $query;
+            } else {
+                $params['body'] = $query;
+            }
         }
 
         if (!empty($aggregations)) {
