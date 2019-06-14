@@ -5,6 +5,7 @@ namespace Elasticquent;
 use Exception;
 use ReflectionMethod;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
 /**
@@ -706,7 +707,7 @@ trait ElasticquentTrait
                 $reflection_method = new ReflectionMethod($model, $key);
 
                 // Check if method class has or inherits Illuminate\Database\Eloquent\Model
-                if(!static::isClassInClass("Illuminate\Database\Eloquent\Model", $reflection_method->class)) {
+                if(static::isClassInClass("Illuminate\Database\Eloquent\Model", $reflection_method->class)) {
                     $relation = $model->$key();
 
                     if ($relation instanceof Relation) {
@@ -720,6 +721,12 @@ trait ElasticquentTrait
                         // Unset attribute before match relation
                         unset($model[$key]);
                         $relation->match([$model], $models, $key);
+                        
+                        // The match method doesn't set the relation as loaded if the $models collection is empty
+                        // Set the relation as loaded manually and avoid future database queries
+                        if ((count($value) == 1 && reset($value) === null) || empty($value)) {
+                            $model->setRelation($key, empty($value) ? new Collection() : null);
+                        }
                     }
                 }
             }

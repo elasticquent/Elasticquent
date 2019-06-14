@@ -1,5 +1,5 @@
 {
-  "name": "elasticquent/elasticquent",
+  "name": "mendicm/elasticquent",
   "type": "library",
   "description": "Maps Laravel Eloquent models to Elasticsearch types.",
   "keywords": [
@@ -20,7 +20,7 @@
     "php": ">=5.4.0",
     "illuminate/database": "~4.2|^5",
     "illuminate/config": "~4.2|^5",
-    "nesbot/carbon": "~1.0",
+    "nesbot/carbon": "~1.0|^2",
     "elasticsearch/elasticsearch": "~6.0"
   },
   "require-dev": {
