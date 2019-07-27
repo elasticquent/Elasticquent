@@ -34,7 +34,7 @@ trait ElasticquentCollectionTrait
 
         // Iterate according to the amount configured, and put that iteration's worth of records into elastic search
         // This is done so that we do not exceed the maximum request size
-        $chunkingResult = $this->chunk(static::$entriesToSendToElasticSearchInOneGo, function ($collectionChunk) use ($result) {
+        $chunkingResult = $this->chunk(static::$entriesToSendToElasticSearchInOneGo)->each(function ($collectionChunk) use ($result) {
             $params = array();
             foreach ($collectionChunk as $item) {
                 $params['body'][] = array(
