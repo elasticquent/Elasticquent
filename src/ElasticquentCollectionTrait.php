@@ -34,9 +34,13 @@ trait ElasticquentCollectionTrait
 
         // Iterate according to the amount configured, and put that iteration's worth of records into elastic search
         // This is done so that we do not exceed the maximum request size
-        $chunkingResult = $this->chunk(static::$entriesToSendToElasticSearchInOneGo, function ($collectionChunk) use ($result) {
+        $all = $this->all();
+        $iteration = 0;
+        do {
+            $chunk = array_slice($all, (0 + ($iteration * static::$entriesToSendToElasticSearchInOneGo)),  static::$entriesToSendToElasticSearchInOneGo);
+
             $params = array();
-            foreach ($collectionChunk as $item) {
+            foreach ($chunk as $item) {
                 $params['body'][] = array(
                     'index' => array(
                         '_id' => $item->getKey(),
@@ -48,23 +52,18 @@ trait ElasticquentCollectionTrait
                 $params['body'][] = $item->getIndexDocumentData();
             }
 
-            $result->result = $this->getElasticSearchClient()->bulk($params);
+            $result = $this->getElasticSearchClient()->bulk($params);
 
             // Check for errors
             if ( (array_key_exists('errors', $result) && $result['errors'] != false ) || (array_key_exists('Message', $result) && stristr('Request size exceeded', $result['Message']) !== false)) {
-                return false;
+                break;
             }
 
             // Remove vars immediately to prevent them hanging around in memory, in case we have a large number of iterations
-            unset($collectionChunk, $params);
-        });
+            unset($chunk, $params);
 
-        // Get the result or null it
-        if ($chunkingResult && property_exists($result, 'result')) {
-            $result = $result->result;
-        } else {
-            $result = null;
-        }
+            ++$iteration;
+        } while (count($all) > ($iteration * static::$entriesToSendToElasticSearchInOneGo) );
 
         return $result;
     }
