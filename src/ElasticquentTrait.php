@@ -590,7 +590,8 @@ trait ElasticquentTrait
         $attributes = $hit['_source'];
 
         if (isset($hit['_id'])) {
-            $attributes[$key_name] = is_numeric($hit['_id']) ? intval($hit['_id']) : $hit['_id'];
+            $idAsInteger = intval($hit['_id']);
+            $attributes[$key_name] = $idAsInteger ? $idAsInteger : $hit['_id'];
         }
         
         // Add fields to attributes
@@ -706,7 +707,7 @@ trait ElasticquentTrait
                 $reflection_method = new ReflectionMethod($model, $key);
 
                 // Check if method class has or inherits Illuminate\Database\Eloquent\Model
-                if(!static::isClassInClass("Illuminate\Database\Eloquent\Model", $reflection_method->class)) {
+                if (!static::isClassInClass("Illuminate\Database\Eloquent\Model", $reflection_method->class)) {
                     $relation = $model->$key();
 
                     if ($relation instanceof Relation) {
@@ -786,7 +787,7 @@ trait ElasticquentTrait
     private static function isClassInClass($classNeedle, $classHaystack)
     {
         // Check for the same
-        if($classNeedle == $classHaystack) {
+        if ($classNeedle == $classHaystack) {
             return true;
         }
 
@@ -796,14 +797,12 @@ trait ElasticquentTrait
             /**
              * @var \ReflectionClass $parent
              */
-            if($parent->getName() == $classNeedle) {
+            if ($parent->getName() == $classNeedle) {
                 return true;
             }
             $classHaystackReflected = $parent;
         }
 
         return false;
-
     }
-
 }
