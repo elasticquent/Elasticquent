@@ -18,10 +18,10 @@
   ],
   "require": {
     "php": ">=5.4.0",
-    "illuminate/database": "~4.2|^6.5.0",
-    "illuminate/config": "~4.2|^6.5.0",
-    "nesbot/carbon": "~1.0|~2",
-    "elasticsearch/elasticsearch": "~4.2|^7.3.0"
+    "illuminate/database": "7.3.0",
+    "illuminate/config": "7.3.0",
+    "nesbot/carbon": "2.32.0",
+    "elasticsearch/elasticsearch": "~4.2|^7.6.0"
   },
   "require-dev": {
     "phpunit/phpunit": "~4.2|^8.4.3",
