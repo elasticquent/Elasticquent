@@ -232,11 +232,7 @@ trait ElasticquentTrait
         }
 
         if (!empty($query)) {
-            if (is_array($query)) {
-                $params['body']['query'] = $query;
-            } else {
-                $params['body'] = $query;
-            }
+            $params['body']['query'] = $query;
         }
 
         if (!empty($aggregations)) {
@@ -246,9 +242,6 @@ trait ElasticquentTrait
         if (!empty($sort)) {
             $params['body']['sort'] = $sort;
         }
-        //getting error on search becuase of fields _source and _timestamp so, remove it.
-        unset($params['fields']);
-//        dd($params);
 
         $result = $instance->getElasticSearchClient()->search($params);
 
@@ -288,9 +281,6 @@ trait ElasticquentTrait
         $params = $instance->getBasicEsParams();
 
         $params['body']['query']['match']['_all'] = $term;
-
-        //getting error on search becuase of fields _source and _timestamp so, remove it.
-        unset($params['fields']);
 
         $result = $instance->getElasticSearchClient()->search($params);
 
@@ -381,13 +371,6 @@ trait ElasticquentTrait
         $params = array(
             'index' => $this->getIndexName(),
             'type' => $this->getTypeName(),
-            'client' => [
-                'curl' => [
-                    CURLOPT_HTTPHEADER => [
-                        'Content-type: application/json',
-                    ]
-                ]
-            ]
         );
 
         if ($getIdIfPossible && $this->getKey()) {
