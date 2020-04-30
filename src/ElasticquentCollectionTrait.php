@@ -28,7 +28,7 @@ trait ElasticquentCollectionTrait
         if ($this->isEmpty()) {
             return null;
         }
-
+      
         // Use an stdClass to store result of elasticsearch operation
         $result = new \stdClass;
 
@@ -66,6 +66,7 @@ trait ElasticquentCollectionTrait
         } while (count($all) > ($iteration * static::$entriesToSendToElasticSearchInOneGo) );
 
         return $result;
+
     }
 
     /**
@@ -78,7 +79,15 @@ trait ElasticquentCollectionTrait
         $all = $this->all();
 
         $params = array();
-
+        $params = [
+            'client' => [
+                'curl' => [
+                    CURLOPT_HTTPHEADER => [
+                        'Content-type: application/json',
+                    ]
+                ]
+            ]
+        ];
         foreach ($all as $item) {
             $params['body'][] = array(
                 'delete' => array(
