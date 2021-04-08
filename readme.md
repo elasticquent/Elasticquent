@@ -212,7 +212,7 @@ For mapping, you can set a `mappingProperties` property in your model and use so
 ```php
 protected $mappingProperties = array(
    'title' => array(
-        'type' => 'string',
+        'type' => 'text',
         'analyzer' => 'standard'
     )
 );
