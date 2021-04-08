@@ -590,8 +590,7 @@ trait ElasticquentTrait
         $attributes = $hit['_source'];
 
         if (isset($hit['_id'])) {
-            $idAsInteger = intval($hit['_id']);
-            $attributes[$key_name] = $idAsInteger ? $idAsInteger : $hit['_id'];
+            $attributes[$key_name] = is_int($hit['_id']) ? intval($hit['_id']) : $hit['_id'];
         }
         
         // Add fields to attributes
