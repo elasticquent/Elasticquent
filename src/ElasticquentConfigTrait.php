@@ -5,6 +5,21 @@ namespace Elasticquent;
 trait ElasticquentConfigTrait
 {
     /**
+     * Should the builder highlight the result
+     * 
+     * @return array|bool
+     */
+    public function getConfigIsHighlightTheSource() {
+        $index_name = $this->getElasticConfig('highlight_in_source');
+
+        if (!empty($index_name)) {
+            return $index_name;
+        }
+
+        return false;
+    }
+    
+    /**
      * Get Index Name
      *
      * @return string

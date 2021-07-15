@@ -146,6 +146,14 @@ return array(
 
     'default_index' => 'my_custom_index_name',
 
+    /*
+    |--------------------------------------------------------------------------
+    | Should We Replace The Source With Highlight
+    |--------------------------------------------------------------------------
+    |
+    */
+    'highlight_in_source' => true,
+    
 );
 
 ```
@@ -338,7 +346,7 @@ The first method is a simple term search that searches all fields.
 The second is a query based search for more complex searching needs:
 
 ```php
-    public static function searchByQuery($query = null, $aggregations = null, $sourceFields = null, $limit = null, $offset = null, $sort = null)
+    public static function searchByQuery($query = null, $aggregations = null, $sourceFields = null, $limit = null, $offset = null, $sort = null, $highlight = null)
 ```
 
 **Example:**
@@ -354,6 +362,7 @@ Here's the list of available parameters:
 - `limit` - Number of records to return
 - `offset` - Sets the record offset (use for paging results)
 - `sort` - Your sort query
+- `highlight` - Your highlight config
 
 ### Raw queries
 

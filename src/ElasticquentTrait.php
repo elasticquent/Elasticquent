@@ -218,10 +218,11 @@ trait ElasticquentTrait
      * @param int   $limit
      * @param int   $offset
      * @param array $sort
+     * @param array $highlight
      *
      * @return ElasticquentResultCollection
      */
-    public static function searchByQuery($query = null, $aggregations = null, $sourceFields = null, $limit = null, $offset = null, $sort = null)
+    public static function searchByQuery($query = null, $aggregations = null, $sourceFields = null, $limit = null, $offset = null, $sort = null, $highlight = null)
     {
         $instance = new static;
 
@@ -241,6 +242,10 @@ trait ElasticquentTrait
 
         if (!empty($sort)) {
             $params['body']['sort'] = $sort;
+        }
+
+        if (!empty($highlight)) {
+            $params['body']['highlight'] = $highlight;
         }
 
         $result = $instance->getElasticSearchClient()->search($params);
@@ -427,7 +432,7 @@ trait ElasticquentTrait
     /**
      * Get Mapping
      *
-     * @return void
+     * @return array
      */
     public static function getMapping()
     {
@@ -597,6 +602,20 @@ trait ElasticquentTrait
         if (isset($hit['fields'])) {
             foreach ($hit['fields'] as $key => $value) {
                 $attributes[$key] = $value;
+            }
+        }
+        
+        // Replace highlight to attributes
+        if ($this->getConfigIsHighlightTheSource()) {
+            if (isset($hit['highlight'])) {
+                foreach ($hit['highlight'] as $key => $value) {
+                    // assume you set "number_of_fragments"=>1 on highlight setting
+                    // does not support multi fragments highlight for convinience
+                    // https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-highlighting.html
+                    if (is_scalar($attributes[$key])) {
+                        $attributes[$key] = $value[0];
+                    }
+                }
             }
         }
 
