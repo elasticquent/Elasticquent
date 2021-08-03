@@ -437,6 +437,36 @@ trait ElasticquentTrait
 
         return $instance->getElasticSearchClient()->indices()->getMapping($params);
     }
+    
+    /**
+    * Create Mapping.
+    * Use if you want to create mappings after the index has already being created.
+    *@return array
+    */
+    public static function createMapping()
+        {
+                $instance = new static;
+
+                $mappings = $instance->getMappingProperties();
+
+                if(!is_null($mappings)) {
+
+                        $index = array(
+                            'index' => $instance->getIndexName(),
+                        );
+
+                        $settings = $instance->getIndexSettings();
+                        if (!is_null($settings)) {
+                                $index['body']['settings'] = $settings;
+                        }
+                        $index['body']['properties'] = $mappings;
+                        $index['type'] = $instance->getTypeName();
+
+                        return $instance->getElasticSearchClient()->indices()->putMapping($index);
+                }
+
+                return false;
+        }
 
     /**
      * Put Mapping.
