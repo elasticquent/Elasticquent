@@ -288,6 +288,74 @@ trait ElasticquentTrait
     }
 
     /**
+     *
+     * "Scroll" trough the elasticsearch results using the scroll API
+     *
+     * @param $size int How many results *per shard* you want back
+     * @param callable $callback
+     * @param null $query
+     * @param null $aggregations
+     * @param null $sourceFields
+     * @param null $limit
+     * @param null $offset
+     * @param null $sort
+     * @return bool
+     */
+    public static function scroll($size, callable $callback, $query = null, $aggregations = null, $sourceFields = null, $limit = null, $offset = null, $sort = null)
+    {
+        $instance = new static;
+
+        $params = $instance->getBasicEsParams(true, $limit, $offset);
+        $params["scroll"] = "30s"; // how long between scroll requests. should be small!
+        $params["size"] = $size; // how many results *per shard* you want back
+
+        if (!empty($sourceFields)) {
+            $params['body']['_source']['include'] = $sourceFields;
+        }
+
+        if (!empty($query)) {
+            $params['body']['query'] = $query;
+        }
+
+        if (!empty($aggregations)) {
+            $params['body']['aggs'] = $aggregations;
+        }
+
+        if (!empty($sort)) {
+            $params['body']['sort'] = $sort;
+        }
+        $client = $instance->getElasticSearchClient();
+        $result = $client->search($params);
+
+        $page = 1;
+        do {
+            // Hydrate results and pass it to the callback and then let the
+            // developer take care of everything within the callback, which allows us to
+            // keep the memory low for spinning through large result sets for working.
+            $hydratedResults = static::hydrateElasticsearchResult($result);
+            if ($callback($hydratedResults, $page) === false) {
+                return false;
+            }
+
+            unset($hydratedResults);
+
+            // When done, get the new scroll_id
+            // You must always refresh your _scroll_id!  It can change sometimes
+            $scroll_id = $result['_scroll_id'];
+
+            // Execute a Scroll request and repeat
+            $result = $client->scroll([
+                "scroll_id" => $scroll_id,  //...using our previously obtained _scroll_id
+                "scroll" => "30s"           // and the same timeout window
+            ]);
+
+            $page++;
+        } while (isset($result['hits']['hits']) && count($result['hits']['hits']) > 0);
+
+        return true;
+    }
+
+    /**
      * Add to Search Index
      *
      * @throws Exception
