@@ -260,6 +260,10 @@ trait ElasticquentTrait
     {
         $instance = new static;
 
+        $basicParams = $instance->getBasicEsParams();
+
+        $params = array_merge($params, $basicParams);
+
         $result = $instance->getElasticSearchClient()->search($params);
 
         return static::hydrateElasticsearchResult($result);
