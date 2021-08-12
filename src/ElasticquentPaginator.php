@@ -20,7 +20,7 @@ class ElasticquentPaginator extends Paginator
         foreach ($options as $key => $value) {
             $this->{$key} = $value;
         }
-        $this->total = $total['value'];
+        $this->total = isset($total['value']) ? $total['value'] : $total;
         $this->perPage = $perPage;
         $this->lastPage = (int) ceil($this->total / $this->perPage);
         $this->currentPage = $this->setCurrentPage($currentPage, $this->lastPage);
