@@ -117,7 +117,7 @@ $ php artisan vendor:publish --provider="Elasticquent\ElasticquentServiceProvide
 ```php
 <?php
 
-return array(
+return [
 
     /*
     |--------------------------------------------------------------------------
@@ -146,7 +146,7 @@ return array(
 
     'default_index' => 'my_custom_index_name',
 
-);
+];
 
 ```
 
@@ -210,12 +210,12 @@ For custom analyzer, you can set an `indexSettings` property in your model and d
 For mapping, you can set a `mappingProperties` property in your model and use some mapping functions from there:
 
 ```php
-protected $mappingProperties = array(
-   'title' => array(
+protected $mappingProperties = [
+   'title' => [
         'type' => 'string',
         'analyzer' => 'standard'
-    )
-);
+    ]
+];
 ```
 
 If you'd like to setup a model's type mapping based on your mapping properties, you can use:
@@ -248,7 +248,7 @@ You can also get the type mapping and check if it exists.
 By default, Elasticquent will look for the `default_index` key within your configuration file(`config/elasticquent.php`). To set the default value for an index being used, you can edit this file and set the `default_index` key:
 
 ```php
-return array(
+return [
 
    // Other configuration keys ...
    
@@ -262,7 +262,7 @@ return array(
     */
     
    'default_index' => 'my_custom_index_name',
-);
+];
 ```
 
 If you'd like to have a more dynamic index, you can also override the default configuration with a `getIndexName` method inside your Eloquent model:
@@ -344,7 +344,7 @@ The second is a query based search for more complex searching needs:
 **Example:**
 
 ```php
-    $books = Book::searchByQuery(array('match' => array('title' => 'Moby Dick')));
+    $books = Book::searchByQuery(['match' => ['title' => 'Moby Dick']]);
 ```
 Here's the list of available parameters:
 
@@ -361,20 +361,21 @@ The final method is a raw query that will be sent to Elasticsearch. This method 
 when searching for records inside Elasticsearch:
 
 ```php
-    $books = Book::complexSearch(array(
-        'body' => array(
-            'query' => array(
-                'match' => array(
+    $books = Book::complexSearch([
+        'body' => [
+            'query' => [
+                'match' => [
                     'title' => 'Moby Dick'
-                )
-            )
-        )
-    ));
+                ]
+            ]
+        ]
+    ]);
 ```
 
 This is the equivalent to:
+
 ```php
-    $books = Book::searchByQuery(array('match' => array('title' => 'Moby Dick')));
+    $books = Book::searchByQuery(['match' => ['title' => 'Moby Dick']]);
 ```
 
 ### Search Collections
@@ -436,7 +437,7 @@ You can check the document score that Elasticsearch assigned to this document wi
 Similar to `Illuminate\Support\Collection`, the `chunk` method breaks the Elasticquent collection into multiple, smaller collections of a given size:
 
 ```php
-    $all_books = Book::searchByQuery(array('match' => array('title' => 'Moby Dick')));
+    $all_books = Book::searchByQuery(['match' => ['title' => 'Moby Dick']]);
     $books = $all_books->chunk(10);
 ```
 
@@ -448,10 +449,10 @@ If you're dealing with raw search data from outside of Elasticquent, you can use
 ```php
 $client = new \Elasticsearch\Client();
 
-$params = array(
+$params = [
     'index' => 'default',
     'type'  => 'books'
-);
+];
 
 $params['body']['query']['match']['title'] = 'Moby Dick';
 
@@ -472,11 +473,11 @@ By default, Elasticquent will use the entire attribute array for your Elasticsea
 ```php
 function getIndexDocumentData()
 {
-    return array(
+    return [
         'id'      => $this->id,
         'title'   => $this->title,
         'custom'  => 'variable'
-    );
+    ];
 }
 ```
 Be careful with this, as Elasticquent reads the document source into the Eloquent model attributes when creating a search result collection, so make sure you are indexing enough data for your the model functionality you want to use.
