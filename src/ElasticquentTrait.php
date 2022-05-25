@@ -370,7 +370,7 @@ trait ElasticquentTrait
     {
         $params = array(
             'index' => $this->getIndexName(),
-            'type' => $this->getTypeName(),
+            // 'type' => $this->getTypeName(),
         );
 
         if ($getIdIfPossible && $this->getKey()) {
@@ -456,7 +456,7 @@ trait ElasticquentTrait
             'properties' => $instance->getMappingProperties(),
         );
 
-        $mapping['body'][$instance->getTypeName()] = $params;
+        $mapping['body']/*[$instance->getTypeName()]*/ = $params;
 
         return $instance->getElasticSearchClient()->indices()->putMapping($mapping);
     }
@@ -531,7 +531,7 @@ trait ElasticquentTrait
 
         $mappingProperties = $instance->getMappingProperties();
         if (!is_null($mappingProperties)) {
-            $index['body']['mappings'][$instance->getTypeName()] = [
+            $index['body']['mappings']/*[$instance->getTypeName()]*/ = [
                 '_source' => array('enabled' => true),
                 'properties' => $mappingProperties,
             ];
