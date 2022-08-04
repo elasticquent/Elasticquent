@@ -744,7 +744,7 @@ trait ElasticquentTrait
         $attributes = $model->getAttributes();
 
         foreach ($attributes as $key => $value) {
-            if ($key === 'pivot') {
+            if ($key === 'pivot' && $parentRelation) {
                 unset($model[$key]);
                 $pivot = $parentRelation->newExistingPivot($value);
                 $model->setRelation($key, $pivot);
