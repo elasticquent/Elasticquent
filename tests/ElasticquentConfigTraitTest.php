@@ -1,8 +1,10 @@
 <?php
 
-class ElasticquentConfigTraitTest extends PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class ElasticquentConfigTraitTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->model = new TestModel;
     }

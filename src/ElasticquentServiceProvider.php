@@ -13,11 +13,9 @@ class ElasticquentServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if (ElasticquentSupport::isLaravel5()) {
-            $this->publishes([
-                __DIR__.'/config/elasticquent.php' => config_path('elasticquent.php'),
-            ]);
-        }
+        $this->publishes([
+            __DIR__.'/config/elasticquent.php' => config_path('elasticquent.php'),
+        ]);
     }
 
     /**
@@ -27,11 +25,6 @@ class ElasticquentServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // Support class
-        $this->app->singleton('elasticquent.support', function () {
-            return new ElasticquentSupport;
-        });
-
         // Elasticsearch client instance
         $this->app->singleton('elasticquent.elasticsearch', function ($app) {
             return $app->make('elasticquent.support')->getElasticSearchClient();

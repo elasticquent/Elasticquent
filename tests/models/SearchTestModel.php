@@ -18,23 +18,23 @@ class SearchTestModel extends Eloquent implements ElasticquentInterface
         $elasticClient
             ->shouldReceive('search')
             ->with(searchParams('with results'))
-            ->andReturn(successfulResults());
+            ->andReturn(new results('successful'));
 
         $elasticClient
             ->shouldReceive('search')
             ->with(searchParams('with no results'))
-            ->andReturn(unsuccessfulResults());
+            ->andReturn(new results('unsuccessful'));
 
         $elasticClient
             ->shouldReceive('search')
             ->with(searchParams(''))
-            ->andReturn(unsuccessfulResults());
+            ->andReturn(new results('unsuccessful'));
 
         $elasticClient
             ->shouldReceive('search')
             ->with(complexParameters())
-            ->andReturn(successfulResults());
+            ->andReturn(new results('successful'));
 
-        return $elasticClient; 
+        return $elasticClient;
     }
 }

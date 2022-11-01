@@ -14,41 +14,43 @@
  *
  * The Elasticquent method will then format the response and we test that the resulting 
  * Elasticquent results collection methods return the results we expect to verify this. 
- */ 
+ */
 
-class ElasticSearchMethodsTest extends PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class ElasticSearchMethodsTest extends TestCase
 {
     protected $expectedHits = [
-            'total' => 2,
-            'max_score' => 0.7768564,
-            'hits' => [
-                [
-                    '_index' => 'my_custom_index_name',
-                    '_type' => 'test_table',
-                    '_score' => 0.7768564,
-                    '_source' => [
-                        'name' => 'foo',
-                    ]
-                ],
-                [
-                    '_index' => 'my_custom_index_name',
-                    '_type' => 'test_table',
-                    '_score' => 0.5634561,
-                    '_source' => [
-                        'name' => 'bar',
-                    ]
-                ],
-            ]
-        ];
+        'total' => ['value' => 2],
+        'max_score' => 0.7768564,
+        'hits' => [
+            [
+                '_index' => 'my_custom_index_name_test_table_index',
+                '_score' => 0.7768564,
+                '_source' => [
+                    'name' => 'foo',
+                ]
+            ],
+            [
+                '_index' => 'my_custom_index_name_test_table_index',
+                '_score' => 0.5634561,
+                '_source' => [
+                    'name' => 'bar',
+                ]
+            ],
+        ]
+    ];
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->model = new SearchTestModel;
     }
 
     public function testSuccessfulSearch()
     {
+
         $result = $this->model->search('with results');
+
 
         $this->assertInstanceOf('Elasticquent\ElasticquentResultCollection', $result);
         $this->assertEquals(2, $result->totalHits());
@@ -65,7 +67,7 @@ class ElasticSearchMethodsTest extends PHPUnit_Framework_TestCase
         $result = $this->model->search('with no results');
 
         $expectedHits = [
-            'total' => 0,
+            'total' => ['value' => 0],
             'max_score' => null,
             'hits' => []
         ];

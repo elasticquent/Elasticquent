@@ -25,6 +25,13 @@ interface ElasticquentInterface
     public function getIndexName();
 
     /**
+     * Get Routing Name
+     *
+     * @return string|null
+     */
+    public function getRoutingName();
+
+    /**
      * Get Type Name
      *
      * @return string
@@ -130,28 +137,10 @@ interface ElasticquentInterface
     /**
      * Put Mapping.
      *
-     * @param bool $ignoreConflicts
-     *
      * @return
      */
-    public static function putMapping($ignoreConflicts = false);
+    public static function putMapping();
 
-    /**
-     * Delete Mapping
-     *
-     * @return
-     */
-    public static function deleteMapping();
-
-    /**
-     * Rebuild Mapping
-     *
-     * This will delete and then re-add
-     * the mapping for this model.
-     *
-     * @return
-     */
-    public static function rebuildMapping();
 
     /**
      * Get Mapping
@@ -163,12 +152,4 @@ interface ElasticquentInterface
      */
     public static function getMapping();
 
-    /**
-     * Type Exists
-     *
-     * Does this type exist?
-     *
-     * @return bool
-     */
-    public static function typeExists();
 }

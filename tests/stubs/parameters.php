@@ -7,15 +7,14 @@
 function basicParameters()
 {
     return [
-        'index' => 'my_custom_index_name',
-        'type' => 'test_table',
+        'index' => 'my_custom_index_name_test_table_index',
     ];
 }
 
 function searchParams($searchTerm)
 {
     $params = basicParameters();
-    $params['body'] = ['query' => ['match' => ['_all' => $searchTerm]]];
+    $params['body'] = ['query' => ['simple_query_string' => ['query' => $searchTerm]]];
     return $params;
 }
 

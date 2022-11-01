@@ -227,6 +227,7 @@ trait ElasticquentTrait
 
         $params = $instance->getBasicEsParams(true, $limit, $offset);
 
+
         if (!empty($sourceFields)) {
             $params['body']['_source']['include'] = $sourceFields;
         }
@@ -243,7 +244,7 @@ trait ElasticquentTrait
             $params['body']['sort'] = $sort;
         }
 
-        $result = $instance->getElasticSearchClient()->search($params);
+        $result = $instance->getElasticSearchClient()->search($params)->asArray();
 
         return static::hydrateElasticsearchResult($result);
     }
@@ -253,14 +254,14 @@ trait ElasticquentTrait
      *
      * Using this method, a custom query can be sent to Elasticsearch.
      *
-     * @param  $params parameters to be passed directly to Elasticsearch
+     * @param  array $params parameters to be passed directly to Elasticsearch
      * @return ElasticquentResultCollection
      */
     public static function complexSearch($params)
     {
         $instance = new static;
 
-        $result = $instance->getElasticSearchClient()->search($params);
+        $result = $instance->getElasticSearchClient()->search($params)->asArray();
 
         return static::hydrateElasticsearchResult($result);
     }
@@ -280,9 +281,10 @@ trait ElasticquentTrait
 
         $params = $instance->getBasicEsParams();
 
-        $params['body']['query']['match']['_all'] = $term;
+        $params['body']['query']['simple_query_string']['query'] = $term;
 
-        $result = $instance->getElasticSearchClient()->search($params);
+        $result = $instance->getElasticSearchClient()->search($params)->asArray();
+
 
         return static::hydrateElasticsearchResult($result);
     }
@@ -311,7 +313,7 @@ trait ElasticquentTrait
         // the index, or get the document from the index.
         $params['id'] = $this->getKey();
 
-        return $this->getElasticSearchClient()->index($params);
+        return $this->getElasticSearchClient()->index($params)->asArray();
     }
 
     /**
@@ -321,7 +323,7 @@ trait ElasticquentTrait
      */
     public function removeFromIndex()
     {
-        return $this->getElasticSearchClient()->delete($this->getBasicEsParams());
+        return $this->getElasticSearchClient()->delete($this->getBasicEsParams())->asArray();
     }
 
     /**
@@ -336,7 +338,7 @@ trait ElasticquentTrait
         // Get our document body data.
         $params['body']['doc'] = $this->getIndexDocumentData();
 
-        return $this->getElasticSearchClient()->update($params);
+        return $this->getElasticSearchClient()->update($params)->asArray();
     }
 
     /**
@@ -349,7 +351,7 @@ trait ElasticquentTrait
      */
     public function getIndexedDocument()
     {
-        return $this->getElasticSearchClient()->get($this->getBasicEsParams());
+        return $this->getElasticSearchClient()->get($this->getBasicEsParams())->asArray();
     }
 
     /**
@@ -370,7 +372,6 @@ trait ElasticquentTrait
     {
         $params = array(
             'index' => $this->getIndexName(),
-            'type' => $this->getTypeName(),
         );
 
         if ($getIdIfPossible && $this->getKey()) {
@@ -384,6 +385,9 @@ trait ElasticquentTrait
         if (is_numeric($offset)) {
             $params['from'] = $offset;
         }
+
+        if($this->getRoutingName())
+            $params['routing'] = $this->getRoutingName();
 
         return $params;
     }
@@ -421,13 +425,13 @@ trait ElasticquentTrait
 
         $mapping = $instance->getMapping();
 
-        return (empty($mapping)) ? false : true;
+        return !empty($mapping);
     }
 
     /**
      * Get Mapping
      *
-     * @return void
+     * @return array
      */
     public static function getMapping()
     {
@@ -435,67 +439,30 @@ trait ElasticquentTrait
 
         $params = $instance->getBasicEsParams();
 
-        return $instance->getElasticSearchClient()->indices()->getMapping($params);
+        return $instance->getElasticSearchClient()->indices()->getMapping($params)->asArray();
     }
 
     /**
      * Put Mapping.
      *
-     * @param bool $ignoreConflicts
-     *
      * @return array
      */
-    public static function putMapping($ignoreConflicts = false)
+    public static function putMapping()
     {
         $instance = new static;
 
         $mapping = $instance->getBasicEsParams();
+
+        $mapping['index'] = $instance->getIndexName();
 
         $params = array(
             '_source' => array('enabled' => true),
             'properties' => $instance->getMappingProperties(),
         );
 
-        $mapping['body'][$instance->getTypeName()] = $params;
+        $mapping['body'] = $params;
 
-        return $instance->getElasticSearchClient()->indices()->putMapping($mapping);
-    }
-
-    /**
-     * Delete Mapping
-     *
-     * @return array
-     */
-    public static function deleteMapping()
-    {
-        $instance = new static;
-
-        $params = $instance->getBasicEsParams();
-
-        return $instance->getElasticSearchClient()->indices()->deleteMapping($params);
-    }
-
-    /**
-     * Rebuild Mapping
-     *
-     * This will delete and then re-add
-     * the mapping for this model.
-     *
-     * @return array
-     */
-    public static function rebuildMapping()
-    {
-        $instance = new static;
-
-        // If the mapping exists, let's delete it.
-        if ($instance->mappingExists()) {
-            $instance->deleteMapping();
-        }
-
-        // Don't need ignore conflicts because if we
-        // just removed the mapping there shouldn't
-        // be any conflicts.
-        return $instance->putMapping();
+        return $instance->getElasticSearchClient()->indices()->putMapping($mapping)->asArray();
     }
 
     /**
@@ -531,7 +498,7 @@ trait ElasticquentTrait
 
         $mappingProperties = $instance->getMappingProperties();
         if (!is_null($mappingProperties)) {
-            $index['body']['mappings'][$instance->getTypeName()] = [
+            $index['body']['mappings'] = [
                 '_source' => array('enabled' => true),
                 'properties' => $mappingProperties,
             ];
@@ -555,23 +522,7 @@ trait ElasticquentTrait
             'index' => $instance->getIndexName(),
         );
 
-        return $client->indices()->delete($index);
-    }
-
-    /**
-     * Type Exists.
-     *
-     * Does this type exist?
-     *
-     * @return bool
-     */
-    public static function typeExists()
-    {
-        $instance = new static;
-
-        $params = $instance->getBasicEsParams();
-
-        return $instance->getElasticSearchClient()->indices()->existsType($params);
+        return $client->indices()->delete($index)->asArray();
     }
 
     /**
@@ -627,7 +578,7 @@ trait ElasticquentTrait
     public static function hydrateElasticsearchResult(array $result)
     {
         $items = $result['hits']['hits'];
-        return static::hydrateElasticquentResult($items, $meta = $result);
+        return static::hydrateElasticquentResult($items, $result);
     }
 
     /**

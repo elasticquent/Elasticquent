@@ -2,8 +2,19 @@
 
 namespace Elasticquent;
 
+
 trait ElasticquentConfigTrait
 {
+    /**
+     * Get Routing Name
+     *
+     * @return string|null
+     */
+    public function getRoutingName()
+    {
+        return null;
+    }
+
     /**
      * Get Index Name
      *
@@ -16,11 +27,12 @@ trait ElasticquentConfigTrait
         $index_name = $this->getElasticConfig('default_index');
 
         if (!empty($index_name)) {
-            return $index_name;
+            //ES 7 -> we need to name index
+            return $index_name.'_'.$this->getTypeName().'_index';
         }
 
         // Otherwise we will just go with 'default'
-        return 'default';
+        return 'default_'.$this->getTypeName().'_index';
     }
 
     /**
@@ -28,21 +40,19 @@ trait ElasticquentConfigTrait
      *
      * @param string $key the configuration key
      * @param string $prefix filename of configuration file
-     * @return array configuration
+     * @return array|string configuration
      */
-    public function getElasticConfig($key = 'config', $prefix = 'elasticquent')
+    public function getElasticConfig(string $key = 'config', string $prefix = 'elasticquent')
     {
         $key = $prefix . ($key ? '.' : '') . $key;
 
-        if (function_exists('config')) {
-            // Get config helper for Laravel 5.1+
-            $config_helper = config();
-        } elseif (function_exists('app')) {
-            // Get config helper for Laravel 4 & Laravel 5.1
-            $config_helper = app('config');
-        } else {
-            // Create a config helper when using stand-alone Eloquent
+        //If there is no config, then theres no Laravel
+        if(!class_exists('Config')) {
+            //Create a config helper when using stand-alone Eloquent
             $config_helper = $this->getConfigHelper();
+        }
+        else {
+            $config_helper = config();
         }
 
         return $config_helper->get($key);
