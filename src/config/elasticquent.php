@@ -16,6 +16,7 @@ return array(
     'config' => [
         'hosts'     => ['localhost:9200'],
         'retries'   => 1,
+        'basicauthentication' => [env('ELASTICQUENT_USERNAME', 'elastic'), env('ELASTICQUENT_PASSWORD', '')],
     ],
 
     /*

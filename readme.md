@@ -8,7 +8,7 @@ Elasticquent uses the [official Elasticsearch PHP API](https://github.com/elasti
 
 # Elasticsearch Requirements
 
-You must be running _at least_ Elasticsearch 1.0. Elasticsearch 0.9 and below *will not work* and are not supported.
+You must be running _at least_ Elasticsearch 8.
 
 ## Contents
 
@@ -18,7 +18,7 @@ You must be running _at least_ Elasticsearch 1.0. Elasticsearch 0.9 and below *w
     * [Elasticsearch Configuration](#elasticsearch-configuration)
     * [Indexes and Mapping](#indexes-and-mapping)
     * [Setting a Custom Index Name](#setting-a-custom-index-name)
-    * [Setting a Custom Type Name](#setting-a-custom-type-name)
+    * [Setting a Custom Routing Name](#setting-a-routing-name)
 * [Indexing Documents](#indexing-documents)
 * [Searching](#searching)
     * [Search Collections](#search-collections)
@@ -133,6 +133,7 @@ return array(
     'config' => [
         'hosts'     => ['localhost:9200'],
         'retries'   => 1,
+        'basicauthentication' => [env('ELASTICQUENT_USERNAME', 'elastic'), env('ELASTICQUENT_PASSWORD', '')],
     ],
 
     /*
@@ -224,18 +225,6 @@ If you'd like to setup a model's type mapping based on your mapping properties, 
     Book::putMapping($ignoreConflicts = true);
 ```
 
-To delete a mapping:
-
-```php
-    Book::deleteMapping();
-```
-
-To rebuild (delete and re-add, useful when you make important changes to your mapping) a mapping:
-
-```php
-    Book::rebuildMapping();
-```
-
 You can also get the type mapping and check if it exists.
 
 ```php
@@ -244,6 +233,8 @@ You can also get the type mapping and check if it exists.
 ```
 
 ### Setting a Custom Index Name
+
+Note! As ES 7 and forward do not have a type anymore, the type of data is part of the index. For instance with the default index name of `my_custom_index_name` becomes `my_custom_index_name_books_index` if the type of data is `books`.
 
 By default, Elasticquent will look for the `default_index` key within your configuration file(`config/elasticquent.php`). To set the default value for an index being used, you can edit this file and set the `default_index` key:
 
@@ -274,24 +265,12 @@ function getIndexName()
 }
 ```
 
-Note: If no index was specified, Elasticquent will use a hardcoded string with the value of `default`.
+Note: If no index was specified, Elasticquent will use a hardcoded string with the value of `default_datatype_index`.
 
-### Setting a Custom Type Name
 
-By default, Elasticquent will use the table name of your models as the type name for indexing. If you'd like to override it, you can with the `getTypeName` function.
+## Setting a routing name
+In order to use routing for instance for multitenancy, you need to override getRoutingName in the model to return a name.
 
-```php
-function getTypeName()
-{
-    return 'custom_type_name';
-}
-```
-
-To check if the type for the Elasticquent model exists yet, use `typeExists`:
-
-```php
-    $typeExists = Book::typeExists();
-```
 
 ## Indexing Documents
 

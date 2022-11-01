@@ -40,11 +40,14 @@ trait ElasticquentCollectionTrait
             $chunk = array_slice($all, (0 + ($iteration * static::$entriesToSendToElasticSearchInOneGo)),  static::$entriesToSendToElasticSearchInOneGo);
 
             $params = array();
+
+            if($this->getRoutingName())
+                $params['routing'] = $this->getRoutingName();
+
             foreach ($chunk as $item) {
                 $params['body'][] = array(
                     'index' => array(
                         '_id' => $item->getKey(),
-                        '_type' => $item->getTypeName(),
                         '_index' => $item->getIndexName(),
                     ),
                 );
@@ -52,7 +55,7 @@ trait ElasticquentCollectionTrait
                 $params['body'][] = $item->getIndexDocumentData();
             }
 
-            $result = $this->getElasticSearchClient()->bulk($params);
+            $result = $this->getElasticSearchClient()->bulk($params)->asArray();
 
             // Check for errors
             if ( (array_key_exists('errors', $result) && $result['errors'] != false ) || (array_key_exists('Message', $result) && stristr('Request size exceeded', $result['Message']) !== false)) {
@@ -79,17 +82,19 @@ trait ElasticquentCollectionTrait
 
         $params = array();
 
+        if($this->getRoutingName())
+            $params['routing'] = $this->getRoutingName();
+
         foreach ($all as $item) {
             $params['body'][] = array(
                 'delete' => array(
                     '_id' => $item->getKey(),
-                    '_type' => $item->getTypeName(),
                     '_index' => $item->getIndexName(),
                 ),
             );
         }
 
-        return $this->getElasticSearchClient()->bulk($params);
+        return $this->getElasticSearchClient()->bulk($params)->asArray();
     }
 
     /**
